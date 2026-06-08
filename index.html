@@ -124,10 +124,63 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
 .lesson-content tr:nth-child(even) td { background: #F8F8F6; }
 
 /* Complete button */
-.complete-btn { width: 100%; padding: 14px; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 60px; }
+.complete-btn { width: 100%; padding: 14px; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 16px; }
 .complete-btn.primary { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: white; }
 .complete-btn.done { background: var(--green); color: white; }
 .complete-btn:hover { transform: translateY(-1px); }
+
+/* Notes */
+.notes-section { margin-bottom: 16px; }
+.notes-toggle { font-size: 13px; color: var(--accent2); cursor: pointer; font-weight: 600; margin-bottom: 8px; }
+.notes-area { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-size: 13px; font-family: inherit; resize: vertical; background: #FFFEF5; }
+
+/* Lesson challenge */
+.challenge-section { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; border-top: 3px solid var(--accent); }
+.challenge-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--accent); }
+.challenge-result { text-align: center; padding: 16px; font-weight: 700; font-size: 15px; margin-top: 12px; border-radius: 10px; }
+.challenge-result.pass { background: #E8F5E9; color: var(--green); }
+.challenge-result.fail { background: #FFEBEE; color: var(--accent); }
+
+/* Match game */
+.match-game { display: flex; gap: 12px; margin-bottom: 16px; }
+.match-col { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.match-item { padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-size: 12px; cursor: pointer; transition: all 0.2s; text-align: center; font-weight: 600; background: var(--card); min-height: 44px; display: flex; align-items: center; justify-content: center; }
+.match-item.selected { border-color: var(--accent2); background: #E3F2FD; }
+.match-item.matched { border-color: var(--green); background: #E8F5E9; opacity: 0.6; pointer-events: none; }
+.match-item.wrong { border-color: var(--accent); background: #FFEBEE; }
+
+/* TF game */
+.tf-statement { background: var(--card); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); text-align: center; margin-bottom: 16px; }
+.tf-text { font-size: 16px; font-weight: 700; line-height: 1.5; margin-bottom: 16px; }
+.tf-btns { display: flex; gap: 12px; justify-content: center; }
+.tf-btn { padding: 12px 32px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.tf-btn.true-btn { background: var(--green); color: white; }
+.tf-btn.false-btn { background: var(--accent); color: white; }
+.tf-feedback { margin-top: 12px; font-size: 13px; padding: 12px; border-radius: 10px; display: none; }
+
+/* Order game */
+.order-game { margin-bottom: 16px; }
+.order-slots { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.order-slot { padding: 10px 14px; border: 2px dashed var(--border); border-radius: 10px; font-size: 13px; min-height: 40px; display: flex; align-items: center; background: #F8F8F6; }
+.order-slot.filled { border-style: solid; border-color: var(--accent2); background: #E3F2FD; cursor: pointer; }
+.order-slot.correct { border-color: var(--green); background: #E8F5E9; }
+.order-slot.wrong { border-color: var(--accent); background: #FFEBEE; }
+.order-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.order-chip { padding: 8px 12px; border: 2px solid var(--border); border-radius: 10px; font-size: 12px; cursor: pointer; background: var(--card); font-weight: 600; transition: all 0.2s; }
+.order-chip:hover { border-color: var(--accent2); }
+.order-chip.used { opacity: 0.3; pointer-events: none; }
+
+/* Memory game */
+.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.memory-card { aspect-ratio: 1; border-radius: 10px; cursor: pointer; position: relative; perspective: 600px; }
+.memory-card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.4s; transform-style: preserve-3d; }
+.memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
+.memory-card-front, .memory-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 6px; text-align: center; font-size: 11px; font-weight: 600; }
+.memory-card-front { background: linear-gradient(135deg, var(--accent3), var(--accent2)); color: white; font-size: 22px; }
+.memory-card-back { background: var(--card); border: 2px solid var(--accent2); transform: rotateY(180deg); line-height: 1.3; color: var(--text); }
+.memory-card.matched .memory-card-inner { opacity: 0.4; }
+.memory-card.matched { pointer-events: none; }
+.memory-card.wrong .memory-card-back { border-color: var(--accent); background: #FFEBEE; }
 
 /* Quiz view */
 .quiz-view { display: none; }
@@ -309,6 +362,30 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
       </div>
     </div>
 
+    <div class="section-title">🎯 Juegos</div>
+    <div class="game-grid">
+      <div class="game-card" onclick="startMatchGame()">
+        <div class="game-icon">🔗</div>
+        <div class="game-name">Unir</div>
+        <div class="game-count">Conceptos</div>
+      </div>
+      <div class="game-card" onclick="startTFGame()">
+        <div class="game-icon">✅</div>
+        <div class="game-name">V o F</div>
+        <div class="game-count">Rápido</div>
+      </div>
+      <div class="game-card" onclick="startOrderGame()">
+        <div class="game-icon">📋</div>
+        <div class="game-name">Ordenar</div>
+        <div class="game-count">Pasos</div>
+      </div>
+      <div class="game-card" onclick="startMemoryGame()">
+        <div class="game-icon">🧠</div>
+        <div class="game-name">Memorice</div>
+        <div class="game-count">Parejas</div>
+      </div>
+    </div>
+
     <div class="section-title">📖 Glosario Comercial</div>
     <div class="glossary-card"><span class="glossary-wrong">Contrato</span><span class="glossary-arrow">→</span><span class="glossary-right">Acuerdo</span></div>
     <div class="glossary-card"><span class="glossary-wrong">Problema</span><span class="glossary-arrow">→</span><span class="glossary-right">Reto / Desafío</span></div>
@@ -340,7 +417,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
       <h2 id="lesson-view-title"></h2>
     </div>
     <div id="lesson-view-content"></div>
-    <button class="complete-btn primary" id="complete-lesson-btn" onclick="completeCurrentLesson()">Completar y siguiente →</button>
+    <div class="notes-section">
+      <div class="notes-toggle" onclick="toggleNotes()">📝 Mis apuntes ▾</div>
+      <textarea class="notes-area" id="lesson-notes" style="display:none" placeholder="Escribe tus apuntes aquí..." oninput="saveNotes()"></textarea>
+    </div>
+    <div id="lesson-challenge"></div>
+    <button class="complete-btn primary" id="complete-lesson-btn" onclick="startLessonChallenge()">Iniciar evaluación →</button>
+    <div style="height:52px"></div>
   </div>
 
   <!-- Quiz View -->
@@ -1611,13 +1694,21 @@ function openLesson(id) {
   view.classList.add('active');
   document.getElementById('lesson-view-title').textContent = currentLesson.icon + ' ' + currentLesson.title;
   document.getElementById('lesson-view-content').innerHTML = `<div class="lesson-content animate-in">${currentLesson.content}</div>`;
+  document.getElementById('lesson-challenge').innerHTML = '';
+  const notesArea = document.getElementById('lesson-notes');
+  notesArea.style.display = 'none';
+  if (!state.notes) state.notes = {};
+  notesArea.value = state.notes[id] || '';
   const btn = document.getElementById('complete-lesson-btn');
+  btn.style.display = 'block';
   if (state.completedLessons.includes(id)) {
-    btn.textContent = '✓ Completada';
-    btn.className = 'complete-btn done';
-  } else {
-    btn.textContent = 'Completar lección ✓';
+    btn.textContent = 'Siguiente →';
     btn.className = 'complete-btn primary';
+    btn.onclick = () => completeCurrentLesson();
+  } else {
+    btn.textContent = 'Iniciar evaluación →';
+    btn.className = 'complete-btn primary';
+    btn.onclick = () => startLessonChallenge();
   }
   window.scrollTo(0,0);
 }
@@ -1860,6 +1951,374 @@ function renderAchievements() {
         ${a.done ? '<div class="lesson-status done">✓ Desbloqueado</div>' : '<div class="lesson-status pending">Pendiente</div>'}
       </div>
     </div>`).join('');
+}
+
+// ============ NOTES ============
+function toggleNotes() {
+  const area = document.getElementById('lesson-notes');
+  const visible = area.style.display !== 'none';
+  area.style.display = visible ? 'none' : 'block';
+  if (!visible && currentLesson) {
+    area.value = state.notes && state.notes[currentLesson.id] || '';
+  }
+}
+function saveNotes() {
+  if (!currentLesson) return;
+  if (!state.notes) state.notes = {};
+  state.notes[currentLesson.id] = document.getElementById('lesson-notes').value;
+  save();
+}
+
+// ============ LESSON CHALLENGE ============
+const LESSON_QUESTIONS = {};
+function getLessonQuestions(lessonId) {
+  const l = LESSONS.find(x => x.id === lessonId);
+  if (!l) return [];
+  let pool = [];
+  if (l.type === 'proceso') pool = [...ALL_QUESTIONS.proceso, ...ALL_QUESTIONS.bant];
+  else if (l.type === 'producto') pool = [...ALL_QUESTIONS.producto];
+  else pool = [...ALL_QUESTIONS.proceso, ...ALL_QUESTIONS.producto];
+  return pool.sort(() => Math.random()-0.5).slice(0, 3);
+}
+
+let challengeState = {};
+
+function startLessonChallenge() {
+  if (!currentLesson) return;
+  if (state.completedLessons.includes(currentLesson.id)) {
+    completeCurrentLesson();
+    return;
+  }
+  const questions = getLessonQuestions(currentLesson.id);
+  challengeState = { questions, current: 0, score: 0 };
+  document.getElementById('complete-lesson-btn').style.display = 'none';
+  renderLessonChallenge();
+}
+
+function renderLessonChallenge() {
+  const cs = challengeState;
+  const container = document.getElementById('lesson-challenge');
+  if (cs.current >= cs.questions.length) {
+    const passed = cs.score >= 2;
+    if (passed) {
+      container.innerHTML = `<div class="challenge-result pass">✅ ¡Aprobado! ${cs.score}/${cs.questions.length} correctas</div>`;
+      completeCurrentLesson();
+    } else {
+      container.innerHTML = `<div class="challenge-result fail">❌ ${cs.score}/${cs.questions.length} — necesitas al menos 2/3 para aprobar</div>`;
+      const btn = document.getElementById('complete-lesson-btn');
+      btn.style.display = 'block';
+      btn.textContent = '🔄 Reintentar evaluación';
+      btn.onclick = () => { container.innerHTML = ''; startLessonChallenge(); };
+    }
+    return;
+  }
+  const q = cs.questions[cs.current];
+  let optsHtml = q.opts.map((o, i) => `<button class="quiz-option" onclick="answerChallenge(${i})">${o}</button>`).join('');
+  container.innerHTML = `
+    <div class="challenge-section animate-in">
+      <div class="challenge-title">Evaluación — Pregunta ${cs.current+1} de ${cs.questions.length}</div>
+      <div class="quiz-q-text" style="font-size:14px;margin-bottom:12px">${q.q}</div>
+      <div id="challenge-opts">${optsHtml}</div>
+      <div class="quiz-explanation" id="challenge-explain">${q.explain}</div>
+    </div>`;
+}
+
+function answerChallenge(idx) {
+  const q = challengeState.questions[challengeState.current];
+  const opts = document.querySelectorAll('#challenge-opts .quiz-option');
+  opts.forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === q.correct) o.classList.add('correct');
+    if (i === idx && i !== q.correct) o.classList.add('wrong');
+  });
+  if (idx === q.correct) challengeState.score++;
+  state.totalAnswered++; if (idx === q.correct) state.totalCorrect++; save();
+  document.getElementById('challenge-explain').style.display = 'block';
+  setTimeout(() => { challengeState.current++; renderLessonChallenge(); }, 1500);
+}
+
+// ============ MATCH GAME ============
+const MATCH_DATA = [
+  {pairs: [["Desk","Helpdesk omnicanal con IA"],["Studio","Bots sin código con IA"],["Engage","Campañas masivas WhatsApp"],["VoC","Análisis de voz del cliente"],["GPT","Asistente interno para ejecutivos"],["Cassper","Recuperación de ventas perdidas"]]},
+  {pairs: [["BANT","Budget, Authority, Need, Timing"],["BSP","Business Solution Provider"],["HSM","Plantilla aprobada por Meta"],["TMO","Tiempo Medio de Operación"],["FCR","Resolución en Primer Contacto"],["SLA","Acuerdo de Nivel de Servicio"]]},
+  {pairs: [["Filtrar SPAM","Desk + Studio"],["Vender por WhatsApp","Studio + Engage"],["Análisis VoC","VoC + Desk"],["Centralizar canales","Desk + Engage + VoC"],["Bot de compra","Studio + Engage"],["Recuperar ventas","Cassper"]]},
+];
+let matchState = {};
+
+function startMatchGame() {
+  const data = MATCH_DATA[Math.floor(Math.random()*MATCH_DATA.length)];
+  const pairs = [...data.pairs];
+  const left = pairs.map(p => p[0]).sort(() => Math.random()-0.5);
+  const right = pairs.map(p => p[1]).sort(() => Math.random()-0.5);
+  matchState = { pairs, left, right, selected: null, side: null, matched: 0, total: pairs.length };
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById('lesson-view').style.display = 'none';
+  const view = document.getElementById('quiz-view');
+  view.style.display = 'block'; view.classList.add('active');
+  document.getElementById('quiz-title').textContent = '🔗 Unir Conceptos';
+  document.getElementById('quiz-progress').innerHTML = '';
+  renderMatchGame();
+  window.scrollTo(0,0);
+}
+
+function renderMatchGame() {
+  const ms = matchState;
+  if (ms.matched >= ms.total) {
+    state.xp += ms.total * 10; state.quizzesDone++; save(); updateHeader();
+    document.getElementById('quiz-content').innerHTML = `<div class="quiz-score animate-in"><div class="score-num">🎉</div><div class="score-msg">¡Todos conectados!</div><div style="margin-top:8px;font-size:13px;color:var(--text2)">+${ms.total*10} XP</div><button class="complete-btn primary" style="margin-top:20px" onclick="closeQuizView()">Volver</button></div>`;
+    return;
+  }
+  let leftHtml = ms.left.map((item, i) => {
+    const isMatched = ms.pairs.some(p => p[0]===item && document.querySelector(`.match-item[data-matched="${item}"]`));
+    return `<div class="match-item ${ms.matchedItems?.includes('L'+i)?'matched':''} ${ms.selected===i&&ms.side==='L'?'selected':''}" onclick="selectMatch('L',${i},'${item.replace(/'/g,"\\'")}')" data-idx="${i}">${item}</div>`;
+  }).join('');
+  let rightHtml = ms.right.map((item, i) => {
+    return `<div class="match-item ${ms.matchedItems?.includes('R'+i)?'matched':''} ${ms.selected===i&&ms.side==='R'?'selected':''}" onclick="selectMatch('R',${i},'${item.replace(/'/g,"\\'")}')" data-idx="${i}">${item}</div>`;
+  }).join('');
+  document.getElementById('quiz-content').innerHTML = `<div style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:12px">${ms.matched}/${ms.total} conectados</div><div class="match-game"><div class="match-col">${leftHtml}</div><div class="match-col">${rightHtml}</div></div>`;
+}
+
+function selectMatch(side, idx, value) {
+  if (!matchState.matchedItems) matchState.matchedItems = [];
+  if (matchState.matchedItems.includes(side+idx)) return;
+  if (!matchState.firstPick) {
+    matchState.firstPick = { side, idx, value };
+    matchState.selected = idx; matchState.side = side;
+    renderMatchGame();
+  } else {
+    if (matchState.firstPick.side === side) {
+      matchState.firstPick = { side, idx, value };
+      matchState.selected = idx; matchState.side = side;
+      renderMatchGame(); return;
+    }
+    const fp = matchState.firstPick;
+    const leftVal = fp.side === 'L' ? fp.value : value;
+    const rightVal = fp.side === 'R' ? fp.value : value;
+    const isCorrect = matchState.pairs.some(p => p[0]===leftVal && p[1]===rightVal);
+    if (isCorrect) {
+      matchState.matchedItems.push(fp.side+fp.idx);
+      matchState.matchedItems.push(side+idx);
+      matchState.matched++;
+    }
+    matchState.firstPick = null; matchState.selected = null; matchState.side = null;
+    renderMatchGame();
+  }
+}
+
+// ============ TRUE/FALSE GAME ============
+const TF_DATA = [
+  {s:"Studio requiere Desk para funcionar", a:false, e:"Studio puede contratarse standalone — no requiere Desk."},
+  {s:"Engage funciona en WhatsApp e Instagram", a:false, e:"Engage funciona EXCLUSIVAMENTE por WhatsApp."},
+  {s:"Adereso hace fine-tuning con datos de clientes", a:false, e:"NO hace fine-tuning. Usa Agentic RAG con fuentes controladas."},
+  {s:"Las licencias de Desk son ilimitadas", a:true, e:"Correcto. El precio sube por conversaciones, no por usuarios."},
+  {s:"Experience viene incluido gratis en Desk", a:true, e:"Correcto. Es un diferenciador vs competencia que lo cobra aparte."},
+  {s:"El BANT mínimo para avanzar es 6/12", a:true, e:"Correcto. Mínimo 6/12 con Need y Authority ≥ 2."},
+  {s:"WhatsApp Calling ya soporta llamadas entrantes", a:false, e:"Beta actual: solo llamadas SALIENTES. Entrantes aún no disponibles."},
+  {s:"Para calificación outbound se exige BANT completo", a:false, e:"Outbound solo requiere Autoridad + Necesidad (no BANT completo)."},
+  {s:"VoC puede procesar tanto texto como voz", a:true, e:"Correcto. VoC procesa ambos formatos."},
+  {s:"El correo post-reunión se puede enviar en 48 horas", a:false, e:"Debe enviarse el mismo día o antes de las 10:00 del siguiente."},
+  {s:"GPT se cobra por usuario activo", a:false, e:"GPT se cobra por mensaje enviado. Futuro: por créditos."},
+  {s:"Adereso opera en arquitectura multi-tenant", a:true, e:"Correcto. SaaS multi-tenant con aislamiento lógico de datos."},
+  {s:"El cotizador puede generar escenarios comparativos", a:true, e:"Correcto. Guarda múltiples versiones para comparar lado a lado."},
+  {s:"Un lead con menos de 2.000 tickets/mes califica", a:false, e:"Mínimo 2.000 tickets/mes. Menos que eso = descalificado."},
+  {s:"El bot puede conectarse a bases de datos SQL", a:true, e:"Correcto. Studio Agent soporta integración SQL."},
+  {s:"Cassper reemplaza al equipo comercial", a:false, e:"No. Cassper hace que el equipo sea más efectivo — no lo reemplaza."},
+  {s:"La PoC tiene costo para el cliente", a:false, e:"La PoC no tiene costo. El AE la genera directamente sin firma."},
+  {s:"Se necesita admin total del BM para vincular con Adereso", a:true, e:"Correcto. Acceso parcial no alcanza."},
+];
+let tfState = {};
+
+function startTFGame() {
+  const shuffled = [...TF_DATA].sort(() => Math.random()-0.5).slice(0, 10);
+  tfState = { items: shuffled, current: 0, score: 0 };
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  const view = document.getElementById('quiz-view');
+  view.style.display = 'block'; view.classList.add('active');
+  document.getElementById('quiz-title').textContent = '✅ Verdadero o Falso';
+  document.getElementById('quiz-progress').innerHTML = '';
+  renderTF();
+  window.scrollTo(0,0);
+}
+
+function renderTF() {
+  if (tfState.current >= tfState.items.length) {
+    const pct = Math.round(tfState.score/tfState.items.length*100);
+    state.xp += tfState.score * 10; state.quizzesDone++; save(); updateHeader();
+    document.getElementById('quiz-content').innerHTML = `<div class="quiz-score animate-in"><div class="score-num">${pct}%</div><div class="score-label">${tfState.score}/${tfState.items.length} correctas</div><div class="score-msg">${pct>=80?'🏆 Excelente!':pct>=60?'👏 Bien!':'📚 Repasa'}</div><div style="margin-top:8px;font-size:13px;color:var(--text2)">+${tfState.score*10} XP</div><button class="complete-btn primary" style="margin-top:20px" onclick="closeQuizView()">Volver</button></div>`;
+    return;
+  }
+  const item = tfState.items[tfState.current];
+  document.getElementById('quiz-content').innerHTML = `
+    <div style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:8px">${tfState.current+1} de ${tfState.items.length}</div>
+    <div class="tf-statement animate-in">
+      <div class="tf-text">"${item.s}"</div>
+      <div class="tf-btns">
+        <button class="tf-btn false-btn" onclick="answerTF(false)">Falso</button>
+        <button class="tf-btn true-btn" onclick="answerTF(true)">Verdadero</button>
+      </div>
+      <div class="tf-feedback" id="tf-feedback"></div>
+    </div>`;
+}
+
+function answerTF(answer) {
+  const item = tfState.items[tfState.current];
+  const correct = answer === item.a;
+  if (correct) tfState.score++;
+  state.totalAnswered++; if (correct) state.totalCorrect++; save();
+  const fb = document.getElementById('tf-feedback');
+  fb.style.display = 'block';
+  fb.style.background = correct ? '#E8F5E9' : '#FFEBEE';
+  fb.textContent = (correct ? '✅ ' : '❌ ') + item.e;
+  document.querySelectorAll('.tf-btn').forEach(b => b.disabled = true);
+  setTimeout(() => { tfState.current++; renderTF(); }, 2000);
+}
+
+// ============ ORDER GAME ============
+const ORDER_DATA = [
+  {title:"Pipeline comercial", items:["SDR califica (BANT)","AE: reunión inicial","Bajada de requerimiento","Propuesta técnica","Propuesta comercial","Envío + negociación","Cierre + contrato","Onboarding (PM)","Expansión (KAM)"]},
+  {title:"Hacer una demo", items:["Crear agente en Studio","Configurar componentes y conocimiento","Activar en tab Demo","Obtener link de WhatsApp","Enviar link al cliente","Cliente envía código predeterminado","Bot inicia la conversación"]},
+  {title:"Proceso de cotización", items:["Documentar caso de uso (Etapa 2)","Propuesta técnica con SSPP (Etapa 3)","Deal en Etapa 4 en HubSpot","Calcular MRR en cotizador","Enviar line items a HubSpot","Crear cotización en el deal","Seleccionar plantilla Cotización-automática"]},
+];
+let orderState = {};
+
+function startOrderGame() {
+  const data = ORDER_DATA[Math.floor(Math.random()*ORDER_DATA.length)];
+  const correct = [...data.items];
+  const shuffled = [...data.items].sort(() => Math.random()-0.5);
+  orderState = { title: data.title, correct, shuffled, placed: [], total: correct.length };
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  const view = document.getElementById('quiz-view');
+  view.style.display = 'block'; view.classList.add('active');
+  document.getElementById('quiz-title').textContent = '📋 Ordena: ' + data.title;
+  document.getElementById('quiz-progress').innerHTML = '';
+  renderOrder();
+  window.scrollTo(0,0);
+}
+
+function renderOrder() {
+  const os = orderState;
+  let slotsHtml = os.correct.map((_, i) => {
+    const filled = os.placed[i];
+    return `<div class="order-slot ${filled?'filled':''}" onclick="${filled?`removeOrder(${i})`:''}">${filled ? `${i+1}. ${filled}` : `${i+1}. ___`}</div>`;
+  }).join('');
+  let chipsHtml = os.shuffled.map((item, i) => {
+    const used = os.placed.includes(item);
+    return `<div class="order-chip ${used?'used':''}" onclick="placeOrder('${item.replace(/'/g,"\\'")}')">${item}</div>`;
+  }).join('');
+  let checkBtn = os.placed.filter(Boolean).length === os.total ? `<button class="complete-btn primary" style="margin-top:12px" onclick="checkOrder()">Verificar orden ✓</button>` : '';
+  document.getElementById('quiz-content').innerHTML = `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Toca los elementos en el orden correcto</div>
+    <div class="order-game">
+      <div class="order-slots">${slotsHtml}</div>
+      <div class="order-options">${chipsHtml}</div>
+      ${checkBtn}
+    </div>`;
+}
+
+function placeOrder(item) {
+  const nextSlot = orderState.placed.findIndex(x => !x);
+  const idx = nextSlot === -1 ? orderState.placed.length : nextSlot;
+  if (idx >= orderState.total) return;
+  orderState.placed[idx] = item;
+  renderOrder();
+}
+
+function removeOrder(idx) {
+  orderState.placed[idx] = null;
+  orderState.placed = orderState.placed.map((v, i) => i < idx ? v : (i === idx ? null : v));
+  const compacted = orderState.placed.filter(Boolean);
+  orderState.placed = compacted;
+  renderOrder();
+}
+
+function checkOrder() {
+  const os = orderState;
+  let allCorrect = true;
+  const slots = document.querySelectorAll('.order-slot');
+  os.placed.forEach((item, i) => {
+    if (item === os.correct[i]) {
+      slots[i].classList.add('correct');
+    } else {
+      slots[i].classList.add('wrong');
+      allCorrect = false;
+    }
+  });
+  if (allCorrect) {
+    state.xp += os.total * 10; state.quizzesDone++; save(); updateHeader();
+    setTimeout(() => {
+      document.getElementById('quiz-content').innerHTML = `<div class="quiz-score animate-in"><div class="score-num">🏆</div><div class="score-msg">¡Orden perfecto!</div><div style="margin-top:8px;font-size:13px;color:var(--text2)">+${os.total*10} XP</div><button class="complete-btn primary" style="margin-top:20px" onclick="closeQuizView()">Volver</button></div>`;
+    }, 1000);
+  } else {
+    setTimeout(() => { orderState.placed = []; renderOrder(); }, 1500);
+  }
+}
+
+// ============ MEMORY GAME ============
+const MEMORY_PAIRS = [
+  ["Desk","Helpdesk omnicanal"],["Studio","Bots con IA"],["Engage","Campañas WhatsApp"],["VoC","Voz del cliente"],
+  ["GPT","Asistente interno"],["Cassper","Ventas perdidas"],["BANT","Calificación de leads"],["BSP","Proveedor oficial Meta"],
+  ["FCR","Resolución primer contacto"],["TMO","Tiempo medio operación"],["HSM","Plantilla WhatsApp"],["SLA","Nivel de servicio"],
+];
+let memState = {};
+
+function startMemoryGame() {
+  const selected = [...MEMORY_PAIRS].sort(() => Math.random()-0.5).slice(0, 8);
+  const cards = [];
+  selected.forEach(([a, b], i) => {
+    cards.push({ id: i, text: a, pairId: i, type: 'A' });
+    cards.push({ id: i, text: b, pairId: i, type: 'B' });
+  });
+  cards.sort(() => Math.random()-0.5);
+  memState = { cards, flipped: [], matched: [], moves: 0, total: selected.length, busy: false };
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  const view = document.getElementById('quiz-view');
+  view.style.display = 'block'; view.classList.add('active');
+  document.getElementById('quiz-title').textContent = '🧠 Memorice';
+  document.getElementById('quiz-progress').innerHTML = '';
+  renderMemory();
+  window.scrollTo(0,0);
+}
+
+function renderMemory() {
+  const ms = memState;
+  if (ms.matched.length >= ms.total) {
+    state.xp += ms.total * 10; state.quizzesDone++; save(); updateHeader();
+    document.getElementById('quiz-content').innerHTML = `<div class="quiz-score animate-in"><div class="score-num">🧠</div><div class="score-msg">¡Todas las parejas!</div><div style="margin-top:4px;font-size:14px;color:var(--text2)">${ms.moves} movimientos</div><div style="margin-top:8px;font-size:13px;color:var(--text2)">+${ms.total*10} XP</div><button class="complete-btn primary" style="margin-top:20px" onclick="closeQuizView()">Volver</button></div>`;
+    return;
+  }
+  let html = `<div style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:8px">${ms.matched.length}/${ms.total} parejas · ${ms.moves} movimientos</div><div class="memory-grid">`;
+  ms.cards.forEach((card, idx) => {
+    const isFlipped = ms.flipped.includes(idx) || ms.matched.includes(card.pairId);
+    const isMatched = ms.matched.includes(card.pairId);
+    html += `<div class="memory-card ${isFlipped?'flipped':''} ${isMatched?'matched':''}" onclick="flipMemory(${idx})"><div class="memory-card-inner"><div class="memory-card-front">?</div><div class="memory-card-back">${card.text}</div></div></div>`;
+  });
+  html += '</div>';
+  document.getElementById('quiz-content').innerHTML = html;
+}
+
+function flipMemory(idx) {
+  const ms = memState;
+  if (ms.busy || ms.flipped.includes(idx) || ms.matched.includes(ms.cards[idx].pairId)) return;
+  ms.flipped.push(idx);
+  renderMemory();
+  if (ms.flipped.length === 2) {
+    ms.moves++;
+    ms.busy = true;
+    const [a, b] = ms.flipped;
+    const cardA = ms.cards[a], cardB = ms.cards[b];
+    if (cardA.pairId === cardB.pairId && a !== b) {
+      ms.matched.push(cardA.pairId);
+      ms.flipped = [];
+      ms.busy = false;
+      setTimeout(() => renderMemory(), 300);
+    } else {
+      setTimeout(() => {
+        ms.flipped = [];
+        ms.busy = false;
+        renderMemory();
+      }, 1000);
+    }
+  }
 }
 
 function resetProgress() {
