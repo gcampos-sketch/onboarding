@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adereso Sales Academy</title>
+<style>
+:root {
+  --bg: #FAFAF8;
+  --card: #FFFFFF;
+  --primary: #1A1A2E;
+  --accent: #E94560;
+  --accent2: #0F3460;
+  --accent3: #16213E;
+  --green: #2ECC71;
+  --yellow: #F39C12;
+  --orange: #E67E22;
+  --text: #1A1A2E;
+  --text2: #666;
+  --border: #E8E8E4;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --radius: 14px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height:100vh; overflow-x:hidden; }
+.app { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
+
+/* Header */
+.header { background: linear-gradient(135deg, var(--accent3) 0%, var(--accent2) 50%, var(--accent) 100%); padding: 20px 20px 16px; color: white; position: sticky; top: 0; z-index: 100; }
+.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.header h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.header-logo { font-size: 14px; opacity: 0.8; }
+.header-stats { display: flex; gap: 16px; font-size: 13px; }
+.header-stats .stat { display: flex; align-items: center; gap: 4px; }
+.stat-icon { font-size: 16px; }
+
+/* Level badges */
+.level-bar { display: flex; gap: 6px; margin-top: 10px; }
+.level-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.level-badge.active { background: white; color: var(--accent2); }
+.level-badge:not(.active) { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+.level-badge.locked { opacity: 0.4; cursor: default; }
+
+/* Navigation */
+.nav { display: flex; justify-content: space-around; background: var(--card); border-top: 1px solid var(--border); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; max-width: 480px; margin: 0 auto; }
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: var(--text2); cursor: pointer; padding: 4px 12px; border-radius: 10px; transition: all 0.2s; font-weight: 600; }
+.nav-item.active { color: var(--accent); }
+.nav-item .nav-icon { font-size: 20px; }
+
+/* Main content */
+.main { padding: 16px 16px 80px; }
+
+/* Welcome card */
+.welcome-card { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.welcome-greeting { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.welcome-sub { font-size: 13px; color: var(--text2); margin-bottom: 12px; }
+.progress-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 4px; transition: width 0.5s ease; }
+
+/* SRS card */
+.srs-card { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; cursor: pointer; transition: transform 0.2s; }
+.srs-card:hover { transform: scale(1.01); }
+.srs-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.srs-card p { font-size: 12px; color: var(--text2); }
+
+/* Section title */
+.section-title { font-size: 17px; font-weight: 800; margin: 20px 0 12px; display: flex; align-items: center; gap: 8px; }
+.section-count { font-size: 12px; color: var(--text2); font-weight: 500; }
+
+/* Lesson cards */
+.lesson-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow); cursor: pointer; transition: all 0.2s; display: flex; gap: 14px; align-items: flex-start; }
+.lesson-card:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.lesson-num { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+.lesson-num.proceso { background: #E3F2FD; color: var(--accent2); }
+.lesson-num.producto { background: #FCE4EC; color: var(--accent); }
+.lesson-num.done { background: var(--green); color: white; }
+.lesson-info { flex: 1; min-width: 0; }
+.lesson-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.lesson-desc { font-size: 12px; color: var(--text2); line-height: 1.4; }
+.lesson-status { font-size: 11px; margin-top: 4px; }
+.lesson-status.done { color: var(--green); font-weight: 700; }
+.lesson-status.pending { color: var(--text2); }
+.lesson-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; margin-top: 4px; }
+.tag-proceso { background: #E3F2FD; color: var(--accent2); }
+.tag-producto { background: #FCE4EC; color: var(--accent); }
+.tag-mixto { background: #F3E5F5; color: #7B1FA2; }
+
+/* Locked lessons */
+.lesson-card.locked { opacity: 0.45; pointer-events: none; position: relative; }
+.lesson-card.locked::after { content: '🔒'; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+
+/* Exam card */
+.exam-ready { background: linear-gradient(135deg, #FFF8E1, #FFECB3) !important; border: 2px solid #FFD700; }
+.exam-passed { background: linear-gradient(135deg, #E8F5E9, #C8E6C9) !important; border: 2px solid var(--green); }
+
+/* Game grid */
+.game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.game-card { background: var(--card); border-radius: var(--radius); padding: 14px 8px; text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: all 0.2s; }
+.game-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.game-card .game-icon { font-size: 28px; margin-bottom: 6px; }
+.game-card .game-name { font-size: 11px; font-weight: 700; }
+.game-card .game-count { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+/* Lesson view */
+.lesson-view { display: none; }
+.lesson-view.active { display: block; }
+.lesson-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.back-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0; }
+.lesson-view h2 { font-size: 20px; font-weight: 800; }
+.lesson-content { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.lesson-content h3 { font-size: 16px; font-weight: 700; margin: 16px 0 8px; color: var(--accent2); }
+.lesson-content h3:first-child { margin-top: 0; }
+.lesson-content p { font-size: 14px; line-height: 1.6; margin-bottom: 10px; color: var(--text); }
+.lesson-content ul { padding-left: 20px; margin-bottom: 12px; }
+.lesson-content li { font-size: 13px; line-height: 1.6; margin-bottom: 4px; }
+.lesson-content .highlight { background: #FFF3E0; padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 4px solid var(--orange); font-size: 13px; }
+.lesson-content .tip { background: #E8F5E9; padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 4px solid var(--green); font-size: 13px; }
+.lesson-content .warning { background: #FFEBEE; padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 4px solid var(--accent); font-size: 13px; }
+.lesson-content .script { background: #F3E5F5; padding: 12px 16px; border-radius: 10px; margin: 12px 0; font-style: italic; font-size: 13px; line-height: 1.6; }
+.lesson-content table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+.lesson-content th { background: var(--accent3); color: white; padding: 8px; text-align: left; font-weight: 600; }
+.lesson-content td { padding: 8px; border-bottom: 1px solid var(--border); }
+.lesson-content tr:nth-child(even) td { background: #F8F8F6; }
+
+/* Complete button */
+.complete-btn { width: 100%; padding: 14px; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 60px; }
+.complete-btn.primary { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: white; }
+.complete-btn.done { background: var(--green); color: white; }
+.complete-btn:hover { transform: translateY(-1px); }
+
+/* Quiz view */
+.quiz-view { display: none; }
+.quiz-view.active { display: block; }
+.quiz-progress { display: flex; gap: 4px; margin-bottom: 20px; }
+.quiz-dot { height: 4px; flex: 1; border-radius: 2px; background: var(--border); }
+.quiz-dot.done { background: var(--green); }
+.quiz-dot.current { background: var(--accent); }
+.quiz-question { background: var(--card); border-radius: var(--radius); padding: 24px 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.quiz-q-text { font-size: 16px; font-weight: 700; line-height: 1.5; margin-bottom: 4px; }
+.quiz-q-context { font-size: 12px; color: var(--text2); margin-bottom: 16px; }
+.quiz-option { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px; background: var(--card); font-size: 14px; text-align: left; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; font-family: inherit; }
+.quiz-option:hover { border-color: var(--accent2); background: #F8F9FF; }
+.quiz-option.correct { border-color: var(--green); background: #E8F5E9; }
+.quiz-option.wrong { border-color: var(--accent); background: #FFEBEE; }
+.quiz-option.disabled { pointer-events: none; opacity: 0.7; }
+.quiz-explanation { background: #F0F4FF; border-radius: 12px; padding: 14px 16px; margin-top: 12px; font-size: 13px; line-height: 1.5; display: none; }
+.quiz-next { width: 100%; padding: 14px; border: none; border-radius: var(--radius); background: linear-gradient(135deg, var(--accent2), var(--accent)); color: white; font-size: 15px; font-weight: 700; cursor: pointer; display: none; margin-top: 12px; font-family: inherit; }
+.quiz-score { text-align: center; padding: 40px 20px; }
+.quiz-score .score-num { font-size: 64px; font-weight: 800; color: var(--accent2); }
+.quiz-score .score-label { font-size: 16px; color: var(--text2); margin-top: 4px; }
+.quiz-score .score-msg { font-size: 18px; font-weight: 700; margin-top: 16px; }
+
+/* Flashcard */
+.flashcard-container { perspective: 1000px; margin-bottom: 16px; }
+.flashcard { width: 100%; min-height: 220px; position: relative; cursor: pointer; transition: transform 0.6s; transform-style: preserve-3d; }
+.flashcard.flipped { transform: rotateY(180deg); }
+.flashcard-face { position: absolute; width: 100%; min-height: 220px; backface-visibility: hidden; border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: var(--shadow); }
+.flashcard-front { background: linear-gradient(135deg, var(--accent3), var(--accent2)); color: white; }
+.flashcard-back { background: var(--card); transform: rotateY(180deg); }
+.flashcard-category { font-size: 11px; font-weight: 700; opacity: 0.7; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+.flashcard-text { font-size: 18px; font-weight: 700; line-height: 1.4; }
+.flashcard-answer { font-size: 15px; line-height: 1.5; color: var(--text); }
+.flashcard-nav { display: flex; gap: 12px; justify-content: center; }
+.flashcard-btn { padding: 12px 24px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.flashcard-btn.know { background: var(--green); color: white; }
+.flashcard-btn.dunno { background: var(--accent); color: white; }
+.flashcard-btn.flip { background: var(--accent2); color: white; }
+.fc-counter { text-align: center; font-size: 13px; color: var(--text2); margin-bottom: 12px; }
+
+/* Progress tab */
+.progress-section { margin-bottom: 20px; }
+.progress-stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+.progress-stat { background: var(--card); border-radius: var(--radius); padding: 16px; text-align: center; box-shadow: var(--shadow); }
+.progress-stat .ps-num { font-size: 28px; font-weight: 800; color: var(--accent2); }
+.progress-stat .ps-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* Glossary */
+.glossary-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
+.glossary-wrong { color: var(--accent); font-weight: 700; font-size: 14px; text-decoration: line-through; }
+.glossary-right { color: var(--green); font-weight: 700; font-size: 14px; margin-left: 8px; }
+.glossary-arrow { color: var(--text2); margin: 0 6px; }
+
+/* Animations */
+@keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+.animate-in { animation: slideUp 0.3s ease-out; }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .app { max-width: 100%; }
+}
+
+/* Print */
+@media print {
+  .header, .nav { display: none; }
+  .main { padding: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-logo">adereso.ai</div>
+        <h1>Sales Academy</h1>
+      </div>
+      <div class="header-stats">
+        <div class="stat"><span class="stat-icon">🔥</span> <span id="streak">0</span></div>
+        <div class="stat"><span class="stat-icon">⭐</span> <span id="xp">0</span> XP</div>
+      </div>
+    </div>
+    <div class="level-bar">
+      <div class="level-badge active" data-level="onboarding">Bronce</div>
+      <div class="level-badge locked" data-level="junior">Plata 🔒</div>
+      <div class="level-badge locked" data-level="senior">Oro 🔒</div>
+    </div>
+  </div>
+
+  <!-- Tab: Home -->
+  <div class="main tab-content" id="tab-home">
+    <div class="welcome-card animate-in">
+      <div class="welcome-greeting">Bienvenido, Comercial 👋</div>
+      <div class="welcome-sub" id="welcome-progress">Nivel Onboarding · 0 XP</div>
+      <div class="progress-row">
+        <span id="lessons-done">0/20 lecciones</span>
+        <span id="lessons-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="srs-card" id="srs-card" onclick="startSRS()" style="display:none">
+      <h3>🧠 Conceptos para repasar</h3>
+      <p id="srs-text">Tienes conceptos que necesitan repaso</p>
+    </div>
+
+    <div class="section-title">📚 Lecciones <span class="section-count" id="lesson-count"></span></div>
+    <div id="lessons-list"></div>
+
+    <!-- Exam section -->
+    <div id="exam-section" style="display:none; margin-top:20px">
+      <div class="section-title">🏅 Examen de Nivel</div>
+      <div class="lesson-card" id="exam-card" style="cursor:pointer">
+        <div class="lesson-num" id="exam-icon" style="font-size:20px; background:linear-gradient(135deg,#FFD700,#FFA000); color:white">🏅</div>
+        <div class="lesson-info">
+          <div class="lesson-title" id="exam-title"></div>
+          <div class="lesson-desc" id="exam-desc"></div>
+          <div class="lesson-status" id="exam-status" style="color:var(--accent);font-weight:700"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Training -->
+  <div class="main tab-content" id="tab-games" style="display:none">
+    <div class="section-title">💪 Entrenamiento</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Los quizzes de entrenamiento son libres — no afectan tu nivel. El examen de nivel está en la pestaña Inicio.</div>
+    <div class="game-grid">
+      <div class="game-card" onclick="startQuiz('proceso')">
+        <div class="game-icon">⚙️</div>
+        <div class="game-name">Quiz Proceso</div>
+        <div class="game-count">10 preguntas</div>
+      </div>
+      <div class="game-card" onclick="startQuiz('producto')">
+        <div class="game-icon">📦</div>
+        <div class="game-name">Quiz Producto</div>
+        <div class="game-count">10 preguntas</div>
+      </div>
+      <div class="game-card" onclick="startQuiz('mixed')">
+        <div class="game-icon">🔀</div>
+        <div class="game-name">Quiz Mixto</div>
+        <div class="game-count">10 preguntas</div>
+      </div>
+      <div class="game-card" onclick="startFlashcards('objections')">
+        <div class="game-icon">🛡️</div>
+        <div class="game-name">Objeciones</div>
+        <div class="game-count">Practica</div>
+      </div>
+      <div class="game-card" onclick="startFlashcards('glossary')">
+        <div class="game-icon">📝</div>
+        <div class="game-name">Glosario</div>
+        <div class="game-count">Qué decir</div>
+      </div>
+      <div class="game-card" onclick="startFlashcards('products')">
+        <div class="game-icon">🃏</div>
+        <div class="game-name">Tarjetas</div>
+        <div class="game-count">Producto</div>
+      </div>
+      <div class="game-card" onclick="startQuiz('bant')">
+        <div class="game-icon">🎯</div>
+        <div class="game-name">BANT</div>
+        <div class="game-count">Calificación</div>
+      </div>
+      <div class="game-card" onclick="startQuiz('pricing')">
+        <div class="game-icon">💰</div>
+        <div class="game-name">Pricing</div>
+        <div class="game-count">Modelo</div>
+      </div>
+      <div class="game-card" onclick="startQuiz('cotizador')">
+        <div class="game-icon">🧮</div>
+        <div class="game-name">Cotizador</div>
+        <div class="game-count">Line items</div>
+      </div>
+      <div class="game-card" onclick="startQuiz('meta')">
+        <div class="game-icon">📱</div>
+        <div class="game-name">Meta/WSP</div>
+        <div class="game-count">BSP</div>
+      </div>
+    </div>
+
+    <div class="section-title">📖 Glosario Comercial</div>
+    <div class="glossary-card"><span class="glossary-wrong">Contrato</span><span class="glossary-arrow">→</span><span class="glossary-right">Acuerdo</span></div>
+    <div class="glossary-card"><span class="glossary-wrong">Problema</span><span class="glossary-arrow">→</span><span class="glossary-right">Reto / Desafío</span></div>
+    <div class="glossary-card"><span class="glossary-wrong">Plataforma</span><span class="glossary-arrow">→</span><span class="glossary-right">Alianza / Solución</span></div>
+    <div class="glossary-card"><span class="glossary-wrong">Costo</span><span class="glossary-arrow">→</span><span class="glossary-right">Inversión / Valor</span></div>
+    <div class="glossary-card"><span class="glossary-wrong">Startup</span><span class="glossary-arrow">→</span><span class="glossary-right">Empresa / Organización</span></div>
+  </div>
+
+  <!-- Tab: Progress -->
+  <div class="main tab-content" id="tab-progress" style="display:none">
+    <div class="section-title">📊 Tu Progreso</div>
+    <div class="progress-stat-grid">
+      <div class="progress-stat"><div class="ps-num" id="stat-lessons">0</div><div class="ps-label">Lecciones</div></div>
+      <div class="progress-stat"><div class="ps-num" id="stat-quizzes">0</div><div class="ps-label">Quizzes</div></div>
+      <div class="progress-stat"><div class="ps-num" id="stat-accuracy">0%</div><div class="ps-label">Aciertos</div></div>
+      <div class="progress-stat"><div class="ps-num" id="stat-streak">0</div><div class="ps-label">Racha 🔥</div></div>
+    </div>
+    <div class="section-title">🏆 Logros</div>
+    <div id="achievements-list"></div>
+    <div style="margin-top:30px;text-align:center">
+      <button onclick="resetProgress()" style="background:none;border:1px solid var(--border);color:var(--text2);padding:8px 16px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit">Resetear progreso</button>
+    </div>
+  </div>
+
+  <!-- Lesson View -->
+  <div class="lesson-view" id="lesson-view">
+    <div class="lesson-header">
+      <div class="back-btn" onclick="closeLessonView()">←</div>
+      <h2 id="lesson-view-title"></h2>
+    </div>
+    <div id="lesson-view-content"></div>
+    <button class="complete-btn primary" id="complete-lesson-btn" onclick="completeCurrentLesson()">Completar y siguiente →</button>
+  </div>
+
+  <!-- Quiz View -->
+  <div class="quiz-view" id="quiz-view">
+    <div class="lesson-header">
+      <div class="back-btn" onclick="closeQuizView()">←</div>
+      <h2 id="quiz-title">Quiz</h2>
+    </div>
+    <div class="quiz-progress" id="quiz-progress"></div>
+    <div id="quiz-content"></div>
+  </div>
+
+  <!-- Flashcard View -->
+  <div class="quiz-view" id="flashcard-view">
+    <div class="lesson-header">
+      <div class="back-btn" onclick="closeFlashcardView()">←</div>
+      <h2 id="flashcard-title">Tarjetas</h2>
+    </div>
+    <div class="fc-counter" id="fc-counter"></div>
+    <div class="flashcard-container">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="flashcard-face flashcard-front">
+          <div class="flashcard-category" id="fc-category"></div>
+          <div class="flashcard-text" id="fc-front"></div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="flashcard-category" id="fc-back-cat">Respuesta</div>
+          <div class="flashcard-answer" id="fc-back"></div>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard-nav">
+      <button class="flashcard-btn dunno" onclick="nextCard(false)">No lo sé</button>
+      <button class="flashcard-btn flip" onclick="flipCard()">Voltear</button>
+      <button class="flashcard-btn know" onclick="nextCard(true)">Lo sé ✓</button>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div class="nav">
+    <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon">🏠</span>Inicio</div>
+    <div class="nav-item" onclick="switchTab('games')"><span class="nav-icon">💪</span>Entrenamiento</div>
+    <div class="nav-item" onclick="switchTab('progress')"><span class="nav-icon">📊</span>Progreso</div>
+  </div>
+</div>
+
+<script>
+// ============ DATA ============
+const LESSONS = [
+  // PROCESO COMERCIAL
+  {id:1, type:'proceso', icon:'🎯', title:'El pipeline completo: de lead a cliente', desc:'Los 9 pasos del proceso comercial Adereso, roles y responsabilidades', content:`
+<h3>El flujo completo</h3>
+<p>El proceso comercial de Adereso tiene <strong>9 pasos</strong>, cada uno es una etapa del pipeline en HubSpot:</p>
+<table><tr><th>Paso</th><th>Owner</th><th>Qué ocurre</th></tr>
+<tr><td>0</td><td>SDR</td><td>Calificación del lead (BANT completo)</td></tr>
+<tr><td>1</td><td>AE</td><td>Reunión inicial con el cliente</td></tr>
+<tr><td>2</td><td>AE</td><td>Bajada de requerimiento + demo personalizada</td></tr>
+<tr><td>3</td><td>AE+SSPP</td><td>Propuesta técnica (levantamiento custom)</td></tr>
+<tr><td>3.1</td><td>SSPP</td><td>Cotización SP (si setup excede plan estándar)</td></tr>
+<tr><td>4</td><td>AE</td><td>Generación propuesta comercial: CRM SSPP (contenido) + HubSpot (documento)</td></tr>
+<tr><td>5</td><td>AE</td><td>Envío propuesta + negociación</td></tr>
+<tr><td>6</td><td>AE</td><td>Cierre + contrato + traspaso a SSPP</td></tr>
+<tr><td>7</td><td>PM</td><td>Onboarding</td></tr>
+<tr><td>8</td><td>PM+CS</td><td>Inicio de servicio + traspaso a CS</td></tr>
+<tr><td>9</td><td>KAM</td><td>Business review + expansión</td></tr></table>
+
+<h3>El equipo</h3>
+<table><tr><th>Rol</th><th>#</th><th>Qué own</th></tr>
+<tr><td>SDR</td><td>3</td><td>Calificación inbound + hand-off a AE</td></tr>
+<tr><td>AE</td><td>3</td><td>Cierre de nuevos deals</td></tr>
+<tr><td>PM</td><td>3</td><td>Implementación (asignado por Diego)</td></tr>
+<tr><td>KAM</td><td>1</td><td>Expansión y retención de toda la cartera</td></tr></table>
+
+<div class="warning">⚡ Con 3 SDRs, el BANT es la única barrera al pipeline basura. Sin BANT completo, no hay reunión. Sin excepciones.</div>
+<div class="tip">💡 Con 1 KAM para toda la cartera, la segmentación A/B/C es obligatoria. No todos los clientes reciben la misma dedicación.</div>
+`},
+
+  {id:2, type:'proceso', icon:'📋', title:'Calificación BANT: el primer filtro', desc:'Cómo calificar un lead inbound con BANT completo antes de agendar', content:`
+<h3>¿Qué es BANT?</h3>
+<p>Es el framework de calificación obligatorio. Para inbound se exige <strong>BANT completo</strong>. Para outbound solo se requiere Autoridad + Necesidad.</p>
+
+<table><tr><th>Criterio</th><th>Pregunta clave</th><th>Mínimo</th></tr>
+<tr><td><strong>B</strong>udget</td><td>"¿Tienen un presupuesto para una solución de este tipo?"</td><td>Disposición desde USD 600-800/mes</td></tr>
+<tr><td><strong>A</strong>uthority</td><td>"¿Tú eres el responsable? ¿Quién más participa?"</td><td>Champion o DM identificado</td></tr>
+<tr><td><strong>N</strong>eed</td><td>"¿Cuántas conversaciones gestionan al mes? ¿Cuál es su principal desafío?"</td><td>Dolor claro + mín. 2.000 tickets/mes</td></tr>
+<tr><td><strong>T</strong>iming</td><td>"¿Cuál es tu plazo ideal para implementar?"</td><td>Intención < 6 meses</td></tr></table>
+
+<h3>Formato de publicación en #BANT</h3>
+<div class="script">🏢 Empresa: [nombre]<br>📊 Tickets/mes: [N] | Ejecutivos: [N]<br>💡 Caso de uso: [descripción]<br>💰 Budget: [rango]<br>👤 Autoridad: [Champion / DM]<br>⏱️ Timing: [plazo]<br>✅ BANT: [puntaje 0-3 por criterio]</div>
+
+<h3>Resultado de la calificación</h3>
+<table><tr><th>Resultado</th><th>Criterio</th><th>Acción</th></tr>
+<tr><td>✅ Avanza</td><td>BANT ≥ 6/12 + Need y Authority ≥ 2</td><td>Agendar reunión con AE</td></tr>
+<tr><td>⏸️ Nurturing</td><td>BANT parcial</td><td>Pipeline frío + recontacto</td></tr>
+<tr><td>❌ Descalificado</td><td>Sin Need real o < 2.000 tickets</td><td>Cerrar como 'No calificados'</td></tr></table>
+
+<div class="warning">⚠️ El SDR no cierra la reunión sin BANT completo. Un deal sin calificar contamina el forecast.</div>
+`},
+
+  {id:3, type:'proceso', icon:'🤝', title:'La reunión inicial: romper hielo + discovery', desc:'Estructura de la primera reunión comercial según el playbook', content:`
+<h3>Estructura de la reunión (45-60 min)</h3>
+<p>Mínimo de éxito: <strong>agendar segunda reunión</strong> y/o obtener compromiso de revisar propuesta.</p>
+
+<h3>Etapa 0 — Hand-off del SDR</h3>
+<div class="script">"Hola [cliente], gracias por conectarte. Les presento a [AE], Asesor en transformación digital de Adereso, que los acompañará en el proceso consultivo."</div>
+
+<h3>Etapa 1 — Romper el hielo (1 min)</h3>
+<ul>
+<li>¿Presencial o remoto?</li>
+<li>¿En qué sede estás?</li>
+<li>Algo contextual del lugar</li>
+</ul>
+
+<h3>Etapa 2 — ¿Por qué estamos acá?</h3>
+<p><strong>Outbound:</strong> "Justamente, la idea es que puedas conocer Adereso. ¿Nos conocías o es primera vez?"</p>
+<p><strong>Inbound:</strong> "La idea es que conozcas Adereso en profundidad. [SDR] me mencionó que [necesidad]. ¿Es así?"</p>
+<div class="tip">💡 Si el inbound da contexto suficiente → saltar directo a Etapa 4 (demo).</div>
+
+<h3>Etapa 3 — Levantamiento de dolores</h3>
+<p>Presentar Adereso en una línea:</p>
+<div class="script">"Adereso es una plataforma con IA que centraliza los canales digitales para hacer más eficiente y automatizar hasta el 98% de las conversaciones entre empresas y clientes."</div>
+<p><strong>Preguntas obligatorias (en orden):</strong></p>
+<ol>
+<li>¿Qué tipo de consultas reciben por estos canales?</li>
+<li>¿Hay algún otro canal que no esté en la web?</li>
+<li>¿Qué consultas representan mayor volumen o dolor?</li>
+<li>¿Cuántas consultas reciben al mes aprox.?</li>
+</ol>
+
+<div class="highlight">🤫 Técnica del silencio: después de preguntar, bebe agua. El cliente aguanta máximo 4 segundos antes de hablar — lo que dice ahí es el dolor real.</div>
+`},
+
+  {id:4, type:'proceso', icon:'💰', title:'Pricing: cómo presentarlo sin improvisar', desc:'El modelo de precios, qué decir primero, cuándo mostrarlo', content:`
+<h3>Regla de oro</h3>
+<p>Mostrar pricing <strong>solo si el cliente lo pide</strong> o si la reunión llegó a ese punto. Nunca antes de cubrir discovery y demo.</p>
+
+<h3>Orden de presentación</h3>
+<ol>
+<li><strong>Unidad de medida:</strong> "Cobramos por conversaciones" — no por usuarios, no por canales</li>
+<li><strong>Dos tipos:</strong> Inbound (la inicia el cliente) y Outbound (la inicia la empresa con plantillas)</li>
+<li><strong>Inbound:</strong> IA responde ilimitado dentro de una conversación. Ventana 24h desde último mensaje del cliente</li>
+<li><strong>Outbound:</strong> Cobro por mensaje enviado. Si el cliente responde → se descuenta de la bolsa inbound</li>
+<li><strong>¿Qué incluye?</strong> Centralización, métricas, licencias ilimitadas, encuestas GRATIS, plantillas WhatsApp GRATIS</li>
+<li><strong>Precio:</strong> $558/mes — bolsa de 2.000 conversaciones. Contrato anual con 40% ya aplicado</li>
+<li><strong>Setup:</strong> $990 pago único. Plan 1 (sin API) o Plan 2 (con Shopify+CRM, recomendado)</li>
+</ol>
+
+<h3>Precios por módulo (line items del cotizador)</h3>
+<p>Los precios varían según el volumen de conversaciones contratadas. Los valores de abajo corresponden a la <strong>bolsa mínima de 2.000 conversaciones</strong>. A mayor volumen, el precio sube proporcionalmente.</p>
+<table><tr><th>Módulo</th><th>Setup (USD)</th><th>Mensual (USD)</th><th>Nota</th></tr>
+<tr><td>💬 Desk</td><td>—</td><td>desde $199</td><td>Mín. 2.000 conv. Precio sube con volumen + recargo por excedentes</td></tr>
+<tr><td>🤖 Studio (módulo)</td><td>$990</td><td>desde $199</td><td>Mín. 2.000 conv. Se muestra sumado con mantención</td></tr>
+<tr><td>🤖 Studio (mantención bot)</td><td>—</td><td>$160</td><td>Incluida siempre con Studio</td></tr>
+<tr><td>📢 Engage</td><td>—</td><td>Variable</td><td>Fee Meta + 12% markup BSP</td></tr>
+<tr><td>🔍 Cassper</td><td>—</td><td>desde $250</td><td>3 planes: Starter $250 / Growth $500 / Scale $1.000</td></tr>
+<tr><td>📊 VoC</td><td>—</td><td>Variable</td><td>Desde 2.000 interacciones. Descuentos por volumen</td></tr>
+<tr><td>🖥️ GPT</td><td>—</td><td>Por mensaje</td><td>3 niveles. Futuro: por créditos</td></tr></table>
+
+<div class="highlight">💰 <strong>Desglose del plan base mínimo $558/mes:</strong> Desk $199 + Studio $199 + Mantención $160 = $558 (para 2.000 conv). A mayor volumen, Desk y Studio suben. En el cotizador, Studio y mantención se muestran sumados como $359.</div>
+
+<h3>Servicios custom (no comisionables)</h3>
+<ul>
+<li><strong>HH (Cotización custom):</strong> Horas de desarrollo para integraciones o proyectos especiales</li>
+<li><strong>Roadmap Custom:</strong> Desarrollo de funcionalidades a medida</li>
+<li><strong>Soporte Premium:</strong> Soporte extendido o 24/7 (enterprise)</li>
+</ul>
+
+<div class="highlight">💡 Diferenciador clave vs competencia: la competencia cobra por token o limita mensajes del bot — nosotros no. Agentes ilimitados incluidos.</div>
+
+<div class="warning">⚠️ Promoción Setup $0: válida solo Plan 1 y Plan 2. Se pide pago adelantado del primer MRR antes de iniciar.</div>
+
+<h3>Períodos y recargos</h3>
+<ul>
+<li><strong>Anual:</strong> Precio base con 40% de descuento ya incluido. Ofrecer siempre.</li>
+<li><strong>Trimestral:</strong> Aplica recargo (sin el 40%). Nunca ofrecer proactivamente.</li>
+<li><strong>Studio sin Desk:</strong> Tiene recargo adicional por operación standalone.</li>
+<li><strong>Tickets extra:</strong> Se cobra recargo % por conversaciones que exceden la bolsa.</li>
+</ul>
+
+<div class="tip">💡 La moneda de cotización puede ser USD o UF (para Chile). El cotizador interno convierte automáticamente.</div>
+`},
+
+  {id:5, type:'proceso', icon:'🛡️', title:'Manejo de objeciones: precio y competencia', desc:'Qué SÍ hacer y qué NO hacer ante las objeciones más comunes', content:`
+<h3>💰 "El precio es alto"</h3>
+<p><strong>✅ SÍ:</strong> Enfrentar directo: "¿Es tema de monto o de timing?" Si es monto: mostrar ROI. Si el decisor es otro: preguntar cómo incluirlo.</p>
+<p><strong>❌ NO:</strong> Ignorar la objeción y pivotar a la propuesta.</p>
+
+<h3>⚔️ "Ya tenemos Salesforce / HubSpot / Zendesk"</h3>
+<p><strong>✅ SÍ:</strong> "Adereso no reemplaza tu CRM — lo complementa. Salesforce gestiona datos; Adereso gestiona la conversación en WhatsApp, RRSS y chat web. Nos integramos vía API."</p>
+<p><strong>❌ NO:</strong> Cambiar de tema sin abordar la objeción.</p>
+
+<h3>🤖 "¿Es bot de árbol o IA real?"</h3>
+<p><strong>✅ SÍ:</strong> "No es árbol. Nuestros bots entienden lenguaje natural. Si el cliente escribe 'quiero saber cuánto debo', interpreta la intención y responde. Te muestro en vivo ahora."</p>
+<p><strong>❌ NO:</strong> Afirmarlo sin demostrarlo.</p>
+
+<h3>📡 "¿Cuándo tienen TikTok?"</h3>
+<p><strong>✅ SÍ:</strong> "¿Qué % de tu tráfico viene de TikTok?" Si es marginal, no frenar la decisión por eso. Si es relevante, ser honesto + anclar a canales probados.</p>
+<p><strong>❌ NO:</strong> Dar fecha estimada vaga sin cerrar la objeción.</p>
+
+<h3>⏱️ "¿Cuántas horas nos toma la implementación?"</h3>
+<p><strong>✅ SÍ:</strong> "2-3 horas semanales del owner del cliente, para reuniones de avance y feedback. Nosotros ponemos 40 horas de desarrollo."</p>
+<p><strong>❌ NO:</strong> "Tendría que evaluarlo".</p>
+`},
+
+  {id:6, type:'proceso', icon:'📧', title:'Follow-up y cadencia post-reunión', desc:'La cadencia exacta de seguimiento después de cada reunión', content:`
+<h3>Correo post-reunión (mismo día o antes de las 10:00 del siguiente)</h3>
+<div class="script">Asunto: Adereso & [empresa] — Próximos pasos<br><br>Hola [nombre],<br>Mucho gusto en conocerte hoy. Tal como quedamos, te comparto:<br>• Brochure Adereso.ai 2025<br>• Demo personalizada / Presentación comercial<br>• Propuesta comercial (si aplica)<br><br>Nuestros próximos pasos son [detallar]. Te propongo que nos reunamos el [fecha] para revisar. ¿Te parece?</div>
+
+<h3>Cadencia si no responde</h3>
+<table><tr><th>Día</th><th>Canal</th><th>Acción</th></tr>
+<tr><td>1</td><td>Correo + WSP</td><td>Envío comprometido</td></tr>
+<tr><td>3</td><td>WhatsApp</td><td>"¿Pudiste revisar lo que te envié?"</td></tr>
+<tr><td>7</td><td>Llamada</td><td>Si no contesta → voz + WSP</td></tr>
+<tr><td>14</td><td>Correo</td><td>Último intento formal</td></tr>
+<tr><td>21</td><td>Correo</td><td>"¿Sigue siendo relevante?"</td></tr></table>
+
+<div class="warning">🔴 Sin respuesta tras 21 días y 5 touchpoints: marcar como 'Perdido — Sin Respuesta'. Reactivar en 60-90 días si era de alta calidad.</div>
+
+<div class="tip">💡 SMB: cadencia más agresiva (cada 2-3 días). Enterprise: más espaciado (cada 5-7 días).</div>
+`},
+
+  {id:7, type:'proceso', icon:'✍️', title:'Cierre y traspaso: del deal firmado al kick-off', desc:'Todo lo que pasa desde la firma hasta el traspaso al PM', content:`
+<h3>Al firmar la propuesta (Etapa 6)</h3>
+<p>La firma activa automáticamente:</p>
+<ol>
+<li><strong>Canal Slack</strong> del deal con participantes + descripción automática</li>
+<li><strong>Correo automático</strong> con formulario de datos fiscales</li>
+<li><strong>Adobo genera borrador</strong> de contrato en Drive</li>
+<li>Segundo correo automático con formulario para crear agente + link calendario PM</li>
+</ol>
+
+<h3>Brief de traspaso AE → PM</h3>
+<p>El AE debe preparar:</p>
+<ul>
+<li>Deal en HubSpot con BANT completo y notas de reuniones</li>
+<li>Propuesta firmada (cotización + contrato)</li>
+<li>Caso de uso: canales, volumen, pain principal</li>
+<li>Acuerdos especiales (descuentos, plazos custom)</li>
+<li>Contactos clave del cliente</li>
+</ul>
+
+<div class="highlight">💡 El AE no desaparece del cliente — mantiene la relación para futuro upsell — pero el ownership operativo es 100% del PM.</div>
+`},
+
+  {id:22, type:'proceso', icon:'🎥', title:'Cómo hacer una demo personalizada', desc:'Crear el bot en Studio, activar demo y enviar link de WhatsApp al cliente', content:`
+<h3>¿Cómo se hace una demo?</h3>
+<p>La demo se hace directamente desde <strong>Adereso Studio</strong>, no desde una presentación ni un PDF. El cliente prueba el bot real por WhatsApp.</p>
+<h3>Paso a paso</h3>
+<ol>
+<li><strong>Crear el agente en Studio:</strong> Configura un agente con los componentes, herramientas y base de conocimiento correspondientes al caso de uso del cliente.</li>
+<li><strong>Activar la demo:</strong> En Studio, ve al tab "Demo" del agente y actívalo. Esto despliega el bot por WhatsApp.</li>
+<li><strong>Obtener el link:</strong> Studio genera automáticamente un link para escribir por WhatsApp junto con un código predeterminado.</li>
+<li><strong>Enviar al cliente:</strong> Envía el link al cliente para que pruebe el bot directamente desde su WhatsApp.</li>
+<li><strong>El cliente envía el código:</strong> Al escribir el código predeterminado, la demo inicia y el bot comienza a interactuar.</li>
+</ol>
+<div class="warning">⚠️ Siempre usar la instancia ADERESO DEMO, nunca la de un cliente real.</div>
+<div class="tip">💡 La demo es el momento más poderoso de la reunión. El cliente experimenta la IA en su propio WhatsApp — eso cierra más que cualquier slide.</div>
+<h3>Qué preparar antes</h3>
+<ul>
+<li><strong>Base de conocimiento:</strong> Cargar info relevante del cliente (productos, precios, FAQs) en Excel, PDF o Google Sheets</li>
+<li><strong>Personalidad del bot:</strong> Configurar tono, idioma y restricciones según la industria del cliente</li>
+<li><strong>Casos de uso:</strong> Tener listos 2-3 escenarios para probar en vivo (ej: consulta de producto, seguimiento de pedido, calificación de lead)</li>
+</ul>
+<h3>Durante la demo en la reunión</h3>
+<ul>
+<li>Compartir pantalla con Studio abierto para mostrar cómo se configura</li>
+<li>Enviar el link de WhatsApp al cliente en el chat de la videollamada</li>
+<li>Dejar que el cliente pruebe escribiendo lo que quiera — la IA responde en tiempo real</li>
+<li>Preguntar cada ~3 min: "¿Esto se parece a cómo lo hacen hoy?" / "¿Con quién más tendría impacto?"</li>
+</ul>
+<h3>Demos pre-configuradas disponibles</h3>
+<ul>
+<li><strong>Simon Eléctrica:</strong> Bot de pedidos + productos (base en Google Sheets)</li>
+<li><strong>Bot de ventas:</strong> Calificación + catálogo + carrito</li>
+<li><strong>Bot de soporte:</strong> FAQs + derivación a humano</li>
+</ul>
+
+<h3>📖 Help Center</h3>
+<ul>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/guía-paso-a-paso-crea-tu-primer-bot-agente/6YJS3CsNTYXFutfgww6HDR" target="_blank">Guía: crea tu primer bot agente</a></li>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/qué-es-adereso-studio/8HTVeT55T2iXBunRfnZvBv" target="_blank">¿Qué es Adereso Studio?</a></li>
+</ul>
+
+<div class="highlight">🔗 <strong>Acceso directo:</strong> <a href="https://app.adere.so" target="_blank">app.adere.so</a> — instancia DEMO para practicar antes de la reunión.</div>
+`},
+
+  // CONOCIMIENTO DE PRODUCTO
+  {id:8, type:'producto', icon:'🖥️', title:'Adereso Desk: el helpdesk con IA', desc:'Canales, distribución, SLA, métricas y novedades', content:`
+<h3>¿Qué es Desk?</h3>
+<p>Plataforma central para centralizar, automatizar y optimizar la atención al cliente en múltiples canales. Con IA Generativa y análisis en tiempo real.</p>
+
+<h3>Canales soportados</h3>
+<table><tr><th>Canal</th><th>Estado</th></tr>
+<tr><td>WhatsApp (BSP oficial Meta)</td><td>✅</td></tr>
+<tr><td>Instagram (DMs + comentarios)</td><td>✅</td></tr>
+<tr><td>Facebook Messenger / Fanpages</td><td>✅</td></tr>
+<tr><td>LinkedIn</td><td>✅</td></tr>
+<tr><td>Email</td><td>✅ (ver restricciones bot)</td></tr>
+<tr><td>Chat Web</td><td>✅</td></tr>
+<tr><td>App Store / Play Store (reseñas)</td><td>✅</td></tr>
+<tr><td>X / Twitter</td><td>✅</td></tr>
+<tr><td>IVR Deflection (llamadas → WhatsApp)</td><td>✅</td></tr>
+<tr><td>TikTok / MercadoLibre</td><td>🔜</td></tr></table>
+
+<h3>Gestión de tickets</h3>
+<ul>
+<li><strong>Vista kanban:</strong> Columnas configurables. La idea es que el ejecutivo siempre vea la primera columna vacía.</li>
+<li><strong>Múltiples cuentas:</strong> Varios WhatsApp, Instagram, marcas en una sola instancia</li>
+<li><strong>Historial completo:</strong> Todo lo que conversó el bot + el humano, visible en un solo hilo</li>
+<li><strong>Metadatos personalizables:</strong> Campos que la IA captura automáticamente del cliente</li>
+<li><strong>Mensajes proactivos:</strong> Enviar mensajes a un cliente sin esperar que te contacte primero</li>
+</ul>
+
+<h3>Distribución y asignación</h3>
+<ul>
+<li><strong>Round Robin:</strong> Distribución equitativa entre ejecutivos</li>
+<li><strong>FIFO / LIFO:</strong> Por orden de llegada o último primero</li>
+<li><strong>IA:</strong> Priorización inteligente</li>
+<li><strong>Topes por ejecutivo:</strong> Límite máximo de tickets simultáneos</li>
+<li><strong>Departamentos:</strong> Agrupación de usuarios con asignación independiente</li>
+<li><strong>Horarios:</strong> Configuración de horarios de atención por departamento</li>
+</ul>
+
+<h3>Métricas y monitoreo</h3>
+<ul>
+<li><strong>Tiempo real:</strong> Tickets abiertos, esperando respuesta, topes y conexiones</li>
+<li><strong>TMO:</strong> Tiempo Medio de Operación por agente o área</li>
+<li><strong>FCR:</strong> Resolución en Primer Contacto (% sin reasignación ni reapertura)</li>
+<li><strong>SLA:</strong> % tickets dentro del SLA con alertas configurables</li>
+<li><strong>Cierres por hora:</strong> Productividad real del equipo</li>
+<li><strong>Exportación:</strong> Excel con columnas configurables + protección con contraseña</li>
+</ul>
+
+<h3>Seguridad</h3>
+<ul>
+<li>Encriptación AES-256 en tránsito y reposo</li>
+<li>SSO, 4 niveles de acceso, caducidad de sesión</li>
+<li>Ofuscamiento automático de tarjetas de crédito</li>
+<li>Palabras prohibidas y restricciones de archivos por rol</li>
+</ul>
+
+<div class="tip">💡 Caso de éxito: Walmart atiende 600.000 tickets/mes con 200 usuarios desde un solo WhatsApp. Cada consulta se resuelve en ~5 min.</div>
+
+<h3>Novedades</h3>
+<ul>
+<li>📞 <strong>WhatsApp Calling (Beta):</strong> Llamadas outbound desde el ticket. Solo salientes por ahora.</li>
+<li>📱 <strong>App Móvil (Beta):</strong> iOS y Android. Login biométrico, bandeja configurable, multimedia completa. Clave para vendedores en terreno.</li>
+<li>🎠 <strong>Carruseles:</strong> Visualización completa dentro del ticket (imágenes, texto, botones)</li>
+<li>📎 <strong>Subir archivos vía API:</strong> Obtener URL pública sin hosting propio</li>
+<li>🔒 <strong>Bloqueo de columnas:</strong> Supervisor puede bloquear edición de filtros por ejecutivo</li>
+</ul>
+
+<h3>📖 Help Center</h3>
+<ul>
+<li><a href="https://help.adereso.ai/primeros-pasos/2WtsLCmufrF6J2pjZBY9LT" target="_blank">Primeros pasos</a></li>
+<li><a href="https://help.adereso.ai/gestión-del-agente-ejecutivo/wyPWvKJunzeTwyUof2BLCc" target="_blank">Gestión del agente</a></li>
+<li><a href="https://help.adereso.ai/administrador/8eb5QjUUPugzFCKxNAwGQB" target="_blank">Administrador</a></li>
+<li><a href="https://help.adereso.ai/analítica/89RzusWYBEWNTBJg2WFu5G/monitoreo-/sJM6bdGzUmTa5dnPh7FKTn" target="_blank">Monitoreo en tiempo real</a></li>
+<li><a href="https://help.adereso.ai/analítica/89RzusWYBEWNTBJg2WFu5G/rendimiento-de-equipo-tickets/71YFbZFH7Q4AErniCZrPMy" target="_blank">Rendimiento de equipo</a></li>
+<li><a href="https://help.adereso.ai/canales-/3N1pw6psNxKTRGdz9NMRMt" target="_blank">Configuración de canales</a></li>
+<li><a href="https://help.adereso.ai/app-móvil/7dBGJU3oEVRH8QvWho26zT" target="_blank">App Móvil</a></li>
+</ul>
+`},
+
+  {id:9, type:'producto', icon:'🤖', title:'Adereso Studio: bots con IA sin código', desc:'Componentes, herramientas, base de conocimiento, activadores y monitoreo', content:`
+<h3>Dos tipos de bot</h3>
+<table><tr><th>Tipo</th><th>Qué hace</th><th>Ideal para</th></tr>
+<tr><td><strong>Bot Agente</strong></td><td>IA generativa autónoma — toma decisiones sin flujos predefinidos</td><td>FAQs, consultas de producto, calificación, venta</td></tr>
+<tr><td><strong>Bot Flow</strong></td><td>Flujos estructurados paso a paso</td><td>Encuestas, formularios, procesos de compra guiados</td></tr></table>
+
+<h3>Anatomía de un Bot Agente</h3>
+<p>Un bot se construye con estos bloques:</p>
+
+<h3>🧩 Componentes de comportamiento</h3>
+<p>Definen <strong>cómo actúa</strong> el bot. Se configuran sin código:</p>
+<ul>
+<li><strong>Personalidad:</strong> Tono, idioma, estilo de comunicación</li>
+<li><strong>Objetivo:</strong> Qué debe lograr (vender, atender, calificar)</li>
+<li><strong>Reglas:</strong> Restricciones y límites (no inventar precios, no hablar de competencia)</li>
+<li><strong>Instrucciones:</strong> Lógica específica combinando lenguaje natural + condiciones</li>
+<li><strong>Tipificación:</strong> Clasifica automáticamente el motivo de contacto</li>
+</ul>
+
+<h3>🔧 Herramientas (acciones del bot)</h3>
+<p>Las acciones que el bot puede <strong>ejecutar</strong>:</p>
+<ul>
+<li>Cerrar tickets / Derivar a ejecutivo humano</li>
+<li>Consultar APIs externas (CRM, ERP, sistemas internos)</li>
+<li>Consultar bases de datos SQL</li>
+<li>Buscar productos en tienda conectada (Shopify, VTEX)</li>
+<li>Recopilar datos y guardarlos en metadatos del ticket</li>
+<li>Reconocimiento de imágenes (procesamiento visual)</li>
+</ul>
+
+<h3>📕 Base de conocimiento</h3>
+<p>De dónde saca la info para responder:</p>
+<ul>
+<li><strong>Archivos:</strong> Excel, PDF, Word — se cargan sin adaptación manual</li>
+<li><strong>Google Drive:</strong> Conexión directa a documentos</li>
+<li><strong>Sitios web:</strong> Scraping automático de contenido</li>
+<li><strong>SQL:</strong> Consultas a bases de datos del cliente</li>
+</ul>
+<div class="warning">⚠️ Control de alucinaciones: el bot SOLO responde con info de su base de conocimiento. No inventa. Si no tiene la respuesta, deriva o avisa.</div>
+
+<h3>📥 Activadores</h3>
+<p>Definen <strong>cuándo se activa</strong> el bot:</p>
+<ul>
+<li>Por canal (WhatsApp, Instagram, Facebook, Chat Web)</li>
+<li>Por intención detectada</li>
+<li>Por palabras clave</li>
+<li>Por tipo de mensaje (público vs privado)</li>
+</ul>
+
+<h3>🛒 Tiendas</h3>
+<p>Conexión a catálogos de producto para que el bot recomiende y venda:</p>
+<ul>
+<li>Shopify, VTEX y otras plataformas</li>
+<li>El bot consulta stock, precios y recomienda productos</li>
+<li>Puede mostrar carruseles con productos</li>
+</ul>
+
+<h3>📂 Recursos compartidos</h3>
+<p>Componentes, herramientas y tiendas que se configuran una vez y se reutilizan en múltiples bots. Evita duplicar trabajo.</p>
+
+<h3>Monitoreo y diagnóstico</h3>
+<ul>
+<li><strong>🔎 Conversaciones:</strong> Monitoreo en tiempo real de todas las conversaciones que atiende el bot</li>
+<li><strong>⚙️ Diagnóstico:</strong> Verifica la salud del bot antes de publicar — detecta problemas de configuración</li>
+<li><strong>📊 Analytics:</strong> Conversaciones atendidas, tasa de resolución, puntos de abandono, Behavior Diagram (flujos reales)</li>
+<li><strong>Tasa de handoff:</strong> % de casos derivados a humano — indica calidad del entrenamiento</li>
+</ul>
+
+<h3>Diferenciadores</h3>
+<ul>
+<li><strong>Sin código:</strong> Interfaz gráfica con componentes + prompts</li>
+<li><strong>Multi-motor:</strong> OpenAI, Google, Anthropic, Grok, Azure</li>
+<li><strong>Privacidad:</strong> NO fine-tuning. Datos no se comparten con modelos LLM</li>
+<li><strong>Modo asíncrono:</strong> Bot envía múltiples mensajes sin esperar respuesta</li>
+<li><strong>Chat Spot:</strong> Conversaciones con contexto vía QR (sucursal, producto)</li>
+<li><strong>Standalone:</strong> No requiere Desk para funcionar</li>
+</ul>
+
+<div class="warning">⚠️ IA en Email: solo primera respuesta + derivación. Máx 2 turnos. Solo texto plano.</div>
+
+<h3>📖 Help Center</h3>
+<ul>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/qué-es-adereso-studio/8HTVeT55T2iXBunRfnZvBv" target="_blank">¿Qué es Studio?</a></li>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/guía-paso-a-paso-crea-tu-primer-bot-agente/6YJS3CsNTYXFutfgww6HDR" target="_blank">Guía: crea tu primer Bot Agente</a></li>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/componentes-de-comportamiento-define-cómo-actúa-tu-bot/7s3zB6nN19Kd8rGQ2Fv1WL" target="_blank">Componentes de comportamiento</a></li>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/herramientas-las-acciones-que-ejecuta-tu-bot/6YJS3CsNTYvMMPVWpF77cW" target="_blank">Herramientas (acciones del bot)</a></li>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/base-de-conocimiento-alimenta-a-tu-bot-con-información-de-tu-empresa/7oUQNzEwTL8wdTnNsw6Hqt" target="_blank">Base de conocimiento</a></li>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/activadores-cómo-definir-cuándo-se-activa-tu-bot/6YJS3CsNTYLxGZGWzatSwF" target="_blank">Activadores</a></li>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/tiendas-conecta-tu-catálogo-de-productos/6YJS3CsNTXkZgWHMAe2baU" target="_blank">Tiendas (Shopify, VTEX)</a></li>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/analytics-entiende-cómo-está-rindiendo-tu-bot/7s3zB6nN1aUZM1E4vUZnCr" target="_blank">Analytics del bot</a></li>
+</ul>
+`},
+
+  {id:10, type:'producto', icon:'📣', title:'Adereso Engage: campañas masivas por WhatsApp', desc:'HSMs, campañas, tiers de envío y analítica', content:`
+<h3>¿Qué es Engage?</h3>
+<p>Solución para campañas proactivas y masivas por WhatsApp. Tasa de apertura: <strong>98%</strong> (vs 20% del email).</p>
+
+<div class="warning">⚠️ Engage funciona EXCLUSIVAMENTE por WhatsApp. No aplica para otros canales.</div>
+
+<h3>Tipos de mensajes (HSM)</h3>
+<table><tr><th>Tipo</th><th>Uso</th><th>Costo Meta</th></tr>
+<tr><td><strong>Marketing</strong></td><td>Promociones, Black Friday, remarketing</td><td>Más alto</td></tr>
+<tr><td><strong>Utility</strong></td><td>Recordatorios, confirmaciones, avisos</td><td>Más bajo</td></tr>
+<tr><td><strong>Autenticación</strong></td><td>Códigos OTP, verificación</td><td>Más bajo</td></tr></table>
+<p>Meta aprueba o rechaza cada plantilla automáticamente. Si la categoriza mal, se puede apelar vía Meta Business Manager.</p>
+
+<h3>Cómo enviar una campaña</h3>
+<ol>
+<li>Crear la plantilla HSM en el módulo BSP de Desk</li>
+<li>Esperar aprobación de Meta (automática, ~6-12 horas)</li>
+<li>Subir base de contactos (Excel o API) con segmentación</li>
+<li>Programar envío (inmediato o fecha futura)</li>
+<li>Monitorear en tiempo real: entrega, lectura, respuesta</li>
+</ol>
+
+<h3>Funcionalidades</h3>
+<ul>
+<li><strong>Campañas interactivas:</strong> Respuestas procesadas por IA</li>
+<li><strong>Botones personalizados:</strong> URLs personalizadas por destinatario</li>
+<li><strong>Carruseles:</strong> Múltiples tarjetas con imágenes y botones</li>
+<li><strong>Programación:</strong> Define fecha y hora futura para el envío</li>
+<li><strong>Opt-out:</strong> Botón para que el cliente deje de recibir mensajes</li>
+<li><strong>Conexión con Desk:</strong> Respuestas del cliente caen como tickets para atención post-campaña</li>
+</ul>
+
+<h3>Tiers de WhatsApp (capacidad de envío)</h3>
+<table><tr><th>Tier</th><th>Envíos / 24h</th><th>Cómo subir</th></tr>
+<tr><td>TIER_1K</td><td>1.000</td><td>Inicio al migrar número</td></tr>
+<tr><td>TIER_10K</td><td>10.000</td><td>Enviar 1K con buena calidad → sube en ~3 días</td></tr>
+<tr><td>TIER_100K</td><td>100.000</td><td>Enviar 10K con buena calidad</td></tr>
+<tr><td>UNLIMITED</td><td>Sin límite</td><td>Volumen consistente con calidad alta</td></tr></table>
+<div class="tip">💡 Para WhatsApp Calling se requiere TIER_10K mínimo. TIER_1K no alcanza.</div>
+
+<h3>Analítica de campañas</h3>
+<ul>
+<li>Entregados, leídos, respondidos, fallidos</li>
+<li>Conversión por campaña (con etiquetas personalizadas)</li>
+<li>Mapa de calor: mejores horas y días de respuesta</li>
+<li>Segmentación de respuestas: IA vs derivadas a Desk</li>
+</ul>
+
+<h3>Modelo de cobro</h3>
+<p>Módulo + tráfico de conversaciones + <strong>12% BSP</strong> sobre fee de Meta.</p>
+
+<h3>📖 Help Center</h3>
+<ul>
+<li><a href="https://help.adereso.ai/adereso-engage-mis-campañas/6jf5LkrjFuc3QJXWBTqY5e" target="_blank">Engage: Mis Campañas</a></li>
+<li><a href="https://help.adereso.ai/adereso-bsp/4iRPgiSv9yd8phbQ3eRWm3/postulación-de-hsms-ante-meta/4iRPgiSv9DTYLKugFMYVDM" target="_blank">Postulación de HSMs</a></li>
+<li><a href="https://help.adereso.ai/adereso-engage-mis-campañas/6jf5LkrjFuc3QJXWBTqY5e/programación-de-campañas/6k91qtVFz1WzrRLgXM4f5S" target="_blank">Programación de campañas</a></li>
+<li><a href="https://help.adereso.ai/adereso-engage-mis-campañas/6jf5LkrjFuc3QJXWBTqY5e/botones-con-urls-personalizadas-por-destinatario/6u6fZWPhswgvotHMc6HewL" target="_blank">Botones con URLs personalizadas</a></li>
+</ul>
+`},
+
+  {id:11, type:'producto', icon:'😊', title:'Adereso Experience: encuestas post-atención', desc:'CSAT, NPS y CES integrados en el mismo canal', content:`
+<h3>¿Qué es?</h3>
+<p>Evalúa en tiempo real la calidad del servicio con encuestas post-atención. Se integra directamente en Desk.</p>
+
+<h3>Tipos de encuesta</h3>
+<ul>
+<li><strong>CSAT:</strong> Calificación post-atención (texto, estrellas o emojis)</li>
+<li><strong>NPS:</strong> Escala 0-10 de probabilidad de recomendación</li>
+<li><strong>CES:</strong> Qué tan fácil fue resolver el problema</li>
+</ul>
+
+<h3>Diferenciadores</h3>
+<ul>
+<li>Incluido en Desk <strong>GRATIS</strong> — sin integraciones adicionales ni fee extra</li>
+<li>Mismo canal de contacto → tasa de respuesta promedio <strong>30%</strong> (vs 2-5% email)</li>
+<li>Resultados en tiempo real</li>
+<li>Comparativa por canal, área y agente</li>
+</ul>
+
+<div class="tip">💡 Muñequeo comercial: en la negociación, mencionar que el módulo de encuestas viene GRATIS incluido — "en otros proveedores te lo cobran aparte". Genera percepción de valor sin costo real.</div>
+
+<h3>📖 Help Center</h3>
+<ul>
+<li><a href="https://help.adereso.ai/canales-/3N1pw6psNxKTRGdz9NMRMt/personaliza-la-imagen-de-perfil-de-tus-canales/78f9N27ekDHUBV28fb5psY" target="_blank">Personalizar imagen de perfil por canal</a></li>
+<li><a href="https://help.adereso.ai/administrador/8eb5QjUUPugzFCKxNAwGQB/bloquear-la-edición-de-columnas-de-un-ejecutivo-/75ynPzD9F4dqwZBxYzedii" target="_blank">Bloquear edición de columnas</a></li>
+</ul>
+`},
+
+  {id:12, type:'producto', icon:'📊', title:'Adereso VoC: voz del cliente con IA', desc:'Análisis de sentimiento, calidad y oportunidades de automatización', content:`
+<h3>Dos módulos</h3>
+<p><strong>VoC Analytics:</strong> Identifica oportunidades de automatización, top motivos de contacto, análisis de sentimiento, resolución efectiva.</p>
+<p><strong>Pauta de Calidad:</strong> IA evalúa miles de conversaciones vs criterios definidos por la empresa. Elimina subjetividad manual.</p>
+
+<h3>Diferenciación</h3>
+<ul>
+<li>Procesa <strong>texto y voz</strong></li>
+<li>Precios accesibles para grandes volúmenes</li>
+<li>Integrado con Desk — sin integración adicional</li>
+<li>Paneles personalizables</li>
+</ul>
+
+<div class="tip">💡 VoC no requiere integración adicional si el cliente ya usa Desk — accede directamente a los datos.</div>
+`},
+
+  {id:13, type:'producto', icon:'💬', title:'Adereso GPT: asistente interno para ejecutivos', desc:'Reduce tiempos de atención en un 15%', content:`
+<h3>¿Qué es?</h3>
+<p>Asistente para <strong>los ejecutivos</strong> (no para clientes finales). Brinda soporte instantáneo al equipo de atención.</p>
+
+<h3>3 niveles</h3>
+<table><tr><th>Nivel</th><th>Qué hace</th></tr>
+<tr><td><strong>Básico</strong></td><td>Responde consultas, centraliza info (PDFs, Excel, Word)</td></tr>
+<tr><td><strong>Intermedio</strong></td><td>Conexión con sistemas internos para consultar datos en tiempo real</td></tr>
+<tr><td><strong>Avanzado</strong></td><td>Ejecuta acciones en CRM, ERP y otros sistemas vía API</td></tr></table>
+
+<h3>Modelo de cobro</h3>
+<p>GPT se cobra <strong>por mensaje enviado</strong> (no por conversación ni por usuario). Próximamente se cobrará por créditos.</p>
+
+<div class="warning">⚠️ No confundir: Desk cobra por conversación, Studio cobra por conversación automatizada, pero GPT cobra por mensaje. Son unidades distintas.</div>
+
+<h3>Impacto medible</h3>
+<p><strong>-15% en TMO</strong> (Tiempo Medio de Operación). Con 50 agentes y TMO de 6 min → ~450 horas/mes recuperadas.</p>
+
+<div class="tip">💡 Caso real: GTD y Movistar usan GPT para onboarding interno y soporte a agentes.</div>
+`},
+
+  {id:14, type:'producto', icon:'📱', title:'Meta Business Suite: lo que todo AE debe saber', desc:'Portafolios, verificación, permisos y bloqueos de Meta', content:`
+<h3>¿Por qué importa?</h3>
+<p>El 90-95% de los proyectos incluyen WhatsApp Business API. El estado del portafolio de Meta puede <strong>trabar toda la implementación</strong>.</p>
+
+<h3>Glosario rápido</h3>
+<p>"Portafolio comercial" = "Business Manager" = "Business Portfolio" → el contenedor.</p>
+<p>"WABA" → WhatsApp Business Account → la cuenta de WhatsApp dentro del portafolio.</p>
+
+<h3>4 estados del portafolio</h3>
+<table><tr><th>Estado</th><th>Impacto</th></tr>
+<tr><td>✅ Verificado</td><td>Ideal. Sin restricciones.</td></tr>
+<tr><td>🔄 En revisión</td><td>Aceptable, hacer seguimiento</td></tr>
+<tr><td>⚠️ No verificado</td><td>Sin check azul, limitaciones en mensajes</td></tr>
+<tr><td>❌ Solo creado</td><td>Hay trabajo antes de arrancar</td></tr></table>
+
+<h3>Preguntas obligatorias en la venta</h3>
+<ol>
+<li>¿Tienen Business Manager?</li>
+<li>¿Está verificado?</li>
+<li>¿Quién tiene acceso de administrador total?</li>
+<li>¿Tienen más de un portafolio?</li>
+</ol>
+
+<div class="warning">🔴 Si el portafolio está bloqueado → escalar a Roma Escudero de inmediato. Es generalmente definitivo.</div>
+
+<h3>📖 Help Center</h3>
+<ul>
+<li><a href="https://help.adereso.ai/adereso-bsp/4iRPgiSv9yd8phbQ3eRWm3/módulo-adereso-bsp-en-desk/6ahQbSxHN3z4HENDHZdpHZ" target="_blank">Módulo Adereso BSP en Desk</a></li>
+<li><a href="https://help.adereso.ai/adereso-bsp/4iRPgiSv9yd8phbQ3eRWm3/postulación-de-hsms-ante-meta/4iRPgiSv9DTYLKugFMYVDM" target="_blank">Postulación de HSMs ante Meta</a></li>
+<li><a href="https://help.adereso.ai/adereso-bsp/4iRPgiSv9yd8phbQ3eRWm3/carruseles-en-whatsapp-y-uso-en-adereso-desk-/6mtTUGEdUkrNwPsJcWWjk7" target="_blank">Carruseles en WhatsApp</a></li>
+<li><a href="https://help.adereso.ai/adereso-bsp/4iRPgiSv9yd8phbQ3eRWm3/guía-de-borradores-de-plantillas/6mtTUGEdUoUzP7yLAbEkTn" target="_blank">Guía de borradores de plantillas</a></li>
+</ul>
+
+<h3>Niveles de bloqueo</h3>
+<table><tr><th>Nivel</th><th>Gravedad</th><th>Solución</th></tr>
+<tr><td>🔴 Portafolio</td><td>Muy alta</td><td>Sin solución directa</td></tr>
+<tr><td>🟡 WABA</td><td>Media</td><td>Crear nuevo WABA</td></tr>
+<tr><td>🟢 Número</td><td>Baja</td><td>Subir número distinto</td></tr></table>
+`},
+
+  {id:23, type:'producto', icon:'🔍', title:'Cassper: recupera ventas perdidas por WhatsApp', desc:'Detecta, diagnostica y reactiva conversaciones con intención de compra que no cerraron', content:`
+<h3>¿Qué es Cassper?</h3>
+<p>Cassper detecta ventas perdidas en tus conversaciones de WhatsApp, las diagnostica y las recupera. Tus sistemas registran lo que vendiste — Cassper mide <strong>lo que NO vendiste</strong>.</p>
+<h3>Cómo funciona (4 pasos)</h3>
+<table><tr><th>Paso</th><th>Qué hace</th></tr>
+<tr><td><strong>1. Cuantifica</strong></td><td>Mapea el embudo conversacional y le pone valor en dinero a cada etapa</td></tr>
+<tr><td><strong>2. Diagnostica</strong></td><td>Atribuye a cada no-conversión su razón real y su monto perdido</td></tr>
+<tr><td><strong>3. Acciona</strong></td><td>Lista priorizada de tickets recuperables por valor, urgencia y canal</td></tr>
+<tr><td><strong>4. Reactiva</strong></td><td>Campañas de WhatsApp personalizadas según el porqué exacto de cada caída</td></tr></table>
+<h3>Resultados reales</h3>
+<ul>
+<li><strong>+23%</strong> recuperación de conversaciones de alta intención en los primeros 90 días</li>
+<li><strong>-62%</strong> tiempo de detección de oportunidades perdidas</li>
+<li><strong>13%</strong> de tus conversaciones de WhatsApp son clientes frustrados que nadie estaba leyendo</li>
+</ul>
+<h3>Industrias</h3>
+<ul>
+<li><strong>Ecommerce:</strong> Carrito abandonado, consulta de stock sin respuesta, proceso de compra complejo</li>
+<li><strong>Automotriz:</strong> Falta de follow-up post-cotización, test drives no agendados</li>
+<li><strong>Salud:</strong> Consulta sin agendamiento, falta de info de cobertura</li>
+<li><strong>Turismo:</strong> Consulta sin confirmación de disponibilidad, cliente reservó por OTA</li>
+</ul>
+<h3>GenIA: el analista 24/7</h3>
+<p>Cassper incluye <strong>GenIA</strong>, un analista de datos con IA al que le puedes preguntar cualquier cosa sobre tus conversaciones. Consulta datos, propone plan de acción y lo ejecuta.</p>
+<h3>Integraciones</h3>
+<p>Se conecta sobre tu stack actual sin migraciones: WhatsApp, HubSpot, Salesforce, Shopify, WooCommerce, Zendesk, VTEX y más.</p>
+<h3>Implementación</h3>
+<ul>
+<li><strong>1-2 semanas</strong> para conexión técnica</li>
+<li><strong>Día 15:</strong> Primeros insights accionables</li>
+<li><strong>30-90 días:</strong> Resultados sólidos a medida que aprende tus patrones</li>
+</ul>
+<h3>Planes y pricing</h3>
+<table><tr><th>Plan</th><th>USD/mes</th><th>Créditos IA</th><th>Conv. analizadas</th><th>Ventas recuperadas incluidas</th></tr>
+<tr><td><strong>Starter</strong></td><td>$250</td><td>2.300</td><td>~575</td><td>USD 2.500</td></tr>
+<tr><td><strong>Growth</strong></td><td>$500</td><td>4.800</td><td>~1.200</td><td>USD 5.000</td></tr>
+<tr><td><strong>Scale</strong></td><td>$1.000</td><td>10.000</td><td>~2.500</td><td>USD 10.000</td></tr></table>
+<p>Todos los planes: <strong>5% de success fee sobre recuperación adicional</strong>. Campañas WhatsApp: fee Meta + 12% BSP.</p>
+<div class="tip">💡 Argumento de venta: "Tus reportes miden lo que vendiste. Cassper mide lo que NO vendiste." — un retailer con 1.400 conversaciones/mes tenía $361M en ventas perdidas sin detectar.</div>
+`},
+
+  // ORO: ESTRATEGIA AVANZADA
+  {id:15, type:'proceso', icon:'📞', title:'Prospección Outbound: cadencia y herramientas', desc:'Los 6 pasos de la cadencia outbound con Apollo y LinkedIn', content:`
+<h3>Diferencia con inbound</h3>
+<p>Outbound solo requiere <strong>Autoridad + Necesidad</strong> (no BANT completo).</p>
+
+<h3>Cadencia outbound (6 pasos)</h3>
+<table><tr><th>Día</th><th>Acción</th></tr>
+<tr><td>1</td><td>Mail 1</td></tr>
+<tr><td>2</td><td>Llamada</td></tr>
+<tr><td>3</td><td>Mail 2</td></tr>
+<tr><td>5</td><td>Mail 3</td></tr>
+<tr><td>8</td><td>Mail 4</td></tr>
+<tr><td>10</td><td>Mail 5</td></tr></table>
+
+<p><strong>Touchpoints antes de dar lead por perdido:</strong> 5 en total (3 llamadas + 1 WhatsApp + 1 correo).</p>
+
+<h3>Herramientas</h3>
+<ul>
+<li><strong>Apollo:</strong> Prospección y secuencias</li>
+<li><strong>LinkedIn Sales Navigator:</strong> Identificación de leads</li>
+<li><strong>Aircall:</strong> Llamadas</li>
+</ul>
+
+<h3>Rutina diaria SDR</h3>
+<ul>
+<li><strong>Mañana:</strong> Prospección en frío + inbounds</li>
+<li><strong>Tarde:</strong> Seguimientos, apoyo a AE, listas, reagendamientos</li>
+</ul>
+`},
+
+  {id:16, type:'mixto', icon:'🎪', title:'Los 6 casos de uso más vendidos', desc:'Perfil de comprador, productos y ciclo de decisión por caso', content:`
+<h3>Los 6 casos estrella</h3>
+<table><tr><th>#</th><th>Caso</th><th>Productos</th><th>Ciclo</th></tr>
+<tr><td>1</td><td>Filtrar SPAM en RRSS y WhatsApp</td><td>Desk + Studio</td><td>~1 mes</td></tr>
+<tr><td>2</td><td>Vender masivamente por WhatsApp</td><td>Studio + Engage</td><td>1-2 meses</td></tr>
+<tr><td>3</td><td>Análisis VoC</td><td>VoC + Desk + Engage + Exp</td><td>1-2 semanas</td></tr>
+<tr><td>4</td><td>Análisis de calidad contact center</td><td>VoC + Desk</td><td>1-2 meses</td></tr>
+<tr><td>5</td><td>Centralizar canales digitales</td><td>Desk + Engage + VoC</td><td>1-2 meses</td></tr>
+<tr><td>6</td><td>Bot de compra / prospección</td><td>Studio + Engage</td><td>1-2 meses</td></tr>
+<tr><td>7</td><td>Recuperación de ventas perdidas</td><td>Cassper</td><td>2-4 semanas</td></tr></table>
+
+<div class="tip">💡 VoC tiene el ciclo de decisión más corto (1-2 semanas). Ideal para entrar rápido en cuentas nuevas.</div>
+
+<h3>ROI de referencia</h3>
+<ul>
+<li>Automatización: 69% general / 96% asesoría</li>
+<li>Satisfacción: 4.9/5.0</li>
+<li>Consultas resueltas <5 min: 98%</li>
+<li>Reducción costos operativos: -25% a -85%</li>
+<li>ROI: 100x</li>
+</ul>
+
+<h3>📖 Help Center</h3>
+<ul>
+<li><a href="https://help.adereso.ai/casos-de-uso/mEsubvEZDQZ53LXDmBiwyk" target="_blank">Casos de uso documentados</a></li>
+<li><a href="https://help.adereso.ai/preguntas-frecuentes/uzxK2BwCW9PsvK68jmsqwQ" target="_blank">Preguntas frecuentes</a></li>
+</ul>
+`},
+
+  {id:17, type:'producto', icon:'🔐', title:'Seguridad y compliance: respuestas para TI', desc:'ISO 27001, encriptación, multi-tenancy y SLA', content:`
+<h3>Certificaciones</h3>
+<ul>
+<li><strong>ISO 27001:</strong> En proceso (presupuesto 2025, auditorías 2026-2029)</li>
+<li><strong>Ethical Hacking:</strong> Anual, metodología OWASP</li>
+<li><strong>Certificado Walmart USA:</strong> Cumple estándares enterprise</li>
+</ul>
+
+<h3>Encriptación</h3>
+<p>AES-256 en tránsito y reposo. Tarjetas de crédito enmascaradas automáticamente. Backups cifrados en GCP.</p>
+
+<h3>Privacidad de IA</h3>
+<ul>
+<li>NO fine-tuning con datos de clientes</li>
+<li>NO cross-contamination entre clientes</li>
+<li>Guard Rails para evitar contenido fuera de scope</li>
+<li>Agentic RAG: acceso solo a fuentes controladas</li>
+</ul>
+
+<div class="warning">⚠️ Multi-tenancy: Adereso opera SaaS multi-tenant. No hay instancias dedicadas. Declarar desde el inicio si el cliente lo requiere.</div>
+
+<h3>SLA</h3>
+<p>Uptime promedio 2025: <strong>99.78%</strong>. El SLA aplica a la plataforma — los fees de WhatsApp/BSP no están cubiertos.</p>
+
+<h3>📖 Recursos</h3>
+<ul>
+<li><a href="https://help.adereso.ai/administrador/8eb5QjUUPugzFCKxNAwGQB" target="_blank">Help Center: Administrador</a></li>
+<li><a href="https://help.adereso.ai/integraciones/kvZbeExMhDxEgFgGA1pqwJ" target="_blank">Help Center: Integraciones</a></li>
+<li><a href="https://help.adereso.ai/desarrolladores/cYoxdnyRQf4rreHwjirZgZ" target="_blank">Help Center: Desarrolladores (API)</a></li>
+<li><a href="https://adereso.statuspage.io" target="_blank">Status page en tiempo real</a></li>
+</ul>
+`},
+
+  {id:18, type:'proceso', icon:'🤖', title:'Don Adereso / Adobo: tu copiloto comercial', desc:'Comandos, automatizaciones y cómo sacarle provecho', content:`
+<h3>¿Qué es Adobo?</h3>
+<p>Asistente interno del equipo comercial. Responde en Slack y tiene automatizaciones activas.</p>
+
+<h3>Comandos clave</h3>
+<table><tr><th>Comando</th><th>Qué hace</th></tr>
+<tr><td><strong>/reus</strong></td><td>Brief de reuniones del día con BANT, desafío, casos de éxito y preguntas</td></tr>
+<tr><td><strong>/clientes</strong></td><td>Lista la base instalada</td></tr>
+<tr><td><strong>/operativa</strong></td><td>Documenta contexto en Notion</td></tr></table>
+
+<h3>Automatizaciones activas</h3>
+<ul>
+<li><strong>Brief diario (9 AM):</strong> DM a cada AE con reuniones del día</li>
+<li><strong>Recordatorio 15 min antes:</strong> Brief de la empresa específica</li>
+<li><strong>Deal ganado (cada 5 min):</strong> Notifica #comercial con MRR + % meta</li>
+<li><strong>Tareas HubSpot (8:30 AM):</strong> DM con tareas pendientes</li>
+<li><strong>Top deals (lunes 9 AM):</strong> Top 4 por probabilidad de cierre</li>
+</ul>
+
+<h3>Preguntas que puedes hacer</h3>
+<ul>
+<li>"Cómo va mi pipeline esta semana"</li>
+<li>"Resúmeme la reunión con [empresa]"</li>
+<li>"Qué clientes similares a [empresa] tenemos"</li>
+<li>"Prepárame argumentos contra la objeción de precio"</li>
+</ul>
+`},
+
+  {id:19, type:'proceso', icon:'📊', title:'SMB vs Enterprise: ajusta tu approach', desc:'Cómo identificar y adaptar el proceso según el tipo de cliente', content:`
+<h3>Cómo distinguirlos</h3>
+<table><tr><th></th><th>SMB</th><th>Enterprise</th></tr>
+<tr><td>Agentes</td><td><50</td><td>>50</td></tr>
+<tr><td>Tickets/mes</td><td><20.000</td><td>>20.000</td></tr>
+<tr><td>Decisores</td><td>1-2 personas</td><td>Múltiples stakeholders</td></tr>
+<tr><td>Ciclo decisión</td><td>1-2 semanas</td><td>2-6 meses</td></tr>
+<tr><td>Demo</td><td>Genérica o leve personalización</td><td>Personalizada con datos del cliente</td></tr>
+<tr><td>Propuesta</td><td>24-48 hrs</td><td>Más elaborada, puede requerir SP + legal</td></tr>
+<tr><td>Follow-up</td><td>Cada 2-3 días</td><td>Cada 5-7 días</td></tr></table>
+
+<div class="highlight">⚠️ Identificar esto en la Etapa 5 (cierre). Define el timing, proceso de aprobación y nivel de personalización.</div>
+`},
+
+  {id:20, type:'proceso', icon:'🔄', title:'Regla de los 90 días y deals perdidos', desc:'Reactivación de leads, atribución y criterios de cierre', content:`
+<h3>Regla de los 90 días</h3>
+<ul>
+<li><strong>Antes de 90 días:</strong> Reactivar mismo deal → se mantiene atribución del SDR original</li>
+<li><strong>Después de 90 días:</strong> Crear deal nuevo → la fuente se define según quién reactiva</li>
+</ul>
+
+<h3>Atribución post-90 días</h3>
+<table><tr><th>Quién reactiva</th><th>Fuente</th></tr>
+<tr><td>Lead vuelve solo</td><td>Inbound</td></tr>
+<tr><td>AE envía WhatsApp</td><td>AE</td></tr>
+<tr><td>SDR reagenda</td><td>SDR</td></tr></table>
+
+<h3>Deal perdido por Timing</h3>
+<p>Recontacto > 90 días → cerrar deal → motivo: Timing → asignar fecha de recontacto → automatización notifica al SDR.</p>
+
+<h3>Deal perdido por Ghosting</h3>
+<p>Protocolo completo agotado → cerrar → motivo: Ghosting → asignar fecha de recontacto.</p>
+
+<h3>Al perder un deal</h3>
+<ol>
+<li>Mover a "Cerrado perdido" en HubSpot</li>
+<li>Completar "Motivo de cierre perdido" (obligatorio)</li>
+<li>Nota con contexto completo</li>
+<li>Tarea de seguimiento para recontactar</li>
+<li>Notificar al SDR para cerrar el loop</li>
+</ol>
+`},
+
+  {id:21, type:'mixto', icon:'🧮', title:'El Cotizador: cómo armar una propuesta', desc:'Módulos, line items, servicios comisionables y el flujo completo de cotización', content:`
+<h3>¿Qué es el Cotizador?</h3>
+<p>Herramienta interna para armar propuestas comerciales. Genera los line items que se cargan a HubSpot y se incluyen en la cotización del cliente.</p>
+
+<h3>Flujo del cotizador: 3 pasos</h3>
+<table><tr><th>Paso</th><th>Qué haces</th></tr>
+<tr><td><strong>1. Contexto</strong></td><td>Asociar a un deal de HubSpot (o crear borrador local)</td></tr>
+<tr><td><strong>2. Cotizar</strong></td><td>Seleccionar módulos, configurar volúmenes, ajustar precios</td></tr>
+<tr><td><strong>3. Enviar</strong></td><td>Revisar resumen, guardar escenarios, enviar a HubSpot</td></tr></table>
+
+<h3>Los 6 módulos principales</h3>
+<table><tr><th>Módulo</th><th>Setup (USD)</th><th>Mensual base (USD)</th></tr>
+<tr><td>💬 <strong>Desk</strong></td><td>—</td><td>desde $199/mes (mín. 2.000 conv)</td></tr>
+<tr><td>🤖 <strong>Studio</strong></td><td>$990</td><td>desde $199 (módulo) + $160 (mantención) = desde $359</td></tr>
+<tr><td>📢 <strong>Engage</strong></td><td>—</td><td>Variable (fee Meta + 12% BSP)</td></tr>
+<tr><td>🔍 <strong>Cassper</strong></td><td>—</td><td>desde $250/mes (Starter) + 5% success fee</td></tr>
+<tr><td>📊 <strong>VoC</strong></td><td>—</td><td>Variable (por interacciones)</td></tr>
+<tr><td>🖥️ <strong>GPT</strong></td><td>—</td><td>Variable (por mensaje enviado, futuro: créditos)</td></tr></table>
+
+<h3>Servicios custom (no comisionables)</h3>
+<p>Estos servicios se cotizan aparte y <strong>no generan comisión</strong> para el AE:</p>
+<ul>
+<li><strong>&lt;/&gt; HH:</strong> Horas de desarrollo para integraciones custom. Se cotiza por proyecto.</li>
+<li><strong>🧩 Roadmap Custom:</strong> Desarrollo de funcionalidades a medida para el cliente.</li>
+<li><strong>🛟 Soporte Premium:</strong> Soporte extendido, horario custom o 24/7.</li>
+</ul>
+
+<div class="warning">⚠️ Los servicios comisionables son los que impactan tu variable: Desk, Studio, Engage, Cassper, VoC, GPT. Los custom no comisionan.</div>
+
+<h3>Variables de configuración</h3>
+<p>El cotizador usa estos parámetros fijos para los cálculos:</p>
+<ul>
+<li><strong>Desk:</strong> Recargo por ticket extra (%) + mínimo de conversaciones</li>
+<li><strong>Studio:</strong> Recargo ticket extra + mínimo conv. + mantención bot (USD/mes) + recargo sin Desk (%) + recargo trimestral (%)</li>
+<li><strong>Engage:</strong> Fee Meta / markup (12%)</li>
+<li><strong>Cassper:</strong> Fee de recuperación (success fee %) + recargo créditos excedentes + créditos por conversación</li>
+<li><strong>Conversión:</strong> Tipo de cambio UF→USD y crédito→USD</li>
+</ul>
+
+<h3>Funcionalidades clave del cotizador</h3>
+<ul>
+<li><strong>Moneda:</strong> Puedes cotizar en USD, UF o Créditos</li>
+<li><strong>Períodos:</strong> Anual (precio base) o Trimestral (con recargo)</li>
+<li><strong>Escenarios:</strong> Guarda múltiples versiones para comparar opciones con el cliente</li>
+<li><strong>Comparador:</strong> Visualiza escenarios lado a lado</li>
+<li><strong>Vista completa vs descuento:</strong> Muestra desglose con o sin descuento aplicado</li>
+</ul>
+
+<div class="tip">💡 Studio tiene un addon llamado "Agent Automation" que puede sumarse a la cotización por $0 adicionales — es un diferenciador para mostrar al cliente la capacidad agentic.</div>
+
+<h3>Ejemplo de cotización típica (Desk + Studio)</h3>
+<table><tr><th>Line Item</th><th>Setup</th><th>Mensual</th><th>Período</th></tr>
+<tr><td>Adereso Desk</td><td>—</td><td>$199</td><td>Anual</td></tr>
+<tr><td>Adereso Studio</td><td>$990</td><td>$199</td><td>Anual</td></tr>
+<tr><td>↳ Addon Agent Automation</td><td>—</td><td>$0</td><td>—</td></tr>
+<tr><td>↳ Mantención bot</td><td>—</td><td>$160</td><td>Anual</td></tr>
+<tr><td colspan="2"><strong>Total</strong></td><td><strong>$558/mes + $990 setup</strong></td><td></td></tr></table>
+
+<div class="highlight">⚠️ Precondición: el deal debe estar en Etapa 4 del pipeline en HubSpot ANTES de generar la cotización. Siempre usar la plantilla "Cotización-automática".</div>
+`}
+];
+
+// ============ QUIZ QUESTIONS ============
+const ALL_QUESTIONS = {
+proceso: [
+  {q:"¿Cuántos pasos tiene el pipeline completo de Adereso?", opts:["6","9","12","7"], correct:1, explain:"Son 9 pasos: desde la calificación SDR (paso 0) hasta business review + expansión (paso 9)."},
+  {q:"¿Qué significa la B en BANT?", opts:["Business","Budget","Baseline","Buyer"], correct:1, explain:"Budget: ¿tienen presupuesto? Mínimo USD 600-800/mes de disposición."},
+  {q:"¿Cuál es el mínimo de tickets/mes para que un lead califique?", opts:["500","1.000","2.000","5.000"], correct:2, explain:"El mínimo requerido es 2.000 tickets/mes. Menos que eso = descalificado."},
+  {q:"¿Cuántos touchpoints antes de dar un lead outbound por perdido?", opts:["3","5","7","10"], correct:1, explain:"5 en total: 3 llamadas + 1 WhatsApp + 1 correo."},
+  {q:"¿Cuándo se debe enviar el correo post-reunión?", opts:["Mismo día o antes de las 10:00 del siguiente","En 48 horas","En la misma semana","Cuando el AE pueda"], correct:0, explain:"El mismo día o antes de las 10:00 AM del día siguiente. Sin excepción."},
+  {q:"¿Qué herramienta usa el SDR para prospección outbound?", opts:["HubSpot solamente","Apollo + LinkedIn Sales Navigator","Salesforce","Google Sheets"], correct:1, explain:"Apollo para secuencias y LinkedIn Sales Navigator para identificar leads."},
+  {q:"¿Quién asigna al PM cuando se cierra un deal?", opts:["El AE","El cliente","Diego Silva (Head SSPP)","El KAM"], correct:2, explain:"Diego Silva asigna según capacidad real. El AE no elige PM ni presiona por uno específico."},
+  {q:"Después de 90 días sin contacto, ¿qué pasa con el deal?", opts:["Se mantiene igual","Se crea deal nuevo","Se elimina","Se congela 6 meses"], correct:1, explain:"Después de 90 días se crea deal nuevo. La fuente depende de quién reactiva."},
+  {q:"¿Cuál es el criterio para SMB vs Enterprise por agentes?", opts:["10 agentes","25 agentes","50 agentes","100 agentes"], correct:2, explain:"<50 agentes = SMB. >50 agentes = Enterprise."},
+  {q:"¿Qué hace el comando /reus de Adobo?", opts:["Resume el pipeline","Genera brief de reuniones del día","Muestra clientes activos","Documenta la operativa"], correct:1, explain:"/reus genera el brief completo: BANT, desafío, casos de éxito y preguntas para cada reunión."},
+],
+producto: [
+  {q:"¿Cuántos productos tiene la suite Adereso AI?", opts:["4","5","6","8"], correct:2, explain:"6 productos: Desk, Engage, Experience, Studio, VoC y GPT."},
+  {q:"¿Engage funciona en qué canal?", opts:["Todos los canales","Solo WhatsApp","WhatsApp + Email","WhatsApp + Instagram"], correct:1, explain:"Engage funciona EXCLUSIVAMENTE por WhatsApp."},
+  {q:"¿Cuál es la tasa de apertura promedio en WhatsApp?", opts:["70%","85%","98%","100%"], correct:2, explain:"98% de tasa de apertura en WhatsApp vs 20% del email."},
+  {q:"¿Qué tipo de IA NO usa Adereso?", opts:["Fine-tuning con datos del cliente","RAG","Multi-motor","Guard Rails"], correct:0, explain:"Adereso NO hace fine-tuning con datos de clientes. Usa Agentic RAG."},
+  {q:"¿Cuál es el uptime promedio 2025 de Adereso?", opts:["97.50%","99.00%","99.78%","99.99%"], correct:2, explain:"Uptime promedio anual 2025: 99.78%. Mejor mes (Marzo): 99.93%."},
+  {q:"¿GPT reduce el TMO en cuánto?", opts:["5%","10%","15%","25%"], correct:2, explain:"-15% en Tiempo Medio de Operación. Con 50 agentes y TMO 6 min = ~450 hrs/mes recuperadas."},
+  {q:"¿Cómo se cobra Adereso GPT?", opts:["Por usuario activo","Por conversación","Por mensaje enviado","Fee fijo mensual"], correct:2, explain:"GPT se cobra por mensaje enviado (no por conversación ni por usuario). Próximamente se cobrará por créditos."},
+  {q:"¿Qué diferencia a VoC de Experience?", opts:["Son lo mismo","Experience analiza conversaciones y VoC envía encuestas","VoC analiza conversaciones con IA; Experience mide satisfacción con encuestas","VoC es para voz y Experience para texto"], correct:2, explain:"VoC analiza conversaciones (sentimiento, calidad, automatización). Experience mide satisfacción (CSAT/NPS/CES) post-atención."},
+  {q:"¿Studio puede contratarse sin Desk?", opts:["Sí, es standalone","No, requiere Desk","Solo con Engage","Depende del plan"], correct:0, explain:"Studio puede contratarse de forma standalone — no requiere Adereso Desk."},
+  {q:"¿Qué tasa de respuesta promedio tienen las encuestas de Experience?", opts:["5%","15%","30%","50%"], correct:2, explain:"30% promedio — porque van por el mismo canal de atención (vs 2-5% del email)."},
+  {q:"¿Cuál es el recargo BSP de Engage sobre el fee de Meta?", opts:["5%","8%","12%","15%"], correct:2, explain:"12% sobre el costo de Meta por ser WhatsApp BSP. Cubre gestión API e integración."},
+  {q:"¿Qué mide Cassper que otros sistemas no miden?", opts:["Tickets cerrados","Ventas concretadas","Ventas perdidas en conversaciones","Satisfacción del cliente"], correct:2, explain:"Cassper detecta conversaciones con intención de compra que no cerraron — las ventas que NO se hicieron."},
+  {q:"¿Cuántos pasos tiene el proceso de Cassper?", opts:["2","3","4","6"], correct:2, explain:"4 pasos: Cuantifica → Diagnostica → Acciona → Reactiva."},
+  {q:"¿Cuánto tarda Cassper en mostrar primeros insights?", opts:["1 día","Día 15","3 meses","6 meses"], correct:1, explain:"Primeros insights accionables desde el día 15. Resultados sólidos entre 30-90 días."},
+  {q:"¿Qué es GenIA dentro de Cassper?", opts:["Un bot para clientes","Un analista de datos con IA 24/7","Un módulo de encuestas","Una herramienta de soporte"], correct:1, explain:"GenIA es un analista con IA al que le preguntas sobre tus conversaciones. Consulta datos, propone plan y lo ejecuta."},
+  // DESK features
+  {q:"¿Se pueden conectar múltiples números de WhatsApp en una sola instancia de Desk?", opts:["No, solo uno","Sí, múltiples cuentas y marcas","Solo con plan Enterprise","Máximo 3"], correct:1, explain:"Desk soporta múltiples cuentas de WhatsApp, Instagram y otros canales en una sola instancia. Útil para empresas con varias marcas."},
+  {q:"¿Qué métodos de asignación de tickets tiene Desk?", opts:["Solo manual","Round Robin únicamente","Round Robin, IA, topes por ejecutivo, FIFO/LIFO","Solo FIFO"], correct:2, explain:"Desk tiene distribución inteligente con Round Robin, IA para priorización, topes por ejecutivo, y FIFO/LIFO."},
+  {q:"¿Desk cobra por número de usuarios o licencias?", opts:["Sí, por licencia","No, agentes ilimitados","Solo los primeros 10 gratis","Por departamento"], correct:1, explain:"Licencias ilimitadas — el precio sube por volumen de conversaciones, no por usuarios. Es un diferenciador fuerte vs competencia que cobra por seat."},
+  {q:"¿Qué pasa con WhatsApp Calling en Desk (Beta)?", opts:["Llamadas entrantes y salientes","Solo llamadas salientes (agente → usuario)","Solo llamadas entrantes","No está disponible"], correct:1, explain:"Beta actual: solo llamadas SALIENTES. Las entrantes, grabación y callback aún no están disponibles."},
+  {q:"¿Qué formatos soporta Desk en las conversaciones?", opts:["Solo texto","Texto e imágenes","Geolocalización, emojis, audios, transcripciones, comprensión de imágenes","Solo texto y emojis"], correct:2, explain:"Desk soporta geolocalización, emojis, audios, transcripciones audio-a-texto. La IA comprende imágenes y audio."},
+  {q:"¿Se recomienda usar bots conversacionales en el canal de email?", opts:["Sí, sin restricciones","No se recomienda — solo primera respuesta + derivación","Solo con Studio Agent","Depende del cliente"], correct:1, explain:"Email es asíncrono. Recomendado: primera respuesta automática + derivación a humano. Máx 2 turnos. Solo texto plano, sin botones."},
+  {q:"¿Qué es IVR Deflection en Desk?", opts:["Un bot de voz","Desvía llamadas a WhatsApp en vez de esperar en línea","Un sistema de grabación","Un menú de opciones telefónicas"], correct:1, explain:"IVR Deflection desvía llamadas a un chat de WhatsApp. Reduce costo de llamadas + mejora experiencia del cliente."},
+  {q:"¿Cuántos niveles de acceso tiene Desk?", opts:["2 (admin y ejecutivo)","3","4 (ejecutivo, supervisor, admin, superadmin)","5"], correct:2, explain:"4 niveles: ejecutivo, supervisor, admin y superadmin. Cada uno con permisos distintos."},
+  {q:"¿Qué canales NO soporta Desk actualmente?", opts:["Instagram","LinkedIn","TikTok y MercadoLibre","Email"], correct:2, explain:"TikTok y MercadoLibre están próximamente (🔜). Todos los demás canales principales ya están soportados."},
+  // STUDIO features
+  {q:"¿Cuál es la diferencia entre Studio Flows y Studio Agent?", opts:["Flows es más caro","Flows son flujos paso a paso; Agent es IA autónoma","Agent no tiene IA","Son lo mismo con distinto nombre"], correct:1, explain:"Flows: flujos estructurados (encuestas, formularios). Agent: IA generativa autónoma que responde FAQs, consulta productos y toma decisiones sin flujos predefinidos."},
+  {q:"¿Studio puede conectarse a bases de datos SQL?", opts:["No","Solo con desarrollo custom","Sí, con Studio Agent","Solo con GPT"], correct:2, explain:"Studio Agent soporta integración SQL y reconocimiento de imágenes para consultas a bases de datos y procesamiento visual."},
+  {q:"¿Qué es el 'control de alucinaciones' en Studio?", opts:["Un filtro de spam","Solo responde con info real de la base de conocimiento","Un sistema de moderación","Un backup de datos"], correct:1, explain:"Guard Rails: el bot solo responde con información real cargada en su base de conocimiento. No inventa respuestas."},
+  {q:"¿Qué formatos acepta Studio para cargar conocimiento?", opts:["Solo PDF","Solo Excel","Excel, PDF, Word sin adaptación manual","Solo APIs"], correct:2, explain:"Studio carga Excel, PDF y Word directamente sin necesidad de adaptación manual. También se conecta a SQL, Google Drive y sitios web."},
+  {q:"¿Qué es el Modo Asíncrono de Studio?", opts:["El bot responde con delay","El bot envía múltiples mensajes sin esperar respuesta","El bot trabaja offline","El bot programa mensajes futuros"], correct:1, explain:"Modo asíncrono: el bot envía múltiples mensajes consecutivos sin esperar respuesta del usuario. Ideal para presentaciones y onboarding."},
+  {q:"¿Qué es Chat Spot en Studio?", opts:["Un canal de soporte interno","Inicia conversaciones con contexto vía QR","Un dashboard de métricas","Un tipo de bot"], correct:1, explain:"Chat Spot: el cliente escanea un QR desde una sucursal o web, y el bot ya conoce el contexto (sucursal, producto, etc.)."},
+  {q:"Si un cliente quiere crear bots solo, ¿puede?", opts:["No, siempre requiere acompañamiento","Sí, con Studio (requiere capacitación inicial)","Solo con Genia","Solo el equipo de Adereso"], correct:1, explain:"Sí puede con Studio. Requiere capacitación inicial — eso puede ser un servicio adicional. La documentación básica está en el Help Center."},
+  {q:"¿Qué pasa cuando el bot no puede resolver una consulta?", opts:["Se cierra el ticket","Se deriva automáticamente a un ejecutivo humano","Se ignora","Se envía un email"], correct:1, explain:"El bot se configura para derivar a humano cuando no tiene respuesta, el cliente lo pide, o la IA detecta baja confianza. La tasa de handoff es un KPI."},
+  // Studio avanzado
+  {q:"¿Qué son los Activadores en Studio?", opts:["Botones dentro del chat","Las reglas que definen cuándo se activa el bot","Los mensajes de bienvenida","Los componentes de personalidad"], correct:1, explain:"Activadores definen cuándo y bajo qué condiciones el bot se activa: por canal, intención, palabras clave o tipo de mensaje."},
+  {q:"¿Qué son los Recursos Compartidos en Studio?", opts:["Documentos del cliente","Componentes y herramientas reutilizables entre múltiples bots","Las APIs conectadas","Los reportes exportados"], correct:1, explain:"Se configuran una vez y se reutilizan en múltiples bots. Evita duplicar trabajo al crear componentes, herramientas y tiendas."},
+  {q:"¿Qué plataformas de ecommerce se conectan como Tienda en Studio?", opts:["Solo Shopify","Shopify y VTEX","Solo WooCommerce","Ninguna, es manual"], correct:1, explain:"Studio conecta tiendas de Shopify, VTEX y otras plataformas para que el bot consulte stock, precios y recomiende productos."},
+  {q:"¿Qué muestra el Behavior Diagram en Analytics de Studio?", opts:["Los errores del bot","Los flujos reales de conversación del bot","El código fuente","Las métricas de Desk"], correct:1, explain:"El Behavior Diagram visualiza los flujos reales que siguen las conversaciones del bot — permite identificar puntos de abandono."},
+  {q:"¿Para qué sirve el Diagnóstico en Studio?", opts:["Para reparar bugs de código","Para verificar la salud del bot antes de publicar","Para medir satisfacción","Para exportar datos"], correct:1, explain:"Diagnóstico detecta problemas de configuración del bot ANTES de publicarlo. Es un chequeo preventivo."},
+  // Engage avanzado
+  {q:"¿Cuál es el tier mínimo de WhatsApp para usar Calling?", opts:["TIER_1K","TIER_10K","TIER_100K","UNLIMITED"], correct:1, explain:"Se requiere TIER_10K o superior. TIER_1K (1.000 envíos/24h) no alcanza para WhatsApp Calling."},
+  {q:"¿Cómo sube un número de TIER_1K a TIER_10K?", opts:["Pagando más","Enviando 1K mensajes con buena calidad en ~3 días","Solicitando a Meta directamente","Automáticamente después de 30 días"], correct:1, explain:"Al enviar 1K mensajes con buena calidad (bajo rechazo/bloqueo), Meta sube el tier automáticamente en ~3 días."},
+  {q:"¿Qué pasa si Meta categoriza mal una plantilla HSM?", opts:["Nada, se usa igual","Se puede apelar vía Meta Business Manager","Se elimina automáticamente","Hay que crear una nueva"], correct:1, explain:"Si Meta categoriza como Marketing lo que debería ser Utility (afecta el costo), se puede apelar directamente en Meta Business Manager."},
+],
+bant: [
+  {q:"Para inbound, ¿qué nivel de BANT se exige?", opts:["Solo Need","Autoridad + Need","BANT completo","Solo Budget"], correct:2, explain:"Inbound exige BANT completo. Outbound solo Autoridad + Necesidad."},
+  {q:"¿Cuál es el puntaje mínimo BANT para avanzar?", opts:["4/12","6/12","8/12","10/12"], correct:1, explain:"Mínimo 6/12 + Need y Authority ≥ 2 cada uno."},
+  {q:"Si un lead tiene Need pero no Budget, ¿qué se hace?", opts:["Se agenda igual","Nurturing (pipeline frío)","Se descalifica","Se pasa al KAM"], correct:1, explain:"BANT parcial → Nurturing con tarea de recontacto."},
+  {q:"¿Cuándo debe estar el BANT completo en HubSpot?", opts:["Después de la reunión","Máximo 1 día antes de la reunión","El mismo día","En la semana"], correct:1, explain:"El BANT debe estar completo máximo 1 día antes de la reunión agendada."},
+  {q:"¿Dónde publica el SDR la calificación?", opts:["Email al AE","Canal #BANT en Slack","Nota en HubSpot solamente","WhatsApp del equipo"], correct:1, explain:"Se publica en el canal #BANT con el formato estándar: empresa, tickets, caso, budget, autoridad, timing."},
+],
+pricing: [
+  {q:"¿Cuánto cuesta Desk para la bolsa mínima de 2.000 conv?", opts:["$159/mes","$199/mes","$558/mes","$299/mes"], correct:1, explain:"Desk parte en $199/mes para la bolsa mínima de 2.000 conversaciones. El precio sube proporcionalmente con mayor volumen."},
+  {q:"¿Cuánto cuesta el setup de Studio?", opts:["$500","$750","$990","$1.500"], correct:2, explain:"$990 pago único. Plan 1 (sin API) o Plan 2 (con Shopify+CRM)."},
+  {q:"¿Cuánto es la mantención mensual del bot (Studio)?", opts:["$100/mes","$130/mes","$160/mes","$200/mes"], correct:2, explain:"La mantención bot de Studio cuesta $160/mes según el cotizador."},
+  {q:"¿Adereso cobra por número de usuarios?", opts:["Sí, por licencia","No, agentes ilimitados","Solo en Enterprise","Desde el Plan 3"], correct:1, explain:"Agentes ilimitados. El precio sube por volumen de conversaciones, no por usuarios."},
+  {q:"¿Cuál es la bolsa mínima de conversaciones?", opts:["1.000/mes","2.000/mes","5.000/mes","10.000/mes"], correct:1, explain:"Mínimo 2.000 conversaciones/mes tanto para Desk como para Studio."},
+  {q:"¿Se puede ofrecer trimestral proactivamente?", opts:["Sí, siempre","Solo si el cliente lo pide","Nunca","Solo en Enterprise"], correct:1, explain:"Nunca ofrecer trimestral proactivamente. Solo mencionarlo si el cliente pregunta: 'no incluye el 40%'."},
+  {q:"¿Cuál es el fee BSP de Engage sobre Meta?", opts:["5%","8%","12%","15%"], correct:2, explain:"12% de markup sobre el fee de Meta. Cubre gestión API e integración."},
+  {q:"¿Qué pasa si Studio se contrata sin Desk?", opts:["Mismo precio","Aplica recargo adicional","No se puede","Requiere aprobación especial"], correct:1, explain:"Studio sin Desk tiene un recargo adicional configurado en el cotizador."},
+  {q:"¿Los servicios custom (HH, Roadmap, Soporte) generan comisión?", opts:["Sí, siempre","Solo HH","No, son no comisionables","Depende del monto"], correct:2, explain:"Los servicios custom son NO comisionables. Solo comisionan: Desk, Studio, Engage, Cassper, VoC, GPT."},
+  {q:"¿En qué etapa del pipeline debe estar el deal para cotizar?", opts:["Etapa 2","Etapa 3","Etapa 4","Etapa 5"], correct:2, explain:"El deal debe estar en Etapa 4 (Elaboración de Propuesta) antes de generar la cotización en el cotizador."},
+],
+meta: [
+  {q:"¿Qué necesita tener el cliente para vincular con Adereso?", opts:["Acceso parcial al BM","Admin total del portafolio de Meta","Acceso a la página de Facebook","Cuenta de Instagram Business"], correct:1, explain:"Se necesita administrador total del Business Manager. Acceso parcial no alcanza."},
+  {q:"Si el portafolio de Meta está bloqueado, ¿qué gravedad tiene?", opts:["Baja","Media","Alta","Muy alta — generalmente definitivo"], correct:3, explain:"Bloqueo de portafolio = muy alta gravedad, generalmente sin solución directa. Escalar a Roma de inmediato."},
+  {q:"¿Adereso es BSP de WhatsApp. Qué significa?", opts:["Business Service Platform","Business Solution Provider","Business Software Product","Basic Service Provider"], correct:1, explain:"BSP = Business Solution Provider oficial de Meta. Provee número certificado sin intermediarios."},
+  {q:"¿Facebook e Instagram para bots necesitan estar en el BM?", opts:["Sí, obligatorio","No, no lo necesitan","Solo Instagram","Solo Facebook"], correct:1, explain:"Conexión de Facebook e Instagram para bots NO necesita estar en el BM. Gestión de campañas publicitarias SÍ."},
+  {q:"¿Cuántas personas deberían tener admin del BM?", opts:["Solo 1","Al menos 2","Mínimo 3","Todo el equipo"], correct:1, explain:"Buena práctica: más de una persona con admin. Si la única persona se va, pierden el control."},
+],
+cotizador: [
+  {q:"¿Cuáles son los 3 pasos del cotizador?", opts:["Módulos → Precio → Enviar","Contexto → Cotizar → Enviar","Deal → Productos → Cierre","BANT → Propuesta → Firma"], correct:1, explain:"Contexto (asociar deal) → Cotizar (seleccionar módulos) → Enviar (resumen y envío a HubSpot)."},
+  {q:"¿Cuánto cuesta Desk como line item para 2.000 conv?", opts:["$159","$199","$299","$558"], correct:1, explain:"Desk parte en $199/mes para la bolsa mínima de 2.000 conversaciones. Sube con mayor volumen."},
+  {q:"¿Cuánto es la mantención mensual del bot (Studio)?", opts:["$100","$130","$160","$200"], correct:2, explain:"Mantención bot de Studio: $160/mes según el cotizador."},
+  {q:"¿Cuáles son servicios NO comisionables?", opts:["Desk y Studio","Engage y VoC","HH, Roadmap Custom y Soporte","Cassper y GPT"], correct:2, explain:"HH (cotización custom), Roadmap Custom y Soporte Premium son servicios no comisionables."},
+  {q:"¿Qué addon de Studio aparece a $0 en el cotizador?", opts:["Bot Flow","Agent Automation","Integración SQL","RAG Premium"], correct:1, explain:"El addon Agent Automation se agrega a $0 — muestra al cliente la capacidad agentic sin costo adicional."},
+  {q:"¿En qué monedas puede cotizar el cotizador?", opts:["Solo USD","USD y CLP","USD, UF y Créditos","Solo UF"], correct:2, explain:"El cotizador soporta USD, UF (para Chile) y Créditos, con tipos de cambio configurables."},
+  {q:"Para Desk+Studio con bolsa mínima, ¿cuánto es el total mensual + setup?", opts:["$199/mes + $990","$359/mes + $990","desde $558/mes + $990","$499/mes + $990"], correct:2, explain:"Desk desde $199 + Studio módulo desde $199 + mantención $160 = desde $558/mes (bolsa mínima 2.000 conv). Setup de Studio $990 único."},
+  {q:"¿Cuánto cuesta el plan Starter de Cassper?", opts:["$100/mes","$250/mes","$500/mes","$1.000/mes"], correct:1, explain:"Starter: $250/mes con 2.300 créditos IA, ~575 conversaciones analizadas y USD 2.500 en ventas recuperadas incluidas."},
+  {q:"¿Qué modelo de cobro usa Cassper?", opts:["Fee fijo mensual","Plan mensual + 5% success fee sobre recuperación adicional","Por usuario activo","Por conversación simple"], correct:1, explain:"Cassper tiene 3 planes (Starter/Growth/Scale) con ventas recuperadas incluidas. Sobre eso, 5% de success fee adicional."},
+]
+};
+ALL_QUESTIONS.mixed = [...ALL_QUESTIONS.proceso, ...ALL_QUESTIONS.producto, ...ALL_QUESTIONS.bant, ...ALL_QUESTIONS.pricing, ...ALL_QUESTIONS.meta, ...ALL_QUESTIONS.cotizador];
+
+// ============ FLASHCARDS ============
+const FLASHCARD_DECKS = {
+objections: [
+  {cat:"Precio", front:"'El precio es alto'", back:"Preguntar: '¿Es tema de monto o de timing?' Si es monto → mostrar ROI. Si el decisor es otro → preguntar cómo incluirlo."},
+  {cat:"Competencia", front:"'Ya tenemos Salesforce / Zendesk'", back:"'Adereso no reemplaza tu CRM — lo complementa. Salesforce gestiona datos; Adereso gestiona la conversación. Nos integramos vía API.'"},
+  {cat:"Producto", front:"'¿Es bot de árbol?'", back:"'No es árbol. Nuestros bots entienden lenguaje natural. Te muestro en vivo ahora.' → DEMO inmediata."},
+  {cat:"Canal", front:"'¿Cuándo tienen TikTok?'", back:"Preguntar: '¿Qué % de tu tráfico viene de TikTok?' Si es marginal, anclar a canales probados. Si es relevante, ser honesto + señalar riesgo del beta de competencia."},
+  {cat:"Implementación", front:"'¿Cuántas horas nos toma?'", back:"'2-3 horas semanales del owner. Nosotros ponemos 40 horas de desarrollo; ustedes solo revisan y aprueban.'"},
+  {cat:"Competencia", front:"'Eso lo hacemos ya'", back:"Preguntar: '¿Qué herramienta usan?' → escuchar → 'Lo que Adereso agrega es el inbox unificado: WhatsApp, Instagram y chat en un solo lugar, con historial. ¿Hoy lo ven centralizado?'"},
+  {cat:"WhatsApp", front:"'Mi número fue bloqueado por Meta'", back:"Explicar en 30s el por qué. Ruta: 1) verificar en Meta BM, 2) apelar con documentación, 3) migrar a API oficial con número nuevo. Ofrecer acompañar."},
+  {cat:"Canal", front:"'¿Integran con Mercado Libre?'", back:"Ser honesto: 'ML tiene API restringida que no permite mensajes externos — aplica a todos los proveedores. Sí podemos gestionar consultas post-compra por WhatsApp y conectar con su API de órdenes.'"},
+  {cat:"Precio", front:"'Quiero ver pricing ahora'", back:"Tener tabla abierta. 'Para [país], el ticket es $X. Con N conv/mes, el plan base parte en $Y. Te mando propuesta detallada al terminar.'"},
+  {cat:"Implementación", front:"'¿Pueden hacer checkout dentro del bot?'", back:"'Sí. El bot muestra catálogo, agrega ítems y genera link de pago (Transbank, MercadoPago, PayPal). Para Shopify/WooCommerce, la integración es nativa.'"},
+],
+glossary: [
+  {cat:"Vocabulario", front:"❌ Contrato", back:"✅ Acuerdo"},
+  {cat:"Vocabulario", front:"❌ Problema", back:"✅ Reto / Desafío"},
+  {cat:"Vocabulario", front:"❌ Plataforma", back:"✅ Alianza / Solución"},
+  {cat:"Vocabulario", front:"❌ Costo", back:"✅ Inversión / Valor"},
+  {cat:"Vocabulario", front:"❌ Startup", back:"✅ Empresa / Organización"},
+],
+products: [
+  {cat:"Desk", front:"¿Qué es Adereso Desk?", back:"Helpdesk inteligente con IA generativa para centralizar atención en múltiples canales. Agentes ilimitados. Canales: WhatsApp, IG, FB, LinkedIn, Email, Chat Web."},
+  {cat:"Studio", front:"¿Qué es Adereso Studio?", back:"Plataforma para crear agentes IA sin código. Dos tipos: Studio Flows (flujos estructurados) y Studio Agent (IA generativa autónoma). Multi-motor, privacidad total."},
+  {cat:"Engage", front:"¿Qué es Adereso Engage?", back:"Campañas masivas SOLO por WhatsApp. 98% tasa de apertura. HSM aprobados por Meta. Cobro: módulo + tráfico + 12% BSP sobre fee Meta."},
+  {cat:"Experience", front:"¿Qué es Adereso Experience?", back:"Encuestas post-atención (CSAT, NPS, CES) GRATIS incluidas en Desk. Mismo canal = 30% tasa respuesta. En la negociación: 'en otros proveedores te lo cobran aparte'."},
+  {cat:"VoC", front:"¿Qué es Adereso VoC?", back:"Análisis de voz del cliente con IA. Analytics (motivos, sentimiento, oportunidades de automatización) + Pauta de Calidad (evaluación a escala). Procesa texto y voz."},
+  {cat:"GPT", front:"¿Qué es Adereso GPT?", back:"Asistente interno para ejecutivos (no clientes). 3 niveles: Básico (PDFs), Intermedio (sistemas internos), Avanzado (ejecuta acciones). Se cobra por mensaje (futuro: créditos). -15% TMO."},
+  {cat:"Diferenciador", front:"¿Por qué Adereso vs competencia?", back:"1) BSP oficial Meta (sin intermediarios). 2) IA ilimitada por conversación (competencia cobra por token). 3) Agentes ilimitados. 4) Multi-motor IA. 5) Privacidad total (no fine-tuning)."},
+  {cat:"Pricing", front:"¿Cuánto cuesta el plan base?", back:"Desk desde $199 + Studio desde $199 + Mantención $160 = desde $558/mes (para bolsa mínima de 2.000 conv) + $990 setup único. Precios suben con mayor volumen. Contrato anual con 40% ya aplicado."},
+  {cat:"Cotizador", front:"¿Cuáles son servicios comisionables?", back:"Desk, Studio, Engage, Cassper, VoC y GPT. Los servicios custom (HH, Roadmap Custom, Soporte Premium) son NO comisionables."},
+  {cat:"Cotizador", front:"¿Qué recargo aplica Studio sin Desk?", back:"Studio tiene un recargo % adicional cuando se contrata standalone sin Desk. Configurado en las variables del cotizador."},
+  {cat:"Cotizador", front:"¿Qué es el addon Agent Automation?", back:"Es un addon de Studio que se suma a la cotización por $0 adicionales. Muestra al cliente la capacidad agentic del bot."},
+  {cat:"Cotizador", front:"¿Cómo funciona Cassper en el cotizador?", back:"3 planes: Starter $250/mes, Growth $500/mes, Scale $1.000/mes. Incluyen ventas recuperadas (USD 2.500/5.000/10.000). Luego 5% de success fee sobre recuperación adicional."},
+  {cat:"Cotizador", front:"¿En qué monedas puede cotizar?", back:"USD, UF (Chile) o Créditos. El cotizador convierte automáticamente con los tipos de cambio configurados."},
+  {cat:"Cotizador", front:"¿Qué son los escenarios del cotizador?", back:"Puedes guardar múltiples versiones de una cotización para comparar opciones lado a lado con el cliente (ej: solo Desk vs Desk+Studio)."},
+]
+};
+
+// ============ STATE ============
+let state = JSON.parse(localStorage.getItem('adereso_academy') || '{}');
+if (!state.completedLessons) state.completedLessons = [];
+if (!state.xp) state.xp = 0;
+if (!state.streak) state.streak = 0;
+if (!state.quizzesDone) state.quizzesDone = 0;
+if (!state.totalCorrect) state.totalCorrect = 0;
+if (!state.totalAnswered) state.totalAnswered = 0;
+if (!state.lastDate) state.lastDate = '';
+if (!state.level) state.level = 'bronce';
+if (!state.examsPassed) state.examsPassed = [];
+function save() { localStorage.setItem('adereso_academy', JSON.stringify(state)); }
+
+let currentLesson = null;
+let quizState = {};
+let fcState = {};
+
+// ============ LEVEL SYSTEM ============
+const LEVELS = {
+  bronce: { name: 'Bronce', lessons: [1,2,3,4,5,6,7,22], nextExam: 'plata', examName: 'Examen Bronce → Plata', examDesc: 'Completa todas las lecciones Bronce para desbloquear. 15 preguntas, necesitas 70% para aprobar.', minScore: 70 },
+  plata: { name: 'Plata', lessons: [8,9,10,11,12,13,14,23], nextExam: 'oro', examName: 'Examen Plata → Oro', examDesc: 'Completa todas las lecciones Plata para desbloquear. 15 preguntas, necesitas 80% para aprobar.', minScore: 80 },
+  oro: { name: 'Oro', lessons: [15,16,17,18,19,20,21], nextExam: null, examName: null, examDesc: null, minScore: null }
+};
+
+function getCurrentLevel() { return state.level || 'bronce'; }
+
+function getLevelForLesson(id) {
+  if (LEVELS.bronce.lessons.includes(id)) return 'bronce';
+  if (LEVELS.plata.lessons.includes(id)) return 'plata';
+  return 'oro';
+}
+
+function isLessonUnlocked(id) {
+  return true;
+}
+
+function areLevelLessonsComplete(level) {
+  return LEVELS[level].lessons.every(id => state.completedLessons.includes(id));
+}
+
+function getExamQuestions(level) {
+  if (level === 'bronce') {
+    const pool = [...ALL_QUESTIONS.proceso, ...ALL_QUESTIONS.bant, ...ALL_QUESTIONS.pricing];
+    return pool.sort(() => Math.random()-0.5).slice(0, 15);
+  } else if (level === 'plata') {
+    const pool = [...ALL_QUESTIONS.producto, ...ALL_QUESTIONS.meta, ...ALL_QUESTIONS.cotizador];
+    return pool.sort(() => Math.random()-0.5).slice(0, 15);
+  }
+  return [];
+}
+
+// ============ INIT ============
+function init() {
+  checkStreak();
+  renderHome();
+  updateHeader();
+}
+
+function checkStreak() {
+  const today = new Date().toDateString();
+  if (state.lastDate && state.lastDate !== today) {
+    const last = new Date(state.lastDate);
+    const diff = (new Date(today) - last) / (1000*60*60*24);
+    if (diff > 1) state.streak = 0;
+  }
+}
+
+function updateHeader() {
+  document.getElementById('xp').textContent = state.xp;
+  document.getElementById('streak').textContent = state.streak;
+  const lvl = getCurrentLevel();
+  const lvlName = LEVELS[lvl].name;
+  const currentLessons = LEVELS[lvl].lessons;
+  const doneCurrent = currentLessons.filter(id => state.completedLessons.includes(id)).length;
+  const totalCurrent = currentLessons.length;
+  const pct = Math.round(doneCurrent/totalCurrent*100);
+  document.getElementById('welcome-progress').textContent = `Nivel ${lvlName} · ${state.xp} XP`;
+  document.getElementById('lessons-done').textContent = `${doneCurrent}/${totalCurrent} lecciones ${lvlName}`;
+  document.getElementById('lessons-pct').textContent = `${pct}%`;
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+  document.getElementById('lesson-count').textContent = `${state.completedLessons.length}/${LESSONS.length} completadas`;
+  // Level badges
+  const badgeMap = {onboarding:'bronce', junior:'plata', senior:'oro'};
+  document.querySelectorAll('.level-badge').forEach(b => {
+    b.classList.remove('active','locked');
+    const bl = badgeMap[b.dataset.level];
+    const levelOrder = ['bronce','plata','oro'];
+    const currentIdx = levelOrder.indexOf(lvl);
+    const badgeIdx = levelOrder.indexOf(bl);
+    if (bl === lvl) {
+      b.classList.add('active');
+      b.textContent = LEVELS[bl].name;
+    } else if (badgeIdx <= currentIdx) {
+      b.textContent = LEVELS[bl].name + ' ✓';
+    } else {
+      b.classList.add('locked');
+      b.textContent = LEVELS[bl].name + ' 🔒';
+    }
+  });
+  // Progress tab
+  document.getElementById('stat-lessons').textContent = state.completedLessons.length;
+  document.getElementById('stat-quizzes').textContent = state.quizzesDone;
+  document.getElementById('stat-accuracy').textContent = state.totalAnswered ? Math.round(state.totalCorrect/state.totalAnswered*100)+'%' : '0%';
+  document.getElementById('stat-streak').textContent = state.streak;
+  // SRS card
+  const srsCount = state.completedLessons.length;
+  if (srsCount > 0) {
+    document.getElementById('srs-card').style.display = 'block';
+    document.getElementById('srs-text').textContent = `${Math.min(srsCount*2, 15)} conceptos listos para repasar`;
+  }
+  // Exam section
+  renderExamSection();
+}
+
+// ============ TABS ============
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('lesson-view').classList.remove('active');
+  document.getElementById('lesson-view').style.display = 'none';
+  document.getElementById('quiz-view').classList.remove('active');
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('flashcard-view').classList.remove('active');
+  document.getElementById('flashcard-view').style.display = 'none';
+  document.getElementById(`tab-${tab}`).style.display = 'block';
+  document.querySelectorAll('.nav-item')[['home','games','progress'].indexOf(tab)].classList.add('active');
+  if (tab === 'progress') renderAchievements();
+  window.scrollTo(0,0);
+}
+
+// ============ RENDER HOME ============
+function renderHome() {
+  const list = document.getElementById('lessons-list');
+  list.innerHTML = '';
+  const lvl = getCurrentLevel();
+  let lastLevel = '';
+  LESSONS.forEach(l => {
+    const done = state.completedLessons.includes(l.id);
+    const unlocked = isLessonUnlocked(l.id);
+    const lessonLevel = getLevelForLesson(l.id);
+    const typeClass = l.type === 'proceso' ? 'proceso' : l.type === 'producto' ? 'producto' : 'proceso';
+    const tagClass = l.type === 'proceso' ? 'tag-proceso' : l.type === 'producto' ? 'tag-producto' : 'tag-mixto';
+    const tagLabel = l.type === 'proceso' ? 'Proceso' : l.type === 'producto' ? 'Producto' : 'Mixto';
+    if (lessonLevel !== lastLevel) {
+      const lvlNames = {bronce:'Bronce',plata:'Plata',oro:'Oro'};
+      const lvlIcons = {bronce:'🥉',plata:'🥈',oro:'🥇'};
+      list.innerHTML += `<div class="section-title" style="margin-top:${lastLevel?'24px':'0'}">${lvlIcons[lessonLevel]} ${lvlNames[lessonLevel]} <span class="section-count">${!unlocked?'🔒 Bloqueado':''}</span></div>`;
+      lastLevel = lessonLevel;
+    }
+    list.innerHTML += `
+      <div class="lesson-card ${unlocked ? '' : 'locked'}" onclick="${unlocked ? 'openLesson('+l.id+')' : ''}">
+        <div class="lesson-num ${done ? 'done' : typeClass}">${done ? '✓' : l.icon}</div>
+        <div class="lesson-info">
+          <div class="lesson-title">${l.title}</div>
+          <div class="lesson-desc">${l.desc}</div>
+          <span class="lesson-tag ${tagClass}">${tagLabel}</span>
+          ${done ? '<div class="lesson-status done">✓ Completada</div>' : ''}
+        </div>
+      </div>`;
+  });
+}
+
+// ============ EXAM SECTION ============
+function renderExamSection() {
+  const lvl = getCurrentLevel();
+  const levelData = LEVELS[lvl];
+  const examSection = document.getElementById('exam-section');
+  const examCard = document.getElementById('exam-card');
+  if (!levelData.nextExam) {
+    if (lvl === 'oro' && areLevelLessonsComplete('oro')) {
+      examSection.style.display = 'block';
+      document.getElementById('exam-title').textContent = '🎓 ¡Graduado!';
+      document.getElementById('exam-desc').textContent = 'Has completado todos los niveles de la Sales Academy.';
+      document.getElementById('exam-status').textContent = '🏆 Nivel máximo alcanzado';
+      document.getElementById('exam-icon').textContent = '🏆';
+      examCard.className = 'lesson-card exam-passed';
+      examCard.onclick = null;
+      examCard.style.cursor = 'default';
+    } else {
+      examSection.style.display = 'none';
+    }
+    return;
+  }
+  const allDone = areLevelLessonsComplete(lvl);
+  const alreadyPassed = state.examsPassed.includes(lvl);
+  if (alreadyPassed) {
+    examSection.style.display = 'block';
+    examCard.className = 'lesson-card exam-passed';
+    document.getElementById('exam-title').textContent = `✅ ${levelData.examName}`;
+    document.getElementById('exam-desc').textContent = 'Aprobado — ya desbloqueaste el siguiente nivel.';
+    document.getElementById('exam-status').textContent = '✓ Aprobado';
+    document.getElementById('exam-status').style.color = 'var(--green)';
+    examCard.onclick = null;
+    examCard.style.cursor = 'default';
+  } else if (allDone) {
+    examSection.style.display = 'block';
+    examCard.className = 'lesson-card exam-ready';
+    document.getElementById('exam-title').textContent = levelData.examName;
+    document.getElementById('exam-desc').textContent = levelData.examDesc;
+    document.getElementById('exam-status').textContent = '→ Rendir examen ahora';
+    document.getElementById('exam-status').style.color = 'var(--accent)';
+    examCard.onclick = () => startExam(lvl);
+    examCard.style.cursor = 'pointer';
+  } else {
+    const remaining = levelData.lessons.filter(id => !state.completedLessons.includes(id)).length;
+    examSection.style.display = 'block';
+    examCard.className = 'lesson-card';
+    document.getElementById('exam-title').textContent = levelData.examName;
+    document.getElementById('exam-desc').textContent = `Completa ${remaining} lección${remaining>1?'es':''} más para desbloquear el examen.`;
+    document.getElementById('exam-status').textContent = '🔒 Bloqueado';
+    document.getElementById('exam-status').style.color = 'var(--text2)';
+    examCard.onclick = null;
+    examCard.style.cursor = 'default';
+  }
+}
+
+function startExam(level) {
+  const questions = getExamQuestions(level);
+  quizState = { questions, current: 0, score: 0, type: 'exam', examLevel: level };
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById('lesson-view').style.display = 'none';
+  document.getElementById('flashcard-view').style.display = 'none';
+  const view = document.getElementById('quiz-view');
+  view.style.display = 'block';
+  view.classList.add('active');
+  const lvlNames = {bronce:'Bronce → Plata', plata:'Plata → Oro'};
+  document.getElementById('quiz-title').textContent = `🏅 Examen ${lvlNames[level]}`;
+  renderQuizQuestion();
+  window.scrollTo(0,0);
+}
+
+// ============ LESSON VIEW ============
+function openLesson(id) {
+  currentLesson = LESSONS.find(l => l.id === id);
+  if (!currentLesson || !isLessonUnlocked(id)) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('flashcard-view').style.display = 'none';
+  const view = document.getElementById('lesson-view');
+  view.style.display = 'block';
+  view.classList.add('active');
+  document.getElementById('lesson-view-title').textContent = currentLesson.icon + ' ' + currentLesson.title;
+  document.getElementById('lesson-view-content').innerHTML = `<div class="lesson-content animate-in">${currentLesson.content}</div>`;
+  const btn = document.getElementById('complete-lesson-btn');
+  if (state.completedLessons.includes(id)) {
+    btn.textContent = '✓ Completada';
+    btn.className = 'complete-btn done';
+  } else {
+    btn.textContent = 'Completar lección ✓';
+    btn.className = 'complete-btn primary';
+  }
+  window.scrollTo(0,0);
+}
+
+function closeLessonView() {
+  document.getElementById('lesson-view').style.display = 'none';
+  document.getElementById('tab-home').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+function completeCurrentLesson() {
+  if (!currentLesson) return;
+  if (!state.completedLessons.includes(currentLesson.id)) {
+    state.completedLessons.push(currentLesson.id);
+    state.xp += 50;
+    const today = new Date().toDateString();
+    if (state.lastDate !== today) { state.streak++; state.lastDate = today; }
+    save();
+    updateHeader();
+    renderHome();
+  }
+  const currentIdx = LESSONS.findIndex(l => l.id === currentLesson.id);
+  if (currentIdx < LESSONS.length - 1) {
+    openLesson(LESSONS[currentIdx + 1].id);
+  } else {
+    closeLessonView();
+  }
+}
+
+// ============ QUIZ ============
+function startQuiz(type) {
+  const pool = ALL_QUESTIONS[type] || ALL_QUESTIONS.mixed;
+  const shuffled = [...pool].sort(() => Math.random()-0.5).slice(0, Math.min(10, pool.length));
+  quizState = { questions: shuffled, current: 0, score: 0, type };
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById('lesson-view').style.display = 'none';
+  document.getElementById('flashcard-view').style.display = 'none';
+  const view = document.getElementById('quiz-view');
+  view.style.display = 'block';
+  view.classList.add('active');
+  const titles = {proceso:'Quiz Proceso',producto:'Quiz Producto',mixed:'Quiz Mixto',bant:'Quiz BANT',pricing:'Quiz Pricing',cotizador:'Quiz Cotizador',meta:'Quiz Meta/WhatsApp'};
+  document.getElementById('quiz-title').textContent = titles[type] || 'Quiz';
+  renderQuizQuestion();
+  window.scrollTo(0,0);
+}
+
+function startSRS() { startQuiz('mixed'); }
+
+function renderQuizQuestion() {
+  const qs = quizState.questions;
+  const i = quizState.current;
+  if (i >= qs.length) { renderQuizScore(); return; }
+  const q = qs[i];
+  // Progress dots
+  let dots = '';
+  qs.forEach((_, idx) => {
+    dots += `<div class="quiz-dot ${idx < i ? 'done' : idx === i ? 'current' : ''}"></div>`;
+  });
+  document.getElementById('quiz-progress').innerHTML = dots;
+  let optsHtml = '';
+  q.opts.forEach((o, idx) => {
+    optsHtml += `<button class="quiz-option" onclick="answerQuiz(${idx})">${o}</button>`;
+  });
+  document.getElementById('quiz-content').innerHTML = `
+    <div class="quiz-question animate-in">
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-q-context">Pregunta ${i+1} de ${qs.length}</div>
+      <div id="quiz-options">${optsHtml}</div>
+      <div class="quiz-explanation" id="quiz-explain">${q.explain}</div>
+      <button class="quiz-next" id="quiz-next-btn" onclick="nextQuizQ()">Siguiente →</button>
+    </div>`;
+}
+
+function answerQuiz(idx) {
+  const q = quizState.questions[quizState.current];
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === q.correct) o.classList.add('correct');
+    if (i === idx && i !== q.correct) o.classList.add('wrong');
+  });
+  if (idx === q.correct) quizState.score++;
+  state.totalAnswered++;
+  if (idx === q.correct) state.totalCorrect++;
+  save();
+  document.getElementById('quiz-explain').style.display = 'block';
+  document.getElementById('quiz-next-btn').style.display = 'block';
+}
+
+function nextQuizQ() {
+  quizState.current++;
+  renderQuizQuestion();
+  window.scrollTo(0,0);
+}
+
+function renderQuizScore() {
+  const pct = Math.round(quizState.score / quizState.questions.length * 100);
+  const isExam = quizState.type === 'exam';
+  const examLevel = quizState.examLevel;
+  let msg, passed = false, levelUpMsg = '';
+
+  if (isExam) {
+    const minScore = LEVELS[examLevel].minScore;
+    passed = pct >= minScore;
+    if (passed) {
+      msg = '🏅 ¡Examen aprobado!';
+      const nextLevel = LEVELS[examLevel].nextExam;
+      levelUpMsg = `Has subido a nivel ${LEVELS[nextLevel].name}`;
+      if (!state.examsPassed.includes(examLevel)) {
+        state.examsPassed.push(examLevel);
+        state.level = nextLevel;
+        state.xp += 200;
+      }
+    } else {
+      msg = `❌ No aprobado (necesitas ${minScore}%)`;
+      levelUpMsg = 'Repasa las lecciones e intenta de nuevo';
+    }
+  } else {
+    msg = pct >= 90 ? '🏆 Excelente!' : pct >= 70 ? '👏 Muy bien!' : pct >= 50 ? '💪 Sigue practicando' : '📚 Repasa las lecciones';
+  }
+  state.quizzesDone++;
+  if (!isExam) state.xp += quizState.score * 10;
+  const today = new Date().toDateString();
+  if (state.lastDate !== today) { state.streak++; state.lastDate = today; }
+  save();
+  updateHeader();
+  renderHome();
+  document.getElementById('quiz-progress').innerHTML = '';
+  document.getElementById('quiz-content').innerHTML = `
+    <div class="quiz-score animate-in">
+      <div class="score-num">${pct}%</div>
+      <div class="score-label">${quizState.score}/${quizState.questions.length} correctas</div>
+      <div class="score-msg">${msg}</div>
+      ${levelUpMsg ? `<div style="margin-top:8px;font-size:14px;color:${passed?'var(--green)':'var(--accent)'};font-weight:600">${levelUpMsg}</div>` : ''}
+      <div style="margin-top:8px;font-size:13px;color:var(--text2)">+${isExam && passed ? 200 : quizState.score*10} XP</div>
+      ${isExam && !passed ? `<button class="complete-btn primary" style="margin-top:16px;background:var(--accent)" onclick="startExam('${examLevel}')">Reintentar examen</button>` : ''}
+      <button class="complete-btn primary" style="margin-top:${isExam && !passed ? '8' : '20'}px" onclick="${isExam ? 'closeExamView()' : 'closeQuizView()'}">Volver</button>
+    </div>`;
+}
+
+function closeExamView() {
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('tab-home').style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item')[0].classList.add('active');
+  renderHome();
+  updateHeader();
+  window.scrollTo(0,0);
+}
+
+function closeQuizView() {
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('tab-games').style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item')[1].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ============ FLASHCARDS ============
+function startFlashcards(deck) {
+  const cards = [...(FLASHCARD_DECKS[deck] || [])].sort(() => Math.random()-0.5);
+  fcState = { cards, current: 0, known: 0, deck };
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById('lesson-view').style.display = 'none';
+  document.getElementById('quiz-view').style.display = 'none';
+  const view = document.getElementById('flashcard-view');
+  view.style.display = 'block';
+  view.classList.add('active');
+  const titles = {objections:'🛡️ Objeciones',glossary:'📝 Glosario',products:'🃏 Productos'};
+  document.getElementById('flashcard-title').textContent = titles[deck] || 'Tarjetas';
+  renderCard();
+  window.scrollTo(0,0);
+}
+
+function renderCard() {
+  if (fcState.current >= fcState.cards.length) {
+    document.getElementById('fc-counter').textContent = '';
+    document.getElementById('flashcard').style.display = 'none';
+    document.querySelector('.flashcard-nav').innerHTML = `
+      <div style="text-align:center;width:100%">
+        <div style="font-size:48px;margin-bottom:12px">🎉</div>
+        <div style="font-size:20px;font-weight:800">¡Terminaste!</div>
+        <div style="font-size:14px;color:var(--text2);margin:8px 0">${fcState.known}/${fcState.cards.length} sabías</div>
+        <button class="complete-btn primary" style="margin-top:16px" onclick="closeFlashcardView()">Volver</button>
+      </div>`;
+    state.xp += fcState.known * 5;
+    save(); updateHeader();
+    return;
+  }
+  const c = fcState.cards[fcState.current];
+  document.getElementById('fc-counter').textContent = `${fcState.current+1} / ${fcState.cards.length}`;
+  document.getElementById('fc-category').textContent = c.cat;
+  document.getElementById('fc-front').textContent = c.front;
+  document.getElementById('fc-back').textContent = c.back;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('flashcard').style.display = 'block';
+}
+
+function flipCard() { document.getElementById('flashcard').classList.toggle('flipped'); }
+
+function nextCard(knew) {
+  if (knew) fcState.known++;
+  fcState.current++;
+  renderCard();
+}
+
+function closeFlashcardView() {
+  document.getElementById('flashcard-view').style.display = 'none';
+  document.getElementById('tab-games').style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item')[1].classList.add('active');
+  document.querySelector('.flashcard-nav').innerHTML = `
+    <button class="flashcard-btn dunno" onclick="nextCard(false)">No lo sé</button>
+    <button class="flashcard-btn flip" onclick="flipCard()">Voltear</button>
+    <button class="flashcard-btn know" onclick="nextCard(true)">Lo sé ✓</button>`;
+  window.scrollTo(0,0);
+}
+
+// ============ ACHIEVEMENTS ============
+function renderAchievements() {
+  const list = document.getElementById('achievements-list');
+  const achs = [
+    {icon:'🎓', name:'Primera lección', desc:'Completa tu primera lección', done: state.completedLessons.length >= 1},
+    {icon:'🥉', name:'Bronce completo', desc:'Completa todas las lecciones Bronce', done: areLevelLessonsComplete('bronce')},
+    {icon:'🥈', name:'Nivel Plata', desc:'Aprueba el examen y sube a Plata', done: state.examsPassed.includes('bronce')},
+    {icon:'🥇', name:'Nivel Oro', desc:'Aprueba el examen y sube a Oro', done: state.examsPassed.includes('plata')},
+    {icon:'📦', name:'Conocedor de producto', desc:'Completa 5 lecciones de producto', done: state.completedLessons.filter(id => {const l=LESSONS.find(x=>x.id===id);return l&&l.type==='producto';}).length >= 5},
+    {icon:'⚙️', name:'Maestro del proceso', desc:'Completa 5 lecciones de proceso', done: state.completedLessons.filter(id => {const l=LESSONS.find(x=>x.id===id);return l&&l.type==='proceso';}).length >= 5},
+    {icon:'🧠', name:'Quiz master', desc:'Completa 5 quizzes', done: state.quizzesDone >= 5},
+    {icon:'🎯', name:'Precisión 80%+', desc:'Mantén 80%+ de aciertos', done: state.totalAnswered > 0 && (state.totalCorrect/state.totalAnswered) >= 0.8},
+    {icon:'🔥', name:'Racha de 3 días', desc:'Practica 3 días seguidos', done: state.streak >= 3},
+    {icon:'🏆', name:'Graduación', desc:'Completa todas las lecciones', done: state.completedLessons.length >= LESSONS.length},
+  ];
+  list.innerHTML = achs.map(a => `
+    <div class="lesson-card" style="opacity:${a.done?1:0.5}">
+      <div class="lesson-num ${a.done?'done':'proceso'}" style="font-size:20px">${a.icon}</div>
+      <div class="lesson-info">
+        <div class="lesson-title">${a.name}</div>
+        <div class="lesson-desc">${a.desc}</div>
+        ${a.done ? '<div class="lesson-status done">✓ Desbloqueado</div>' : '<div class="lesson-status pending">Pendiente</div>'}
+      </div>
+    </div>`).join('');
+}
+
+function resetProgress() {
+  if (!confirm('¿Seguro que quieres borrar todo tu progreso? Esta acción no se puede deshacer.')) return;
+  localStorage.removeItem('adereso_academy');
+  location.reload();
+}
+
+init();
+</script>
+</body>
+</html>
