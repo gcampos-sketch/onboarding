@@ -760,7 +760,7 @@ const LESSONS = [
 <h3>Seguridad</h3>
 <ul>
 <li>Encriptación AES-256 en tránsito y reposo</li>
-<li>SSO, 4 niveles de acceso, caducidad de sesión</li>
+<li>SSO, 3 niveles de acceso (ejecutivo, supervisor, admin), caducidad de sesión</li>
 <li>Ofuscamiento automático de tarjetas de crédito</li>
 <li>Palabras prohibidas y restricciones de archivos por rol</li>
 </ul>
@@ -769,7 +769,7 @@ const LESSONS = [
 
 <h3>Novedades</h3>
 <ul>
-<li>📞 <strong>WhatsApp Calling (Beta):</strong> Llamadas outbound desde el ticket. Solo salientes por ahora.</li>
+<li>📞 <strong>WhatsApp Calling (Beta):</strong> Llamadas salientes (outbound) desde el ticket por WhatsApp. No existen llamadas entrantes.</li>
 <li>📱 <strong>App Móvil (Beta):</strong> iOS y Android. Login biométrico, bandeja configurable, multimedia completa. Clave para vendedores en terreno.</li>
 <li>🎠 <strong>Carruseles:</strong> Visualización completa dentro del ticket (imágenes, texto, botones)</li>
 <li>📎 <strong>Subir archivos vía API:</strong> Obtener URL pública sin hosting propio</li>
@@ -840,10 +840,12 @@ const LESSONS = [
 <h3>🛒 Tiendas</h3>
 <p>Conexión a catálogos de producto para que el bot recomiende y venda:</p>
 <ul>
-<li>Shopify, VTEX y otras plataformas</li>
+<li><strong>Shopify (MCP):</strong> Conexión fácil sin API — solo pones la URL de la tienda y se crea un componente. Listo.</li>
+<li><strong>VTEX, WooCommerce y otros:</strong> Cualquier tienda con API disponible se puede conectar</li>
 <li>El bot consulta stock, precios y recomienda productos</li>
 <li>Puede mostrar carruseles con productos</li>
 </ul>
+<div class="tip">💡 Para Shopify basta con el MCP: pones la página web de la tienda, creas un componente y el bot ya accede al catálogo completo. Sin desarrollo.</div>
 
 <h3>📂 Recursos compartidos</h3>
 <p>Componentes, herramientas y tiendas que se configuran una vez y se reutilizan en múltiples bots. Evita duplicar trabajo.</p>
@@ -1346,11 +1348,11 @@ producto: [
   {q:"¿Se pueden conectar múltiples números de WhatsApp en una sola instancia de Desk?", opts:["No, solo uno","Sí, múltiples cuentas y marcas","Solo con plan Enterprise","Máximo 3"], correct:1, explain:"Desk soporta múltiples cuentas de WhatsApp, Instagram y otros canales en una sola instancia. Útil para empresas con varias marcas."},
   {q:"¿Qué métodos de asignación de tickets tiene Desk?", opts:["Solo manual","Round Robin únicamente","Round Robin, IA, topes por ejecutivo, FIFO/LIFO","Solo FIFO"], correct:2, explain:"Desk tiene distribución inteligente con Round Robin, IA para priorización, topes por ejecutivo, y FIFO/LIFO."},
   {q:"¿Desk cobra por número de usuarios o licencias?", opts:["Sí, por licencia","No, agentes ilimitados","Solo los primeros 10 gratis","Por departamento"], correct:1, explain:"Licencias ilimitadas — el precio sube por volumen de conversaciones, no por usuarios. Es un diferenciador fuerte vs competencia que cobra por seat."},
-  {q:"¿Qué pasa con WhatsApp Calling en Desk (Beta)?", opts:["Llamadas entrantes y salientes","Solo llamadas salientes (agente → usuario)","Solo llamadas entrantes","No está disponible"], correct:1, explain:"Beta actual: solo llamadas SALIENTES. Las entrantes, grabación y callback aún no están disponibles."},
+  {q:"¿Qué tipo de llamadas soporta Desk por WhatsApp?", opts:["Entrantes y salientes","Solo salientes (agente → usuario)","Solo entrantes","No soporta llamadas"], correct:1, explain:"Solo llamadas SALIENTES por WhatsApp. No existen llamadas entrantes (inbound)."},
   {q:"¿Qué formatos soporta Desk en las conversaciones?", opts:["Solo texto","Texto e imágenes","Geolocalización, emojis, audios, transcripciones, comprensión de imágenes","Solo texto y emojis"], correct:2, explain:"Desk soporta geolocalización, emojis, audios, transcripciones audio-a-texto. La IA comprende imágenes y audio."},
   {q:"¿Se recomienda usar bots conversacionales en el canal de email?", opts:["Sí, sin restricciones","No se recomienda — solo primera respuesta + derivación","Solo con Studio Agent","Depende del cliente"], correct:1, explain:"Email es asíncrono. Recomendado: primera respuesta automática + derivación a humano. Máx 2 turnos. Solo texto plano, sin botones."},
   {q:"¿Qué es IVR Deflection en Desk?", opts:["Un bot de voz","Desvía llamadas a WhatsApp en vez de esperar en línea","Un sistema de grabación","Un menú de opciones telefónicas"], correct:1, explain:"IVR Deflection desvía llamadas a un chat de WhatsApp. Reduce costo de llamadas + mejora experiencia del cliente."},
-  {q:"¿Cuántos niveles de acceso tiene Desk?", opts:["2 (admin y ejecutivo)","3","4 (ejecutivo, supervisor, admin, superadmin)","5"], correct:2, explain:"4 niveles: ejecutivo, supervisor, admin y superadmin. Cada uno con permisos distintos."},
+  {q:"¿Cuántos niveles de acceso tiene Desk?", opts:["2 (admin y ejecutivo)","3 (ejecutivo, supervisor, admin)","4","5"], correct:1, explain:"3 niveles: ejecutivo, supervisor y admin. Cada uno con permisos distintos."},
   {q:"¿Qué canales NO soporta Desk actualmente?", opts:["Instagram","LinkedIn","TikTok y MercadoLibre","Email"], correct:2, explain:"TikTok y MercadoLibre están próximamente (🔜). Todos los demás canales principales ya están soportados."},
   // STUDIO features
   {q:"¿Cuál es la diferencia entre Studio Flows y Studio Agent?", opts:["Flows es más caro","Flows son flujos paso a paso; Agent es IA autónoma","Agent no tiene IA","Son lo mismo con distinto nombre"], correct:1, explain:"Flows: flujos estructurados (encuestas, formularios). Agent: IA generativa autónoma que responde FAQs, consulta productos y toma decisiones sin flujos predefinidos."},
@@ -1364,7 +1366,7 @@ producto: [
   // Studio avanzado
   {q:"¿Qué son los Activadores en Studio?", opts:["Botones dentro del chat","Las reglas que definen cuándo se activa el bot","Los mensajes de bienvenida","Los componentes de personalidad"], correct:1, explain:"Activadores definen cuándo y bajo qué condiciones el bot se activa: por canal, intención, palabras clave o tipo de mensaje."},
   {q:"¿Qué son los Recursos Compartidos en Studio?", opts:["Documentos del cliente","Componentes y herramientas reutilizables entre múltiples bots","Las APIs conectadas","Los reportes exportados"], correct:1, explain:"Se configuran una vez y se reutilizan en múltiples bots. Evita duplicar trabajo al crear componentes, herramientas y tiendas."},
-  {q:"¿Qué plataformas de ecommerce se conectan como Tienda en Studio?", opts:["Solo Shopify","Shopify y VTEX","Solo WooCommerce","Ninguna, es manual"], correct:1, explain:"Studio conecta tiendas de Shopify, VTEX y otras plataformas para que el bot consulte stock, precios y recomiende productos."},
+  {q:"¿Qué plataformas de ecommerce se conectan como Tienda en Studio?", opts:["Solo Shopify","Shopify (MCP fácil) + VTEX + cualquier tienda con API","Solo WooCommerce","Ninguna, es manual"], correct:1, explain:"Shopify se conecta fácil con MCP (solo pones la URL). VTEX, WooCommerce y cualquier tienda con API disponible también se conectan."},
   {q:"¿Qué muestra el Behavior Diagram en Analytics de Studio?", opts:["Los errores del bot","Los flujos reales de conversación del bot","El código fuente","Las métricas de Desk"], correct:1, explain:"El Behavior Diagram visualiza los flujos reales que siguen las conversaciones del bot — permite identificar puntos de abandono."},
   {q:"¿Para qué sirve el Diagnóstico en Studio?", opts:["Para reparar bugs de código","Para verificar la salud del bot antes de publicar","Para medir satisfacción","Para exportar datos"], correct:1, explain:"Diagnóstico detecta problemas de configuración del bot ANTES de publicarlo. Es un chequeo preventivo."},
   // Engage avanzado
@@ -1970,16 +1972,77 @@ function saveNotes() {
 }
 
 // ============ LESSON CHALLENGE ============
-const LESSON_QUESTIONS = {};
-function getLessonQuestions(lessonId) {
-  const l = LESSONS.find(x => x.id === lessonId);
-  if (!l) return [];
-  let pool = [];
-  if (l.type === 'proceso') pool = [...ALL_QUESTIONS.proceso, ...ALL_QUESTIONS.bant];
-  else if (l.type === 'producto') pool = [...ALL_QUESTIONS.producto];
-  else pool = [...ALL_QUESTIONS.proceso, ...ALL_QUESTIONS.producto];
-  return pool.sort(() => Math.random()-0.5).slice(0, 3);
-}
+const LESSON_QS = {
+  1:[{q:"¿Cuántos pasos tiene el pipeline comercial?",opts:["6","9","12","7"],correct:1,e:"Son 9 pasos: desde calificación SDR hasta business review + expansión."},
+     {q:"¿Quién asigna al PM cuando se cierra un deal?",opts:["El AE","El cliente","Diego Silva (Head SSPP)","El KAM"],correct:2,e:"Diego Silva asigna según capacidad real."},
+     {q:"¿Cuántos KAMs tiene el equipo?",opts:["3","2","1","5"],correct:2,e:"1 KAM para toda la cartera — por eso la segmentación A/B/C es obligatoria."}],
+  2:[{q:"¿Qué significa la B en BANT?",opts:["Business","Budget","Baseline","Buyer"],correct:1,e:"Budget: disposición a pagar desde USD 600-800/mes."},
+     {q:"¿Cuál es el mínimo de tickets/mes para calificar?",opts:["500","1.000","2.000","5.000"],correct:2,e:"Mínimo 2.000 tickets/mes."},
+     {q:"Para outbound, ¿qué nivel de BANT se exige?",opts:["BANT completo","Solo Budget","Autoridad + Necesidad","Solo Need"],correct:2,e:"Outbound solo requiere Autoridad + Necesidad."}],
+  3:[{q:"¿Cuál es el mínimo de éxito de la primera reunión?",opts:["Cerrar el deal","Agendar segunda reunión","Enviar propuesta","Hacer demo"],correct:1,e:"Mínimo: agendar segunda reunión y/o compromiso de revisar propuesta."},
+     {q:"¿Cuánto dura la técnica del silencio?",opts:["1 segundo","4 segundos máx","10 segundos","30 segundos"],correct:1,e:"El cliente aguanta máx 4 segundos antes de hablar — ahí sale el dolor real."},
+     {q:"Si un inbound da suficiente contexto, ¿qué haces?",opts:["Repetir discovery","Saltar directo a demo (Etapa 4)","Enviar propuesta","Cerrar la reunión"],correct:1,e:"Si da contexto suficiente → saltar directo a Etapa 4 (demo)."}],
+  4:[{q:"¿Cuándo mostrar pricing al cliente?",opts:["Al inicio de la reunión","Solo si lo pide o si la reunión llegó a ese punto","Siempre en la segunda reunión","Nunca"],correct:1,e:"Nunca antes de cubrir discovery y demo."},
+     {q:"¿Cuánto es el plan base mínimo Desk+Studio?",opts:["$199/mes","$359/mes","Desde $558/mes","$990/mes"],correct:2,e:"Desk $199 + Studio $199 + Mantención $160 = desde $558/mes para 2.000 conv."},
+     {q:"¿Se puede ofrecer trimestral proactivamente?",opts:["Sí","Solo si el cliente pregunta","Siempre en Enterprise","Depende del país"],correct:1,e:"Nunca ofrecer trimestral proactivamente. Solo si pregunta: 'no incluye el 40%'."}],
+  5:[{q:"Si el cliente dice 'el precio es alto', ¿qué hacer?",opts:["Bajar el precio","Preguntar: ¿es tema de monto o de timing?","Ignorar y seguir","Ofrecer descuento"],correct:1,e:"Enfrentar directo. Si es monto → ROI. Si el decisor es otro → incluirlo."},
+     {q:"Si dicen 'ya tenemos Salesforce', ¿qué responder?",opts:["Adereso es mejor","Adereso no reemplaza tu CRM, lo complementa","Cambiar de tema","Ofrecer migración"],correct:1,e:"Posicionar como complemento, no reemplazo."},
+     {q:"Si preguntan '¿es bot de árbol?', ¿qué hacer?",opts:["Decir que no y seguir","Mostrar demo en vivo ahora","Enviar documentación","Ignorar la pregunta"],correct:1,e:"Demo inmediata — mostrar, no solo afirmar."}],
+  6:[{q:"¿Cuándo enviar el correo post-reunión?",opts:["En 48 horas","Mismo día o antes de las 10:00 del siguiente","En la semana","Cuando pueda"],correct:1,e:"Sin excepción: mismo día o antes de las 10:00 AM del siguiente."},
+     {q:"Después de 21 días sin respuesta, ¿qué hacer?",opts:["Seguir insistiendo","Marcar como Perdido - Sin Respuesta","Escalar al KAM","Enviar descuento"],correct:1,e:"Marcar como perdido. Reactivar en 60-90 días si era de alta calidad."},
+     {q:"¿Cada cuánto hacer follow-up a un SMB?",opts:["Cada semana","Cada 2-3 días","Cada mes","Solo una vez"],correct:1,e:"SMB: cadencia agresiva cada 2-3 días. Enterprise: cada 5-7 días."}],
+  7:[{q:"¿Qué se activa automáticamente al firmar la propuesta?",opts:["Nada, todo es manual","Canal Slack + correo datos fiscales + contrato","Solo el contrato","Solo el canal Slack"],correct:1,e:"Se activan: canal Slack, correo con formulario fiscal, y Adobo genera contrato."},
+     {q:"¿El AE desaparece del cliente después del traspaso?",opts:["Sí, 100%","No — mantiene relación para upsell pero PM tiene ownership","Depende del deal","Solo si el KAM lo pide"],correct:1,e:"AE mantiene relación para upsell, pero ownership operativo es 100% del PM."},
+     {q:"¿Quién genera el borrador de contrato?",opts:["El AE manualmente","Adobo automáticamente","El equipo legal","El PM"],correct:1,e:"Adobo genera el borrador automáticamente al recibir los datos fiscales."}],
+  22:[{q:"¿Dónde se hace la demo?",opts:["PowerPoint","Adereso Studio","Zoom","Google Docs"],correct:1,e:"La demo se hace en Studio: crear agente, activar tab Demo, generar link WhatsApp."},
+      {q:"¿Qué debe enviar el cliente para iniciar la demo?",opts:["Su email","Un código predeterminado por WhatsApp","Nada","Un formulario"],correct:1,e:"El cliente envía el código predeterminado en WhatsApp y la demo inicia."},
+      {q:"¿Se puede usar la instancia de un cliente real para demos?",opts:["Sí","No, siempre usar ADERESO DEMO","Solo con permiso","Depende del caso"],correct:1,e:"Siempre usar instancia ADERESO DEMO, nunca la de un cliente real."}],
+  8:[{q:"¿Cuántos canales soporta Desk actualmente?",opts:["5","7","9+","Solo WhatsApp"],correct:2,e:"9+ canales: WhatsApp, IG, FB, LinkedIn, Email, Chat Web, App Store, Play Store, X, IVR Deflection."},
+     {q:"¿Desk cobra por número de usuarios?",opts:["Sí","No, agentes ilimitados","Solo Enterprise","Hasta 50 gratis"],correct:1,e:"Licencias ilimitadas — el precio sube por conversaciones, no por usuarios."},
+     {q:"¿Qué es IVR Deflection?",opts:["Un bot de voz","Desvía llamadas a WhatsApp","Un sistema de grabación","Un menú telefónico"],correct:1,e:"Desvía llamadas a chat de WhatsApp. Reduce costos y mejora experiencia."}],
+  9:[{q:"¿Cuál es la diferencia entre Flows y Agent?",opts:["Flows es más caro","Flows: flujos paso a paso; Agent: IA autónoma","Agent no tiene IA","Son iguales"],correct:1,e:"Flows: estructurados. Agent: IA generativa autónoma con decisiones."},
+     {q:"¿Cómo se conecta Shopify fácil a Studio?",opts:["Con desarrollo custom","Con MCP: solo poner la URL de la tienda","No se puede","Solo vía API REST"],correct:1,e:"MCP de Shopify: solo pones la URL, creas un componente y listo. Sin API."},
+     {q:"¿Qué hace el Diagnóstico de Studio?",opts:["Repara bugs","Verifica la salud del bot antes de publicar","Mide satisfacción","Exporta datos"],correct:1,e:"Detecta problemas de configuración ANTES de publicar. Chequeo preventivo."}],
+  10:[{q:"¿En qué canal funciona Engage?",opts:["Todos","Solo WhatsApp","WhatsApp + Email","WhatsApp + IG"],correct:1,e:"Engage funciona EXCLUSIVAMENTE por WhatsApp."},
+      {q:"¿Cómo sube un número de TIER_1K a TIER_10K?",opts:["Pagando más","Enviando 1K con buena calidad en ~3 días","Pidiendo a Meta","Automáticamente en 30 días"],correct:1,e:"Enviar 1K con buena calidad y Meta sube el tier en ~3 días."},
+      {q:"¿Qué tipos de HSM existen?",opts:["Solo Marketing","Marketing, Utility y Autenticación","Solo Utility","Marketing y Ventas"],correct:1,e:"3 tipos: Marketing (promos), Utility (recordatorios), Autenticación (OTP)."}],
+  11:[{q:"¿Experience tiene costo adicional?",opts:["Sí, fee mensual","No, viene GRATIS incluido en Desk","Solo en Plan 2","Depende del volumen"],correct:1,e:"GRATIS incluido en Desk. En la negociación: 'en otros proveedores te lo cobran aparte'."},
+      {q:"¿Qué tasa de respuesta tienen las encuestas?",opts:["5%","15%","30%","50%"],correct:2,e:"30% porque van por el mismo canal de atención (vs 2-5% del email)."},
+      {q:"¿Qué tipos de encuesta soporta Experience?",opts:["Solo CSAT","Solo NPS","CSAT, NPS y CES","Solo formularios"],correct:2,e:"CSAT (satisfacción), NPS (recomendación) y CES (esfuerzo del cliente)."}],
+  12:[{q:"¿VoC puede procesar voz además de texto?",opts:["No, solo texto","Sí, texto y voz","Solo voz","Solo chat"],correct:1,e:"VoC procesa ambos: texto y audio/voz."},
+      {q:"¿VoC necesita integración adicional si ya tiene Desk?",opts:["Sí, siempre","No, accede directo a los datos de Desk","Depende","Solo con API"],correct:1,e:"Sin integración adicional — accede directamente a las conversaciones de Desk."},
+      {q:"¿Qué hace la Pauta de Calidad de VoC?",opts:["Envía encuestas","IA evalúa miles de conversaciones vs criterios definidos","Genera reportes de ventas","Monitorea agentes en vivo"],correct:1,e:"Escala el análisis de calidad a miles de conversaciones eliminando subjetividad manual."}],
+  13:[{q:"¿GPT es para clientes finales o para ejecutivos?",opts:["Clientes finales","Ejecutivos internos","Ambos","Depende del plan"],correct:1,e:"GPT es asistente para EJECUTIVOS internos, no para clientes finales."},
+      {q:"¿Cómo se cobra GPT?",opts:["Por usuario","Por conversación","Por mensaje enviado","Fee fijo"],correct:2,e:"Por mensaje enviado. Futuro: por créditos."},
+      {q:"¿Cuánto reduce GPT el TMO?",opts:["5%","10%","15%","25%"],correct:2,e:"-15% en TMO. Con 50 agentes y TMO 6 min = ~450 hrs/mes recuperadas."}],
+  14:[{q:"¿Qué necesita el cliente para vincular con Adereso?",opts:["Acceso parcial","Admin total del portafolio Meta","Acceso a Facebook","Cuenta de IG Business"],correct:1,e:"Se necesita administrador total del Business Manager."},
+      {q:"Si el portafolio está bloqueado, ¿qué gravedad tiene?",opts:["Baja","Media","Alta","Muy alta, generalmente definitivo"],correct:3,e:"Bloqueo de portafolio = muy alta gravedad, sin solución directa. Escalar a Roma."},
+      {q:"¿Cuántas personas deberían tener admin del BM?",opts:["Solo 1","Al menos 2","Mínimo 5","Todo el equipo"],correct:1,e:"Buena práctica: más de una persona. Si la única se va, pierden el control."}],
+  23:[{q:"¿Qué mide Cassper?",opts:["Tickets cerrados","Ventas concretadas","Ventas perdidas en conversaciones","Satisfacción"],correct:2,e:"Cassper detecta conversaciones con intención de compra que no cerraron."},
+      {q:"¿Cuánto cuesta el plan Starter de Cassper?",opts:["$100/mes","$250/mes","$500/mes","$1.000/mes"],correct:1,e:"Starter: $250/mes con 2.300 créditos IA y USD 2.500 en ventas recuperadas incluidas."},
+      {q:"¿Cuánto tarda Cassper en dar primeros insights?",opts:["1 día","Día 15","3 meses","6 meses"],correct:1,e:"Primeros insights desde el día 15. Resultados sólidos entre 30-90 días."}],
+  15:[{q:"Para outbound, ¿se exige BANT completo?",opts:["Sí","No, solo Autoridad + Necesidad","Solo Budget","Depende"],correct:1,e:"Outbound solo requiere Autoridad + Necesidad."},
+      {q:"¿Cuántos touchpoints antes de dar un lead outbound por perdido?",opts:["3","5","7","10"],correct:1,e:"5 en total: 3 llamadas + 1 WhatsApp + 1 correo."},
+      {q:"¿Qué herramientas usa el SDR para outbound?",opts:["Solo HubSpot","Apollo + LinkedIn Sales Navigator","Salesforce","Excel"],correct:1,e:"Apollo para secuencias y LinkedIn Sales Navigator para identificar leads."}],
+  16:[{q:"¿Cuál caso de uso tiene el ciclo de decisión más corto?",opts:["Centralizar canales","Análisis VoC (1-2 semanas)","Bot de compra","Filtrar SPAM"],correct:1,e:"VoC: 1-2 semanas. Ideal para entrar rápido en cuentas nuevas."},
+      {q:"¿Qué productos se usan para vender masivamente por WhatsApp?",opts:["Desk + VoC","Studio + Engage","Solo Engage","Desk + Engage"],correct:1,e:"Studio (bot de venta) + Engage (campañas masivas)."},
+      {q:"¿Cuál es el ROI de referencia de Adereso?",opts:["10x","50x","100x","200x"],correct:2,e:"ROI: 100x según casos de referencia."}],
+  17:[{q:"¿Adereso tiene certificación ISO 27001?",opts:["Sí, certificado","En proceso de certificación","No aplica","Lo tendrán en 2030"],correct:1,e:"En proceso (presupuesto 2025, auditorías 2026-2029). Ethical hacking anual OWASP."},
+      {q:"¿Adereso tiene instancias dedicadas por cliente?",opts:["Sí","No, es SaaS multi-tenant","Solo Enterprise","Bajo pedido"],correct:1,e:"Multi-tenant con aislamiento lógico. Declarar desde el inicio si el cliente lo requiere."},
+      {q:"¿Qué cubre el SLA de Adereso?",opts:["Todo incluyendo WhatsApp","Solo la plataforma, no fees WhatsApp/BSP","Solo WhatsApp","Solo Studio"],correct:1,e:"SLA aplica a la plataforma. Los fees de WhatsApp/BSP no están cubiertos."}],
+  18:[{q:"¿Qué hace el comando /reus de Adobo?",opts:["Resume pipeline","Brief de reuniones del día","Lista clientes","Documenta operativa"],correct:1,e:"/reus genera brief completo: BANT, desafío, casos de éxito y preguntas."},
+      {q:"¿Cada cuánto Adobo notifica deals ganados?",opts:["Cada hora","Cada 5 minutos","Diariamente","Semanalmente"],correct:1,e:"Cada 5 minutos detecta deals en Etapa 6 y notifica #comercial."},
+      {q:"¿Cuándo llega el brief diario de reuniones?",opts:["7 AM","9 AM","12 PM","5 PM"],correct:1,e:"9:00 AM Chile, lunes a viernes, por DM a cada AE."}],
+  19:[{q:"¿Cuál es el criterio de agentes para SMB vs Enterprise?",opts:["10","25","50","100"],correct:2,e:"<50 agentes = SMB. >50 agentes = Enterprise."},
+      {q:"¿Cada cuánto hacer follow-up a Enterprise?",opts:["Cada 2 días","Cada 5-7 días","Semanal","Mensual"],correct:1,e:"Enterprise: más espaciado, cada 5-7 días. SMB: cada 2-3 días."},
+      {q:"¿Cuándo identificar si es SMB o Enterprise?",opts:["En la calificación","En Etapa 5 (cierre)","Post-venta","No importa"],correct:1,e:"En Etapa 5. Define timing, proceso de aprobación y personalización."}],
+  20:[{q:"Después de 90 días sin contacto, ¿qué pasa con el deal?",opts:["Se mantiene","Se crea deal nuevo","Se elimina","Se congela"],correct:1,e:"Después de 90 días se crea deal nuevo. Fuente depende de quién reactiva."},
+      {q:"¿Qué es obligatorio al perder un deal?",opts:["Nada","Completar motivo de cierre perdido en HubSpot","Llamar al cliente","Escalar al KAM"],correct:1,e:"Obligatorio: completar 'Motivo de cierre perdido' + nota + tarea de seguimiento."},
+      {q:"¿La PoC tiene costo para el cliente?",opts:["Sí","No, sin costo","Depende","Solo Enterprise"],correct:1,e:"Sin costo. El AE la genera directamente sin SSPP ni firma de propuesta."}],
+  21:[{q:"¿Cuáles son los 3 pasos del cotizador?",opts:["Módulos→Precio→Enviar","Contexto→Cotizar→Enviar","Deal→Productos→Cierre","BANT→Propuesta→Firma"],correct:1,e:"Contexto (asociar deal) → Cotizar (módulos) → Enviar (resumen a HubSpot)."},
+      {q:"¿Los servicios custom generan comisión?",opts:["Sí","No, son no comisionables","Solo HH","Depende del monto"],correct:1,e:"HH, Roadmap Custom y Soporte son NO comisionables."},
+      {q:"¿En qué etapa debe estar el deal para cotizar?",opts:["Etapa 2","Etapa 3","Etapa 4","Etapa 5"],correct:2,e:"Etapa 4 (Elaboración de Propuesta) antes de generar la cotización."}],
+};
 
 let challengeState = {};
 
@@ -1989,10 +2052,21 @@ function startLessonChallenge() {
     completeCurrentLesson();
     return;
   }
-  const questions = getLessonQuestions(currentLesson.id);
+  const specificQs = LESSON_QS[currentLesson.id];
+  const questions = specificQs ? [...specificQs] : getLessonQuestions(currentLesson.id);
   challengeState = { questions, current: 0, score: 0 };
   document.getElementById('complete-lesson-btn').style.display = 'none';
   renderLessonChallenge();
+}
+
+function getLessonQuestions(lessonId) {
+  const l = LESSONS.find(x => x.id === lessonId);
+  if (!l) return [];
+  let pool = [];
+  if (l.type === 'proceso') pool = [...ALL_QUESTIONS.proceso];
+  else if (l.type === 'producto') pool = [...ALL_QUESTIONS.producto];
+  else pool = [...ALL_QUESTIONS.proceso, ...ALL_QUESTIONS.producto];
+  return pool.sort(() => Math.random()-0.5).slice(0, 3);
 }
 
 function renderLessonChallenge() {
@@ -2002,13 +2076,19 @@ function renderLessonChallenge() {
     const passed = cs.score >= 2;
     if (passed) {
       container.innerHTML = `<div class="challenge-result pass">✅ ¡Aprobado! ${cs.score}/${cs.questions.length} correctas</div>`;
-      completeCurrentLesson();
+      setTimeout(() => completeCurrentLesson(), 800);
     } else {
-      container.innerHTML = `<div class="challenge-result fail">❌ ${cs.score}/${cs.questions.length} — necesitas al menos 2/3 para aprobar</div>`;
+      container.innerHTML = `<div class="challenge-result fail">❌ ${cs.score}/${cs.questions.length} — necesitas al menos 2/3</div>`;
       const btn = document.getElementById('complete-lesson-btn');
       btn.style.display = 'block';
       btn.textContent = '🔄 Reintentar evaluación';
-      btn.onclick = () => { container.innerHTML = ''; startLessonChallenge(); };
+      btn.onclick = () => {
+        container.innerHTML = '';
+        challengeState.current = 0;
+        challengeState.score = 0;
+        document.getElementById('complete-lesson-btn').style.display = 'none';
+        renderLessonChallenge();
+      };
     }
     return;
   }
@@ -2019,7 +2099,8 @@ function renderLessonChallenge() {
       <div class="challenge-title">Evaluación — Pregunta ${cs.current+1} de ${cs.questions.length}</div>
       <div class="quiz-q-text" style="font-size:14px;margin-bottom:12px">${q.q}</div>
       <div id="challenge-opts">${optsHtml}</div>
-      <div class="quiz-explanation" id="challenge-explain">${q.explain}</div>
+      <div class="quiz-explanation" id="challenge-explain">${q.e || q.explain || ''}</div>
+      <button class="quiz-next" id="challenge-next" onclick="nextChallengeQ()" style="display:none">Siguiente →</button>
     </div>`;
 }
 
@@ -2034,7 +2115,12 @@ function answerChallenge(idx) {
   if (idx === q.correct) challengeState.score++;
   state.totalAnswered++; if (idx === q.correct) state.totalCorrect++; save();
   document.getElementById('challenge-explain').style.display = 'block';
-  setTimeout(() => { challengeState.current++; renderLessonChallenge(); }, 1500);
+  document.getElementById('challenge-next').style.display = 'block';
+}
+
+function nextChallengeQ() {
+  challengeState.current++;
+  renderLessonChallenge();
 }
 
 // ============ MATCH GAME ============
@@ -2113,7 +2199,7 @@ const TF_DATA = [
   {s:"Las licencias de Desk son ilimitadas", a:true, e:"Correcto. El precio sube por conversaciones, no por usuarios."},
   {s:"Experience viene incluido gratis en Desk", a:true, e:"Correcto. Es un diferenciador vs competencia que lo cobra aparte."},
   {s:"El BANT mínimo para avanzar es 6/12", a:true, e:"Correcto. Mínimo 6/12 con Need y Authority ≥ 2."},
-  {s:"WhatsApp Calling ya soporta llamadas entrantes", a:false, e:"Beta actual: solo llamadas SALIENTES. Entrantes aún no disponibles."},
+  {s:"WhatsApp Calling soporta llamadas entrantes", a:false, e:"Solo llamadas SALIENTES (outbound) por WhatsApp. No existen llamadas entrantes."},
   {s:"Para calificación outbound se exige BANT completo", a:false, e:"Outbound solo requiere Autoridad + Necesidad (no BANT completo)."},
   {s:"VoC puede procesar tanto texto como voz", a:true, e:"Correcto. VoC procesa ambos formatos."},
   {s:"El correo post-reunión se puede enviar en 48 horas", a:false, e:"Debe enviarse el mismo día o antes de las 10:00 del siguiente."},
@@ -2157,6 +2243,7 @@ function renderTF() {
         <button class="tf-btn true-btn" onclick="answerTF(true)">Verdadero</button>
       </div>
       <div class="tf-feedback" id="tf-feedback"></div>
+      <button class="quiz-next" id="tf-next-btn" onclick="tfState.current++;renderTF();" style="display:none">Siguiente →</button>
     </div>`;
 }
 
@@ -2170,7 +2257,7 @@ function answerTF(answer) {
   fb.style.background = correct ? '#E8F5E9' : '#FFEBEE';
   fb.textContent = (correct ? '✅ ' : '❌ ') + item.e;
   document.querySelectorAll('.tf-btn').forEach(b => b.disabled = true);
-  setTimeout(() => { tfState.current++; renderTF(); }, 2000);
+  document.getElementById('tf-next-btn').style.display = 'block';
 }
 
 // ============ ORDER GAME ============
