@@ -1311,6 +1311,100 @@ const LESSONS = [
 <tr><td colspan="2"><strong>Total</strong></td><td><strong>$558/mes + $990 setup</strong></td><td></td></tr></table>
 
 <div class="highlight">⚠️ Precondición: el deal debe estar en Etapa 4 del pipeline en HubSpot ANTES de generar la cotización. Siempre usar la plantilla "Cotización-automática".</div>
+`},
+
+  {id:24, type:'proceso', icon:'🤝', title:'Operativa KAM: rol, deals y rutina', desc:'Diferencias con AE, tipos de deal, pipeline y coordinación con CS', content:`
+<h3>KAM vs AE</h3>
+<p>El KAM es un <strong>AE de base instalada</strong>. Trabaja exclusivamente con empresas que ya son clientes.</p>
+<table><tr><th></th><th>AE</th><th>KAM</th></tr>
+<tr><td>Foco</td><td>Nuevos logos</td><td>Expansión de base instalada</td></tr>
+<tr><td>Origen del deal</td><td>SDR (inbound/outbound)</td><td>Cliente activo</td></tr>
+<tr><td>Métrica central</td><td>Revenue nuevo</td><td>NRR (Net Revenue Retention)</td></tr>
+<tr><td>Pipeline</td><td>HubSpot comercial</td><td>Mismo pipeline que AE</td></tr></table>
+
+<h3>Origen de deals KAM</h3>
+<ul>
+<li><strong>Detección proactiva:</strong> KAM revisa base instalada con CS buscando señales de expansión</li>
+<li><strong>SDR agenda otra área:</strong> Si el SDR prospeta otro departamento de un cliente activo, la reunión va al KAM (no al AE)</li>
+<li><strong>Hand-off desde CS:</strong> CS detecta oportunidad comercial y la deriva al KAM</li>
+</ul>
+<div class="highlight">💡 Ejemplo: Falabella CX es cliente activo. SDR prospeta Falabella Operaciones → si agenda, esa reunión va al KAM porque la relación comercial ya existe.</div>
+
+<h3>4 tipos de deal KAM</h3>
+<table><tr><th>Tipo</th><th>Qué es</th><th>Señal típica</th></tr>
+<tr><td><strong>Upsell</strong></td><td>Sube de plan o aumenta consumo</td><td>Consumo cerca del límite del plan</td></tr>
+<tr><td><strong>Cross-sell</strong></td><td>Adopta producto/canal que no tiene</td><td>Pregunta por algo que no usa</td></tr>
+<tr><td><strong>Renovación</strong></td><td>Renegociación al vencimiento</td><td>Contrato a <90 días</td></tr>
+<tr><td><strong>Expansión</strong></td><td>Nuevo departamento del mismo cliente</td><td>Otra área tiene caso de uso</td></tr></table>
+
+<h3>Rutina del KAM</h3>
+<p><strong>Diario:</strong> HubSpot (deals/tareas), Customer Control (consumo, NPS, Health Score), seguimiento de propuestas.</p>
+<p><strong>Semanal:</strong> Pipeline con liderazgo (lunes). Planning con CS: riesgos, renovaciones <90 días, expansiones, QBRs.</p>
+<p><strong>Mensual:</strong> Business Reviews / QBRs para cuentas relevantes.</p>
+
+<h3>Coordinación KAM ↔ CS</h3>
+<table><tr><th>CS → KAM</th><th>KAM → CS</th></tr>
+<tr><td>NPS bajo → planificar reconversión</td><td>Deal cerrado → CS hace onboarding del módulo</td></tr>
+<tr><td>Cliente pregunta por algo que no tiene → cross-sell</td><td>Renovación en negociación → CS alineado en discurso</td></tr>
+<tr><td>Volumen creciendo → activar upsell</td><td>Riesgo comercial → CS acompaña comunicación</td></tr>
+<tr><td>Contrato cerca del vencimiento → renovar</td><td></td></tr></table>
+
+<div class="warning">⚠️ SIEMPRE admitir a Diio en reuniones con clientes. Es el único asistente autorizado para capturar transcripción y tareas.</div>
+`},
+
+  {id:25, type:'proceso', icon:'🔄', title:'KAM: renovación, churn y expansión', desc:'Proceso de renovación T-90/60/30, retención, señales de expansión por módulo', content:`
+<h3>Proceso de renovación</h3>
+<table><tr><th>Hito</th><th>Acción</th></tr>
+<tr><td><strong>T-90 días</strong></td><td>Activar renovación. Revisar contrato, MRR, consumo, NPS, incidentes, salud de cuenta. KAM + CS definen diagnóstico: renovar simple, con upgrade, con riesgo, o condicionada.</td></tr>
+<tr><td><strong>T-60 días</strong></td><td>Preparar propuesta. Considerar plan actual, consumo real, cambios, módulos activos, oportunidades. Si hay cambio de plan → usar cotizador/HubSpot.</td></tr>
+<tr><td><strong>T-30 días</strong></td><td>Cerrar condiciones, resolver objeciones, confirmar aprobadores, dejar tareas en HubSpot hasta firma.</td></tr></table>
+<div class="warning">⚠️ Si el cliente no quiere renovar → abrir caso de riesgo/churn, documentar en HubSpot, alinear CS y escalar a liderazgo.</div>
+
+<h3>Proceso de churn y retención</h3>
+<h3>Señales tempranas</h3>
+<ul>
+<li>NPS < 7 / Health Score deteriorado</li>
+<li>Bajo uso sostenido / caída de consumo</li>
+<li>Módulos clave inactivos</li>
+<li>Tickets/incidentes frecuentes</li>
+<li>No asiste a QBRs / sponsor desconectado</li>
+<li>Renovación cercana sin avance</li>
+</ul>
+
+<h3>Playbook de retención</h3>
+<ol>
+<li>Registrar alerta en HubSpot con motivo</li>
+<li>Revisar Customer Control y coordinar diagnóstico con CS</li>
+<li>Separar: ¿problema comercial, operativo o técnico?</li>
+<li>Si es valor/adopción → Business Review con quick wins</li>
+<li>Si es técnico → levantar impacto y derivar a Soporte/SSPP/Producto</li>
+<li>Escalar a liderazgo cuando: intención declarada de churn, renovación <60 días con riesgo, cliente estratégico o MRR relevante</li>
+</ol>
+
+<h3>Señales de expansión por módulo</h3>
+<table><tr><th>Módulo</th><th>Cuándo ofrecerlo</th></tr>
+<tr><td><strong>Desk (más canales)</strong></td><td>Opera canales por fuera, silos, derivaciones manuales</td></tr>
+<tr><td><strong>Studio / IA</strong></td><td>Alto volumen de consultas repetitivas, bots rígidos, dependencia de agentes</td></tr>
+<tr><td><strong>Engage</strong></td><td>Necesita campañas proactivas, reactivación, cobranza, marketing masivo</td></tr>
+<tr><td><strong>VoC / Experience</strong></td><td>Necesita medir satisfacción, analizar calidad, entender motivos de contacto</td></tr>
+<tr><td><strong>Expansión de cuenta</strong></td><td>Otra área/departamento tiene caso de uso propio</td></tr></table>
+<div class="tip">💡 La propuesta de expansión debe partir del uso actual y del problema concreto, no del catálogo de módulos. Primero business case, después precio.</div>
+
+<h3>Escalamiento técnico</h3>
+<table><tr><th>Derivar a</th><th>Cuándo</th></tr>
+<tr><td><strong>Soporte</strong></td><td>Bug, error operativo, caída, duda de uso</td></tr>
+<tr><td><strong>SSPP</strong></td><td>Cambio de alcance, ajuste de bot, integración, requerimiento custom</td></tr>
+<tr><td><strong>Producto</strong></td><td>Feedback roadmap, brecha funcional, pedido recurrente</td></tr></table>
+<div class="warning">⚠️ El KAM no debe resolver técnicamente ni ser router manual eterno: registra, deriva, acuerda SLA/owner y hace seguimiento comercial del impacto.</div>
+
+<h3>Métricas del KAM</h3>
+<ul>
+<li><strong>NRR</strong> (Net Revenue Retention): upsell + cross-sell + renovaciones - churn</li>
+<li><strong>Renovaciones a tiempo</strong> (% cerradas antes del vencimiento)</li>
+<li><strong>Expansion revenue</strong> (MRR nuevo de base instalada)</li>
+<li><strong>Health Score / CHI</strong> de cartera (Customer Control)</li>
+<li><strong>Pipeline KAM</strong> y forecast de base instalada</li>
+</ul>
 `}
 ];
 
@@ -1474,7 +1568,7 @@ let fcState = {};
 const LEVELS = {
   bronce: { name: 'Bronce', lessons: [1,2,3,4,5,6,7,22], nextExam: 'plata', examName: 'Examen Bronce → Plata', examDesc: 'Completa todas las lecciones Bronce para desbloquear. 15 preguntas, necesitas 70% para aprobar.', minScore: 70 },
   plata: { name: 'Plata', lessons: [8,9,10,11,12,13,14,23], nextExam: 'oro', examName: 'Examen Plata → Oro', examDesc: 'Completa todas las lecciones Plata para desbloquear. 15 preguntas, necesitas 80% para aprobar.', minScore: 80 },
-  oro: { name: 'Oro', lessons: [15,16,17,18,19,20,21], nextExam: null, examName: null, examDesc: null, minScore: null }
+  oro: { name: 'Oro', lessons: [15,16,17,18,19,20,21,24,25], nextExam: null, examName: null, examDesc: null, minScore: null }
 };
 
 function getCurrentLevel() { return state.level || 'bronce'; }
@@ -2042,6 +2136,12 @@ const LESSON_QS = {
   21:[{q:"¿Cuáles son los 3 pasos del cotizador?",opts:["Módulos→Precio→Enviar","Contexto→Cotizar→Enviar","Deal→Productos→Cierre","BANT→Propuesta→Firma"],correct:1,e:"Contexto (asociar deal) → Cotizar (módulos) → Enviar (resumen a HubSpot)."},
       {q:"¿Los servicios custom generan comisión?",opts:["Sí","No, son no comisionables","Solo HH","Depende del monto"],correct:1,e:"HH, Roadmap Custom y Soporte son NO comisionables."},
       {q:"¿En qué etapa debe estar el deal para cotizar?",opts:["Etapa 2","Etapa 3","Etapa 4","Etapa 5"],correct:2,e:"Etapa 4 (Elaboración de Propuesta) antes de generar la cotización."}],
+  24:[{q:"¿Cuál es la métrica central del KAM?",opts:["Revenue nuevo","NRR (Net Revenue Retention)","Tickets cerrados","CSAT"],correct:1,e:"NRR: upsell + cross-sell + renovaciones - churn. El KAM mide retención y expansión, no revenue nuevo."},
+      {q:"Si el SDR agenda reunión con otra área de un cliente activo, ¿a quién va?",opts:["Al AE de turno","Al KAM","Al PM","Al SDR mismo"],correct:1,e:"Va al KAM porque la relación comercial ya existe. El KAM tiene el contexto de la cuenta."},
+      {q:"¿Cuántos tipos de deal KAM existen?",opts:["2","3","4","6"],correct:2,e:"4 tipos: Upsell, Cross-sell, Renovación y Expansión de cuenta."}],
+  25:[{q:"¿Cuándo debe activarse el proceso de renovación?",opts:["T-30 días","T-60 días","T-90 días","T-120 días"],correct:2,e:"T-90 días antes del vencimiento. A T-60 se prepara propuesta, a T-30 se cierra."},
+      {q:"Si un cliente tiene NPS < 7, ¿qué hace el KAM?",opts:["Venderle más módulos","No es momento de vender, planificar reconversión","Ignorar hasta la renovación","Derivar a Soporte"],correct:1,e:"NPS bajo = no es momento de vender. Primero reconvertir la experiencia con CS."},
+      {q:"¿Cuándo escalar un riesgo de churn a liderazgo?",opts:["Nunca, el KAM lo maneja solo","Cuando el cliente declara intención de churn o renovación <60 días con riesgo","Solo si el cliente es enterprise","Cuando el NPS baja"],correct:1,e:"Escalar cuando: intención declarada de churn, renovación <60 días con riesgo, cliente estratégico o MRR relevante."}],
 };
 
 let challengeState = {};
