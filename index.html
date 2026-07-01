@@ -141,6 +141,38 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
 .challenge-result.pass { background: #E8F5E9; color: var(--green); }
 .challenge-result.fail { background: #FFEBEE; color: var(--accent); }
 
+/* Product wizard */
+.wiz-progress { display: flex; gap: 6px; margin-bottom: 16px; }
+.wiz-step { flex: 1; height: 6px; border-radius: 3px; background: var(--border); transition: all 0.3s; }
+.wiz-step.done { background: var(--green); }
+.wiz-step.current { background: var(--accent); }
+.wiz-phase-tag { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); margin-bottom: 8px; }
+.wiz-card { background: var(--card); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.wiz-card h2 { font-size: 19px; margin: 0 0 14px; color: var(--accent3); }
+.wiz-nav { display: flex; gap: 10px; margin-bottom: 16px; }
+.wiz-nav button { flex: 1; padding: 14px; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.wiz-nav .wiz-back { background: var(--card); border: 1px solid var(--border); color: var(--text2); flex: 0 0 54px; }
+.wiz-nav .wiz-next { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: white; }
+.wiz-nav button:hover { transform: translateY(-1px); }
+.scenario-box { background: linear-gradient(135deg, #F0F4FF, #FFF); border: 1px solid var(--border); border-left: 4px solid var(--accent2); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+.scenario-client { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 4px; }
+.scenario-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent2); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.scenario-bubble { background: white; border: 1px solid var(--border); border-radius: 4px 14px 14px 14px; padding: 10px 14px; font-size: 14px; font-style: italic; color: var(--text); }
+.scenario-prompt { font-size: 13px; font-weight: 700; color: var(--text2); margin: 14px 0 10px; }
+.scenario-feedback { border-radius: 10px; padding: 12px 14px; font-size: 13px; margin-top: 12px; display: none; line-height: 1.5; }
+.scenario-feedback.good { background: #E8F5E9; color: #1B7F3B; border: 1px solid #A5D6A7; }
+.scenario-feedback.bad { background: #FFF4E5; color: #A85B00; border: 1px solid #FFD199; }
+.build-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 13px 15px; border: 2px solid var(--border); border-radius: 12px; background: var(--card); font-size: 14px; text-align: left; cursor: pointer; margin-bottom: 8px; transition: all 0.15s; }
+.build-item .build-check { width: 22px; height: 22px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; color: var(--text2); }
+.build-item.selected { border-color: var(--accent2); background: #F0F4FF; }
+.build-item.selected .build-check { background: var(--accent2); color: white; border-color: var(--accent2); }
+.build-item.disabled { pointer-events: none; }
+.build-item.build-right { border-color: var(--green); background: #E8F5E9; }
+.build-item.build-right .build-check { background: var(--green); color: white; border-color: var(--green); }
+.build-item.build-missed { border-color: var(--green); background: #E8F5E9; opacity: 0.65; border-style: dashed; }
+.build-item.build-wrong { border-color: var(--accent); background: #FFEBEE; }
+.build-item.build-wrong .build-check { background: var(--accent); color: white; border-color: var(--accent); }
+
 /* Match game */
 .match-game { display: flex; gap: 12px; margin-bottom: 16px; }
 .match-col { flex: 1; display: flex; flex-direction: column; gap: 8px; }
@@ -394,6 +426,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
     <div class="glossary-card"><span class="glossary-wrong">Startup</span><span class="glossary-arrow">→</span><span class="glossary-right">Empresa / Organización</span></div>
   </div>
 
+  <!-- Tab: Product Academies -->
+  <div class="main tab-content" id="tab-products" style="display:none">
+    <div class="section-title">🎓 Academias por Producto</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Domina cada producto por separado. Cada academia tiene su ficha completa + evaluación específica. Aprueba (2/3) para dominarlo.</div>
+    <div id="product-academy-list"></div>
+  </div>
+
+  <!-- Product Academy detail view -->
+  <div class="main lesson-view" id="product-view" style="display:none">
+    <div class="lesson-header">
+      <div class="back-btn" onclick="switchTab('products')">←</div>
+      <h2 id="product-view-title"></h2>
+    </div>
+    <div class="wiz-progress" id="product-wiz-progress"></div>
+    <div id="product-view-content"></div>
+    <div id="product-view-nav"></div>
+    <div style="height:52px"></div>
+  </div>
+
   <!-- Tab: Progress -->
   <div class="main tab-content" id="tab-progress" style="display:none">
     <div class="section-title">📊 Tu Progreso</div>
@@ -466,6 +517,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
   <div class="nav">
     <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon">🏠</span>Inicio</div>
     <div class="nav-item" onclick="switchTab('games')"><span class="nav-icon">💪</span>Entrenamiento</div>
+    <div class="nav-item" onclick="switchTab('products')"><span class="nav-icon">🎓</span>Productos</div>
     <div class="nav-item" onclick="switchTab('progress')"><span class="nav-icon">📊</span>Progreso</div>
   </div>
 </div>
@@ -789,43 +841,75 @@ const LESSONS = [
 `},
 
   {id:9, type:'producto', icon:'🤖', title:'Adereso Studio: bots con IA sin código', desc:'Componentes, herramientas, base de conocimiento, activadores y monitoreo', content:`
+<h3>¿Qué es Studio?</h3>
+<p>Plataforma para crear bots que <strong>responden, ejecutan acciones reales y derivan a tu equipo</strong> cuando hace falta un humano — todo desde una interfaz visual, sin código.</p>
+<div class="tip">💬 El pitch: "¿Tu equipo pierde horas respondiendo lo mismo? ¿Se pierden ventas fuera de horario? Studio configura un bot que entiende al cliente, ejecuta acciones y sabe cuándo pasar a un humano."</div>
+
+<h3>🚀 Qué puedes hacer con Studio</h3>
+<ul>
+<li><strong>Crear bots con IA</strong> que responden de forma personalizada a cada cliente</li>
+<li><strong>Definir activadores</strong> para que el bot se active por canal, horario o contenido</li>
+<li><strong>Conectar herramientas</strong>: APIs, catálogos de productos y bases de conocimiento</li>
+<li><strong>Monitorear conversaciones</strong> en tiempo real para supervisar la atención</li>
+<li><strong>Transferir a tu equipo</strong> cuando el bot detecta que necesita un humano</li>
+</ul>
+
 <h3>Dos tipos de bot</h3>
-<table><tr><th>Tipo</th><th>Qué hace</th><th>Ideal para</th></tr>
-<tr><td><strong>Bot Agente</strong></td><td>IA generativa autónoma — toma decisiones sin flujos predefinidos</td><td>FAQs, consultas de producto, calificación, venta</td></tr>
-<tr><td><strong>Bot Flow</strong></td><td>Flujos estructurados paso a paso</td><td>Encuestas, formularios, procesos de compra guiados</td></tr></table>
+<table><tr><th>Aspecto</th><th>🧠 Bot Agente</th><th>🔀 Bot Flow</th></tr>
+<tr><td>Autonomía</td><td>Alta — decide según contexto</td><td>Ninguna — pasos fijos</td></tr>
+<tr><td>Uso de IA</td><td>Sí (GPT, Claude, Gemini)</td><td>Parcial</td></tr>
+<tr><td>Control</td><td>Guiado por componentes</td><td>Total — cada respuesta definida</td></tr>
+<tr><td>Ideal para</td><td>Atención, ventas, FAQ variadas</td><td>Encuestas, formularios, compras</td></tr></table>
+<div class="tip">💡 ¿No sabes cuál elegir? Empieza con <strong>Bot Agente</strong> — es más flexible y lo ajustas a medida que conoces las consultas de los clientes.</div>
+
+<h3>👣 Crear tu primer bot (paso a paso)</h3>
+<ol>
+<li><strong>Accede a Studio</strong> desde Adereso Desk → menú <strong>Módulos</strong></li>
+<li><strong>Inicia la creación:</strong> botón <strong>"+ Añadir Bot"</strong> (o "Crear Un Bot" si aún no tienes bots)</li>
+<li><strong>Elige el tipo:</strong> Bot Agente (IA flexible) o Bot Flow (proceso estructurado)</li>
+<li><strong>Nómbralo</strong> de forma descriptiva (ej: "Bot Ventas", "Bot Soporte") y clic en <strong>"Crear Nuevo Bot"</strong></li>
+</ol>
+<div class="highlight">⏱️ En menos de 1 minuto tienes tu primer bot creado. Luego lo configuras.</div>
+
+<h3>👣 Tu ruta para configurarlo</h3>
+<p><strong>1️⃣ Componentes de comportamiento</strong> → <strong>2️⃣ Herramientas</strong> → <strong>3️⃣ Activadores</strong> → <strong>4️⃣ Diagnostica y publica</strong></p>
 
 <h3>Anatomía de un Bot Agente</h3>
 <p>Un bot se construye con estos bloques:</p>
 
+<div class="highlight">🧠 <strong>Componente vs Herramienta</strong> (la distinción clave): un <strong>componente</strong> define <em>cómo piensa y habla</em> el bot (instrucción de comportamiento). Una <strong>herramienta</strong> define <em>qué hace</em> el bot (acción concreta: cerrar ticket, llamar API, derivar). Regla mental: componente = instrucción, herramienta = acción.</div>
+
 <h3>🧩 Componentes de comportamiento</h3>
-<p>Definen <strong>cómo actúa</strong> el bot. Se configuran sin código:</p>
+<p>Un componente es una <strong>instrucción estructurada</strong> de cómo comportarse. Se combinan varios y se escriben en lenguaje natural, en segunda persona ("debes…"). Tipos:</p>
 <ul>
-<li><strong>Personalidad:</strong> Tono, idioma, estilo de comunicación</li>
-<li><strong>Objetivo:</strong> Qué debe lograr (vender, atender, calificar)</li>
-<li><strong>Reglas:</strong> Restricciones y límites (no inventar precios, no hablar de competencia)</li>
-<li><strong>Instrucciones:</strong> Lógica específica combinando lenguaje natural + condiciones</li>
-<li><strong>Tipificación:</strong> Clasifica automáticamente el motivo de contacto</li>
+<li><strong>🎯 Objetivo · 🎭 Personalidad · 💬 Estilo de comunicación</strong> — <em>únicos por bot</em></li>
+<li><strong>📜 Reglas · 🚫 Restricciones · 🪜 Pasos · ⚡ Condicionales</strong></li>
+<li><strong>📚 Conocimiento · 🏢 Conocimiento de negocio · 🔤 Terminología</strong></li>
+<li><strong>🛡️ Protección</strong> (anti-manipulación) · <strong>🔀 Transferencia</strong> (cuándo derivar)</li>
+<li><strong>🛍️ Tienda Shopify · 🔌 Servidor MCP · 💳 Stripe MCP</strong></li>
 </ul>
+<p>Se configuran en <strong>Comportamiento → Nuevo componente</strong>. Se activan/desactivan sin borrarlos. Ojo con el <strong>contador de tokens</strong>: instrucciones muy largas dejan menos espacio para la conversación.</p>
+<div class="warning">⚠️ Objetivo, Personalidad y Estilo de comunicación son únicos: solo uno de cada por bot.</div>
 
 <h3>🔧 Herramientas (acciones del bot)</h3>
-<p>Las acciones que el bot puede <strong>ejecutar</strong>:</p>
+<p>Las acciones que el bot <strong>ejecuta</strong>. Se agrupan en Comunicación, Datos/gestión, Integración y Memoria:</p>
 <ul>
-<li>Cerrar tickets / Derivar a ejecutivo humano</li>
-<li>Consultar APIs externas (CRM, ERP, sistemas internos)</li>
-<li>Consultar bases de datos SQL</li>
-<li>Buscar productos en tienda conectada (Shopify, VTEX)</li>
-<li>Recopilar datos y guardarlos en metadatos del ticket</li>
-<li>Reconocimiento de imágenes (procesamiento visual)</li>
+<li><strong>Comunicación:</strong> Botones, Derivar a humano, Cerrar conversación</li>
+<li><strong>Datos:</strong> Agregar etiquetas, Actualizar metadatos, Establecer prioridad</li>
+<li><strong>Integración:</strong> Petición HTTP (APIs), Base de conocimiento, Búsqueda de productos, Invocar agente, Temporizador</li>
+<li><strong>Memoria dinámica:</strong> set / append / remove / update</li>
 </ul>
+<div class="tip">💡 Terminal vs no terminal: una herramienta <strong>terminal</strong> (Cerrar, Derivar) finaliza la sesión del bot; una <strong>no terminal</strong> (HTTP, etiquetas) permite que el bot siga conversando.</div>
 
 <h3>📕 Base de conocimiento</h3>
-<p>De dónde saca la info para responder:</p>
+<p>Se sube desde <strong>Studio → el bot → Base de Conocimiento</strong>, en 4 pestañas: <strong>Archivos, Subir desde Drive, Scraper Web, Historial</strong>.</p>
 <ul>
-<li><strong>Archivos:</strong> Excel, PDF, Word — se cargan sin adaptación manual</li>
-<li><strong>Google Drive:</strong> Conexión directa a documentos</li>
-<li><strong>Sitios web:</strong> Scraping automático de contenido</li>
-<li><strong>SQL:</strong> Consultas a bases de datos del cliente</li>
+<li><strong>Formatos:</strong> PDF (con texto seleccionable), Word y Hojas de Cálculo / Google Sheets</li>
+<li><strong>Google Drive:</strong> picker integrado (PDF, Word, Sheets)</li>
+<li><strong>Scraper Web:</strong> extrae contenido de un sitio (hasta 500 páginas por defecto)</li>
+<li>❌ Evita: PDFs escaneados, archivos con contraseña, hojas con macros</li>
 </ul>
+<div class="warning">⚠️ <strong>Subir contenido NO basta.</strong> Hay que crear la herramienta <strong>"Búsqueda en base de conocimiento"</strong>. Sin esa tool, el bot tiene el contenido indexado pero no puede consultarlo.</div>
 <div class="warning">⚠️ Control de alucinaciones: el bot SOLO responde con info de su base de conocimiento. No inventa. Si no tiene la respuesta, deriva o avisa.</div>
 
 <h3>📥 Activadores</h3>
@@ -872,6 +956,7 @@ const LESSONS = [
 
 <h3>📖 Help Center</h3>
 <ul>
+<li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/introducción-a-adereso-studio-tu-primer-paso-hacia-la-automatización/k46ga3KXNduj74fuz3V2hz" target="_blank">Introducción a Adereso Studio</a></li>
 <li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/qué-es-adereso-studio/8HTVeT55T2iXBunRfnZvBv" target="_blank">¿Qué es Studio?</a></li>
 <li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/guía-paso-a-paso-crea-tu-primer-bot-agente/6YJS3CsNTYXFutfgww6HDR" target="_blank">Guía: crea tu primer Bot Agente</a></li>
 <li><a href="https://help.adereso.ai/adereso-studio/7gcst3pjvWGmqqFfDDVKs7/componentes-de-comportamiento-define-cómo-actúa-tu-bot/7s3zB6nN19Kd8rGQ2Fv1WL" target="_blank">Componentes de comportamiento</a></li>
@@ -888,6 +973,13 @@ const LESSONS = [
 <p>Solución para campañas proactivas y masivas por WhatsApp. Tasa de apertura: <strong>98%</strong> (vs 20% del email).</p>
 
 <div class="warning">⚠️ Engage funciona EXCLUSIVAMENTE por WhatsApp. No aplica para otros canales.</div>
+
+<h3>Casos de uso por categoría</h3>
+<table><tr><th>Categoría</th><th>Ejemplos</th></tr>
+<tr><td><strong>Postventa</strong></td><td>Confirmaciones de pedido, seguimiento de despacho, encuestas, recordatorios de cita</td></tr>
+<tr><td><strong>Comercial</strong></td><td>Promociones, lanzamientos, Black Friday, remarketing, recuperación de carrito</td></tr>
+<tr><td><strong>Relacional</strong></td><td>Saludos, fidelización, reactivación de clientes inactivos, contenido de valor</td></tr></table>
+<div class="tip">💡 Ubicar la campaña del cliente en una de estas 3 categorías ayuda a elegir el tipo de HSM correcto y a proyectar el costo.</div>
 
 <h3>Tipos de mensajes (HSM)</h3>
 <table><tr><th>Tipo</th><th>Uso</th><th>Costo Meta</th></tr>
@@ -933,6 +1025,13 @@ const LESSONS = [
 
 <h3>Modelo de cobro</h3>
 <p>Módulo + tráfico de conversaciones + <strong>12% BSP</strong> sobre fee de Meta.</p>
+
+<h3>Cómo se cobra cada mensaje (créditos)</h3>
+<table><tr><th>Estado del mensaje</th><th>¿Se cobra?</th></tr>
+<tr><td><strong>Failed</strong> (no entregado)</td><td>❌ No se cobra</td></tr>
+<tr><td><strong>Delivered</strong> (entregado)</td><td>✅ Se cobra</td></tr>
+<tr><td><strong>Read</strong> (leído)</td><td>✅ Se cobra</td></tr></table>
+<div class="warning">⚠️ Validación de números: la plataforma valida que el número exista en WhatsApp antes de enviar. Números inválidos no consumen crédito, pero limpiar la base antes evita fallos masivos y protege la calidad (que afecta el tier).</div>
 
 <h3>📖 Help Center</h3>
 <ul>
@@ -1558,6 +1657,7 @@ if (!state.totalAnswered) state.totalAnswered = 0;
 if (!state.lastDate) state.lastDate = '';
 if (!state.level) state.level = 'bronce';
 if (!state.examsPassed) state.examsPassed = [];
+if (!state.productsMastered) state.productsMastered = [];
 function save() { localStorage.setItem('adereso_academy', JSON.stringify(state)); }
 
 let currentLesson = null;
@@ -1671,9 +1771,12 @@ function switchTab(tab) {
   document.getElementById('quiz-view').style.display = 'none';
   document.getElementById('flashcard-view').classList.remove('active');
   document.getElementById('flashcard-view').style.display = 'none';
+  document.getElementById('product-view').classList.remove('active');
+  document.getElementById('product-view').style.display = 'none';
   document.getElementById(`tab-${tab}`).style.display = 'block';
-  document.querySelectorAll('.nav-item')[['home','games','progress'].indexOf(tab)].classList.add('active');
+  document.querySelectorAll('.nav-item')[['home','games','products','progress'].indexOf(tab)].classList.add('active');
   if (tab === 'progress') renderAchievements();
+  if (tab === 'products') renderProductAcademies();
   window.scrollTo(0,0);
 }
 
@@ -2093,16 +2196,41 @@ const LESSON_QS = {
       {q:"¿Se puede usar la instancia de un cliente real para demos?",opts:["Sí","No, siempre usar ADERESO DEMO","Solo con permiso","Depende del caso"],correct:1,e:"Siempre usar instancia ADERESO DEMO, nunca la de un cliente real."}],
   8:[{q:"¿Cuántos canales soporta Desk actualmente?",opts:["5","7","9+","Solo WhatsApp"],correct:2,e:"9+ canales: WhatsApp, IG, FB, LinkedIn, Email, Chat Web, App Store, Play Store, X, IVR Deflection."},
      {q:"¿Desk cobra por número de usuarios?",opts:["Sí","No, agentes ilimitados","Solo Enterprise","Hasta 50 gratis"],correct:1,e:"Licencias ilimitadas — el precio sube por conversaciones, no por usuarios."},
-     {q:"¿Qué es IVR Deflection?",opts:["Un bot de voz","Desvía llamadas a WhatsApp","Un sistema de grabación","Un menú telefónico"],correct:1,e:"Desvía llamadas a chat de WhatsApp. Reduce costos y mejora experiencia."}],
+     {q:"¿Qué es IVR Deflection?",opts:["Un bot de voz","Desvía llamadas a WhatsApp","Un sistema de grabación","Un menú telefónico"],correct:1,e:"Desvía llamadas a chat de WhatsApp. Reduce costos y mejora experiencia."},
+     {q:"¿Qué es un ticket en Desk?",opts:["Un mensaje suelto","La unidad básica de atención: una conversación/caso con un cliente","Un reporte","Una etiqueta"],correct:1,e:"El ticket es la unidad básica de atención: contiene cliente, canal, mensajes, agente, estado, SLA e historial."},
+     {q:"Un ticket 'En espera' significa que…",opts:["Ya se cerró","El último mensaje es del cliente y el agente debe responder","El agente respondió y espera al cliente","Es spam"],correct:1,e:"En espera = el último mensaje es del cliente → le toca al agente. 'Respondido' es lo inverso."},
+     {q:"¿Para qué sirve una columna en Desk?",opts:["Para cada ticket","Es una vista repetible que agrupa tickets por filtros","Para cobrar","Es un departamento"],correct:1,e:"Una columna es una vista configurable (canal, estado, SLA…) para el trabajo diario. No se crea una por ticket."},
+     {q:"En el semáforo de SLA, ¿qué significa rojo?",opts:["Dentro de SLA","Cerca de vencer","Fuera de SLA (atrasado)","Cerrado"],correct:2,e:"Verde = dentro, amarillo = por vencer, rojo = fuera de SLA. Se prioriza atender los rojos primero."},
+     {q:"¿Cuál NO es un modo de asignación de tickets?",opts:["Round Robin","Carga balanceada","Por cartera/relación previa","Por orden alfabético del cliente"],correct:3,e:"La asignación usa disponibilidad, departamento, carga, relación previa u horario — con modos Round Robin y carga balanceada."}],
   9:[{q:"¿Cuál es la diferencia entre Flows y Agent?",opts:["Flows es más caro","Flows: flujos paso a paso; Agent: IA autónoma","Agent no tiene IA","Son iguales"],correct:1,e:"Flows: estructurados. Agent: IA generativa autónoma con decisiones."},
      {q:"¿Cómo se conecta Shopify fácil a Studio?",opts:["Con desarrollo custom","Con MCP: solo poner la URL de la tienda","No se puede","Solo vía API REST"],correct:1,e:"MCP de Shopify: solo pones la URL, creas un componente y listo. Sin API."},
-     {q:"¿Qué hace el Diagnóstico de Studio?",opts:["Repara bugs","Verifica la salud del bot antes de publicar","Mide satisfacción","Exporta datos"],correct:1,e:"Detecta problemas de configuración ANTES de publicar. Chequeo preventivo."}],
+     {q:"¿Qué hace el Diagnóstico de Studio?",opts:["Repara bugs","Verifica la salud del bot antes de publicar","Mide satisfacción","Exporta datos"],correct:1,e:"Detecta problemas de configuración ANTES de publicar. Chequeo preventivo."},
+     {q:"Si un cliente no sabe qué tipo de bot elegir, ¿qué recomiendas?",opts:["Bot Flow, es más simple","Bot Agente, es más flexible y se ajusta después","Ninguno hasta tener el proceso","Ambos a la vez"],correct:1,e:"Empezar con Bot Agente: es más flexible y se ajusta a medida que se conocen las consultas."},
+     {q:"¿Qué motores de IA puede usar un Bot Agente?",opts:["Solo GPT","GPT, Claude y Gemini","Solo un modelo propio","Solo Gemini"],correct:1,e:"Multi-motor: GPT (OpenAI), Claude (Anthropic), Gemini (Google), entre otros."},
+     {q:"¿Desde dónde se accede a Studio para crear un bot?",opts:["Desde un instalador","Desde Adereso Desk → menú Módulos","Desde WhatsApp","Desde la app móvil solamente"],correct:1,e:"Se entra desde Adereso Desk, en el menú principal Módulos → Studio."},
+     {q:"¿Cuál es la diferencia entre un componente y una herramienta?",opts:["Son lo mismo","Componente = cómo piensa/habla; Herramienta = qué hace/ejecuta","La herramienta es texto y el componente una acción","El componente es de pago"],correct:1,e:"Componente = instrucción de comportamiento. Herramienta = acción concreta (cerrar ticket, API, derivar)."},
+     {q:"¿Qué componentes son ÚNICOS por bot?",opts:["Reglas y Restricciones","Objetivo, Personalidad y Estilo de comunicación","Todos son únicos","Ninguno"],correct:1,e:"Objetivo, Personalidad y Estilo de comunicación: solo uno de cada por bot (se editan, no se duplican)."},
+     {q:"Subiste PDFs a la base de conocimiento pero el bot no los usa. ¿Qué falta?",opts:["Esperar la indexación","Agregar la herramienta 'Búsqueda en base de conocimiento'","Convertir los PDFs a Word","Reiniciar el bot"],correct:1,e:"Sin la herramienta de búsqueda, el bot no consulta la KB aunque el contenido esté indexado."},
+     {q:"¿Qué es una herramienta 'terminal'?",opts:["La más importante","Al ejecutarse finaliza la sesión del bot","Una herramienta de pago","La que corre en un servidor"],correct:1,e:"Terminal = finaliza la sesión (ej: Cerrar conversación, Derivar). No terminal = el bot sigue conversando."},
+     {q:"¿Qué formatos se pueden subir a la base de conocimiento?",opts:["Solo PDF","PDF, Word y Hojas de Cálculo (+ scraper web)","Solo imágenes","Cualquier archivo"],correct:1,e:"PDF (con texto), Word y Hojas de Cálculo/Sheets. Además se puede scrapear un sitio web. Evita PDFs escaneados."},
+     {q:"El cliente quiere que el bot informe el estado de pedido en tiempo real. ¿Qué usas?",opts:["Base de conocimiento","API (Petición HTTP)","Un componente de conocimiento","Un flujo"],correct:1,e:"Datos vivos/transaccionales (estado de pedido, stock, saldos) van por API. La KB es solo para info estable."},
+     {q:"El bot debe responder dudas de garantías según las políticas de la empresa. ¿Qué usas?",opts:["Una API","Base de conocimiento + tool de búsqueda","El componente de personalidad","Un temporizador"],correct:1,e:"Políticas/FAQs/manuales = documentos estables → KB + tool de búsqueda."},
+     {q:"¿Cuál es la 'regla sana' al crear componentes?",opts:["Uno solo con todo","Un componente por responsabilidad","Mientras más largos, mejor","No usar componentes"],correct:1,e:"Un componente = una responsabilidad. No mezclar personalidad, reglas, restricciones y pasos en un bloque gigante."},
+     {q:"¿Cuál es la idea que mejor define Studio?",opts:["Un constructor de flujos rígidos","Un constructor de agentes que razonan","Un CRM","Un chat en vivo"],correct:1,e:"Studio no es flujos rígidos: es un constructor de agentes. Defines qué sabe, cómo se comporta, qué puede hacer y cuándo usar cada capacidad."}],
   10:[{q:"¿En qué canal funciona Engage?",opts:["Todos","Solo WhatsApp","WhatsApp + Email","WhatsApp + IG"],correct:1,e:"Engage funciona EXCLUSIVAMENTE por WhatsApp."},
       {q:"¿Cómo sube un número de TIER_1K a TIER_10K?",opts:["Pagando más","Enviando 1K con buena calidad en ~3 días","Pidiendo a Meta","Automáticamente en 30 días"],correct:1,e:"Enviar 1K con buena calidad y Meta sube el tier en ~3 días."},
-      {q:"¿Qué tipos de HSM existen?",opts:["Solo Marketing","Marketing, Utility y Autenticación","Solo Utility","Marketing y Ventas"],correct:1,e:"3 tipos: Marketing (promos), Utility (recordatorios), Autenticación (OTP)."}],
+      {q:"¿Qué tipos de HSM existen?",opts:["Solo Marketing","Marketing, Utility y Autenticación","Solo Utility","Marketing y Ventas"],correct:1,e:"3 tipos: Marketing (promos), Utility (recordatorios), Autenticación (OTP)."},
+      {q:"Un mensaje con estado 'Failed', ¿se cobra?",opts:["Sí, siempre","No, solo se cobran Delivered y Read","Solo si es Marketing","Depende del tier"],correct:1,e:"Failed no se cobra. Se cobran los mensajes Delivered (entregado) y Read (leído)."},
+      {q:"Si un cliente responde una campaña de Engage, ¿dónde llega?",opts:["Se pierde","A Desk como ticket, en el departamento de respuesta","Al correo del comercial","A un Excel"],correct:1,e:"Engage inicia la conversación; la respuesta entra a Desk como ticket. No reemplaza a Desk."},
+      {q:"Al cargar el CSV de contactos, ¿qué es imprescindible?",opts:["Que sea .xlsx","Teléfonos con código de país y columnas mapeadas al template","Menos de 100 filas","Ordenar alfabéticamente"],correct:1,e:"Los teléfonos deben llevar código de país y las columnas se mapean contra las variables del template HSM."},
+      {q:"¿Cuál es un estado válido de una campaña?",opts:["Aprobada por RRHH","Cargada / Enviando / Completada (o Pausada / Error)","En SLA","Indexada"],correct:1,e:"Los estados de campaña son: Cargada, Enviando, Completada, Pausada y Error."}],
   11:[{q:"¿Experience tiene costo adicional?",opts:["Sí, fee mensual","No, viene GRATIS incluido en Desk","Solo en Plan 2","Depende del volumen"],correct:1,e:"GRATIS incluido en Desk. En la negociación: 'en otros proveedores te lo cobran aparte'."},
       {q:"¿Qué tasa de respuesta tienen las encuestas?",opts:["5%","15%","30%","50%"],correct:2,e:"30% porque van por el mismo canal de atención (vs 2-5% del email)."},
-      {q:"¿Qué tipos de encuesta soporta Experience?",opts:["Solo CSAT","Solo NPS","CSAT, NPS y CES","Solo formularios"],correct:2,e:"CSAT (satisfacción), NPS (recomendación) y CES (esfuerzo del cliente)."}],
+      {q:"¿Qué tipos de encuesta soporta Experience?",opts:["Solo CSAT","Solo NPS","CSAT, NPS y CES","Solo formularios"],correct:2,e:"CSAT (satisfacción), NPS (recomendación) y CES (esfuerzo del cliente)."},
+      {q:"Si la pregunta de Resolución sale negativa, ¿qué puede pasar?",opts:["Nada","El ticket vuelve automáticamente a la cola para reatención","Se borra la encuesta","Se cierra el cliente"],correct:1,e:"Reapertura automática: si Resolución es negativa, el ticket regresa a la cola. Experience mide y recupera."},
+      {q:"¿Cuántas encuestas activas puede tener una cuenta social a la vez?",opts:["Ilimitadas","Una","Tres","Depende del plan"],correct:1,e:"Una cuenta social solo puede estar asociada a una encuesta activa a la vez."},
+      {q:"¿Para qué sirve el anti-spam en Experience?",opts:["Bloquear bots","No volver a encuestar al mismo cliente por X días","Filtrar correos","Cifrar respuestas"],correct:1,e:"La protección anti-spam define días para no encuestar al mismo cliente demasiado seguido."},
+      {q:"¿Cuándo se dispara el envío automático de la encuesta?",opts:["Al abrir el ticket","Al cerrar el ticket (con espera opcional)","Cada mañana","Al asignar agente"],correct:1,e:"El modo automático envía al cerrar el ticket; se puede configurar una espera antes del envío."}],
   12:[{q:"¿VoC puede procesar voz además de texto?",opts:["No, solo texto","Sí, texto y voz","Solo voz","Solo chat"],correct:1,e:"VoC procesa ambos: texto y audio/voz."},
       {q:"¿VoC necesita integración adicional si ya tiene Desk?",opts:["Sí, siempre","No, accede directo a los datos de Desk","Depende","Solo con API"],correct:1,e:"Sin integración adicional — accede directamente a las conversaciones de Desk."},
       {q:"¿Qué hace la Pauta de Calidad de VoC?",opts:["Envía encuestas","IA evalúa miles de conversaciones vs criterios definidos","Genera reportes de ventas","Monitorea agentes en vivo"],correct:1,e:"Escala el análisis de calidad a miles de conversaciones eliminando subjetividad manual."}],
@@ -2145,6 +2273,643 @@ const LESSON_QS = {
 };
 
 let challengeState = {};
+
+// ============ PRODUCT ACADEMIES ============
+const PRODUCT_ACADEMIES = [
+  {key:'desk', name:'Adereso Desk', icon:'🖥️', lessonId:8, tagline:'El helpdesk omnicanal con IA', color:'#0F3460'},
+  {key:'studio', name:'Adereso Studio', icon:'🤖', lessonId:9, tagline:'Bots con IA sin código', color:'#E94560'},
+  {key:'engage', name:'Adereso Engage', icon:'📣', lessonId:10, tagline:'Campañas masivas por WhatsApp', color:'#16A085'},
+  {key:'experience', name:'Adereso Experience', icon:'😊', lessonId:11, tagline:'Encuestas post-atención (CSAT/NPS/CES)', color:'#F39C12'},
+  {key:'cassper', name:'Cassper', icon:'🔍', lessonId:23, tagline:'Recupera ventas perdidas por WhatsApp', color:'#8E44AD'},
+];
+
+// Chapters (wizard) + scenario simulator per product
+const PRODUCT_CONTENT = {
+  desk: {
+    chapters: [
+      {title:'¿Qué es Desk?', html:`<p><strong>Desk es el helpdesk omnicanal con IA</strong> de Adereso. Centraliza, automatiza y optimiza la atención al cliente en múltiples canales, con IA Generativa y análisis en tiempo real.</p><p>Es el <strong>corazón de la suite</strong>: todo lo demás (Studio, Engage, Experience) se conecta aquí.</p>`},
+      {title:'Canales (9+)', html:`<p>Desk unifica <strong>9+ canales</strong> en una sola bandeja:</p><ul><li>WhatsApp (BSP oficial Meta), Instagram, Facebook Messenger</li><li>LinkedIn, Email, Chat Web, X (Twitter)</li><li>Reseñas de App Store y Play Store</li><li><strong>IVR Deflection:</strong> desvía llamadas telefónicas a WhatsApp</li></ul><div class="tip">💡 Un solo agente ve todos los canales sin cambiar de pantalla.</div>`},
+      {title:'Roles y precios', html:`<p><strong>3 roles</strong> (no existe superadmin):</p><ul><li><strong>Ejecutivo:</strong> atiende tickets</li><li><strong>Supervisor:</strong> monitorea equipo y métricas</li><li><strong>Admin:</strong> configura la plataforma</li></ul><p><strong>Licencias ilimitadas:</strong> el precio NO sube por usuarios, sube por conversaciones. Base desde <strong>$199/mes</strong> por bolsa de 2.000 conversaciones.</p>`},
+      {title:'IA y métricas', html:`<p>La IA de Desk resume conversaciones, sugiere respuestas y tipifica automáticamente. Métricas clave: TMO (tiempo medio de operación), FCR (resolución en primer contacto), SLA y volumen por canal.</p><div class="warning">⚠️ El SLA aplica a la plataforma. Los fees de WhatsApp/BSP no están cubiertos.</div>`},
+      {title:'El modelo mental de Desk', html:`<div class="highlight">🧠 Un cliente escribe por cualquier canal → Adereso crea o actualiza un <strong>ticket</strong> → el ticket entra a una <strong>columna</strong> según su estado → el sistema lo <strong>asigna</strong> a un agente o departamento → el agente responde, completa datos, escala si hace falta y <strong>cierra</strong> el caso.</div><p>Si Studio construye bots, <strong>Desk es donde humanos y bots gestionan los casos reales</strong> con clientes. Es la atención del día a día.</p>`},
+      {title:'¿Qué es un ticket?', html:`<p>El <strong>ticket</strong> es la unidad básica de atención: representa una conversación o caso con un cliente. Cada ticket contiene:</p><ul><li>ID único · Cliente · Canal de origen</li><li>Mensajes · Agente asignado · Departamento</li><li>Estado · SLA · Etiquetas</li><li>Datos del cliente, datos del ticket e historial</li></ul>`},
+      {title:'Los 6 estados de un ticket', html:`<table><tr><th>Estado</th><th>Qué significa</th></tr><tr><td>No abordado</td><td>El cliente escribió y nadie respondió aún</td></tr><tr><td>Abordado</td><td>Un agente ya respondió al menos una vez</td></tr><tr><td>En espera</td><td>El último mensaje es del cliente → el agente debe responder</td></tr><tr><td>Respondido</td><td>El último mensaje es del agente → se espera al cliente</td></tr><tr><td>Cerrado</td><td>La atención terminó</td></tr><tr><td>Ignorado</td><td>Descartado (spam o irrelevante)</td></tr></table>`},
+      {title:'Bandeja y columnas', html:`<p>Las <strong>columnas</strong> son vistas configurables que agrupan tickets según filtros (canal, estado, agente, departamento, fecha, SLA, etiqueta, cuenta). Sirven para ordenar el trabajo diario.</p><p>Ejemplos útiles: "WhatsApp sin responder", "Mis tickets abiertos", "Tickets fuera de SLA".</p><div class="tip">💡 Se crea una columna cuando un equipo necesita una <strong>vista repetible</strong> de trabajo — NO una columna por cada ticket.</div>`},
+      {title:'SLA: el semáforo', html:`<p>El <strong>SLA</strong> es el tiempo máximo esperado para responder un ticket antes de considerarlo atrasado. Se ve como semáforo:</p><ul><li>🟢 <strong>Verde:</strong> dentro de SLA</li><li>🟡 <strong>Amarillo:</strong> cerca de vencer</li><li>🔴 <strong>Rojo:</strong> fuera de SLA</li></ul><p>Sirve para priorizar la atención y medir desempeño operativo. Se configura por canal o departamento.</p>`},
+      {title:'Departamentos y asignación', html:`<p><strong>Departamentos:</strong> equipos o áreas que atienden tickets (Soporte, Ventas, Facturación, KAMs). Permiten enrutar, definir responsables y SLA por área.</p><p><strong>Asignación:</strong> distribuye tickets entre agentes según disponibilidad, departamento, carga actual, relación previa con el cliente, cartera o horario.</p><p>Modos: <strong>Round Robin</strong> y <strong>carga balanceada</strong>.</p>`},
+      {title:'El panel de contexto', html:`<p>Con un ticket abierto ves 3 zonas a la vez: la <strong>conversación</strong> (historial + composer con respuestas rápidas, adjuntos, emojis, audio), y a la derecha el <strong>contexto</strong>:</p><ul><li>Datos del cliente y datos del ticket (editables)</li><li>Pedidos Shopify · Omnicanalidad · Tickets anteriores</li><li><strong>Comentarios internos</strong> · Integraciones · Escalamiento · Bots</li></ul><div class="warning">⚠️ Las notas internas NUNCA se confunden con mensajes al cliente: son privadas del equipo.</div>`},
+      {title:'Cuándo crear cada cosa', html:`<table><tr><th>Crea…</th><th>Cuando…</th></tr><tr><td>Columna</td><td>un equipo necesita una vista repetible (no por ticket)</td></tr><tr><td>Departamento</td><td>hay un área con responsables y SLA propios</td></tr><tr><td>Canal</td><td>quieres atender ese medio dentro de Adereso</td></tr><tr><td>Etiqueta</td><td>necesitas clasificar motivos, campañas o prioridades</td></tr><tr><td>Integración</td><td>el agente necesita ver/enviar datos a otro sistema (Shopify, HubSpot, API)</td></tr><tr><td>SLA</td><td>hay que medir y priorizar tiempos de respuesta</td></tr></table>`},
+    ],
+    scenarios: [
+      {client:'"Ya tenemos varios sistemas para WhatsApp, Instagram y correo... ¿otro más?"', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Sí, Desk es un sistema más pero mejor."', correct:false, fb:'Posicionarlo como "uno más" refuerza la objeción. Desk REEMPLAZA esos sistemas fragmentados unificándolos.'},
+        {t:'"Justo al revés: Desk unifica esos canales en una sola bandeja, así tu equipo deja de saltar entre herramientas."', correct:true, fb:'Correcto. El valor de Desk es consolidar, no sumar. Atacas el dolor real: la fragmentación.'},
+        {t:'"Depende, habría que ver tu caso."', correct:false, fb:'Muy tibio. Tienes la respuesta: Desk centraliza 9+ canales. Sé directo con el beneficio.'},
+      ]},
+      {client:'"¿Cuánto cuesta por cada agente que agregue? Somos 40."', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Son $199 por agente al mes."', correct:false, fb:'Incorrecto. Desk NO cobra por usuario. Este error puede costarte el deal.'},
+        {t:'"Las licencias son ilimitadas — no cobramos por agente. El precio va por volumen de conversaciones."', correct:true, fb:'Exacto. Licencias ilimitadas es un diferenciador fuerte vs competencia que cobra por asiento.'},
+        {t:'"Te hago un descuento por volumen de agentes."', correct:false, fb:'No aplica: no se cobra por agente, así que no hay descuento por asientos. El cobro es por conversaciones.'},
+      ]},
+      {client:'"Recibimos muchas llamadas telefónicas y se nos satura la línea."', prompt:'¿Qué función mencionas?', opts:[
+        {t:'"Desk tiene un call center con llamadas entrantes."', correct:false, fb:'Incorrecto — no hay inbound telefónico. La función correcta es IVR Deflection.'},
+        {t:'"Con IVR Deflection desviamos esas llamadas a WhatsApp, bajando costos y saturación."', correct:true, fb:'Correcto. IVR Deflection convierte llamadas en chats de WhatsApp gestionables en Desk.'},
+        {t:'"Habría que contratar Engage para eso."', correct:false, fb:'No. Engage es para campañas salientes. Lo que resuelve la saturación de llamadas es IVR Deflection en Desk.'},
+      ]},
+      {client:'"Mi equipo no sabe qué atender primero, se pierden entre tantos tickets."', prompt:'¿Qué le recomiendas?', opts:[
+        {t:'"Que atiendan en el orden que van llegando."', correct:false, fb:'Ineficiente. Ignora la urgencia real. Para eso está el SLA.'},
+        {t:'"Priorizar por SLA: atacar primero los tickets en rojo (fuera de SLA) y amarillo, con una columna filtrada por SLA vencido."', correct:true, fb:'Correcto. El semáforo de SLA + una columna de "SLA vencido" ordena la operación.'},
+        {t:'"Contratar más agentes."', correct:false, fb:'No resuelve la priorización. Primero se ordena con SLA y columnas.'},
+      ]},
+      {client:'"Un supervisor quiere una vista fija de \'mis tickets de WhatsApp sin responder\' para revisarla cada día."', prompt:'¿Qué haces?', opts:[
+        {t:'"Crear una columna con filtros canal=WhatsApp y estado=en espera."', correct:true, fb:'Correcto. Una columna es justo eso: una vista repetible con filtros para el trabajo diario.'},
+        {t:'"Crear un departamento nuevo."', correct:false, fb:'No. Un departamento es para un área con responsables y SLA propios, no para una vista personal.'},
+        {t:'"Crear una etiqueta por cada ticket."', correct:false, fb:'No. Las etiquetas clasifican motivos; la vista repetible se logra con una columna.'},
+      ]},
+      {client:'"Este caso lo tiene que ver Facturación, no yo. ¿Cómo lo paso sin perder el contexto?"', prompt:'¿Cómo lo escalas bien?', opts:[
+        {t:'"Cerrar el ticket y pedirle al cliente que escriba a Facturación."', correct:false, fb:'Pésima experiencia. El cliente tendría que repetir todo. Nunca lo hagas.'},
+        {t:'"Dejar un comentario interno con el contexto y transferir el ticket al departamento Facturación."', correct:true, fb:'Correcto. Nota interna + cambio de departamento mantiene el historial para quien recibe.'},
+        {t:'"Reenviar la conversación por correo."', correct:false, fb:'No. El escalamiento se hace dentro de Desk (nota interna + transferir), conservando el ticket y su historial.'},
+      ]},
+    ],
+    builder: [
+      {
+        caso: 'Una tienda atiende por WhatsApp, Instagram y correo con 3 herramientas distintas. Los mensajes se pierden, no hay métricas y quieren medir la satisfacción tras cada atención. Tienen 35 agentes.',
+        pistas: 'Piensa: ¿qué unifica canales? ¿cómo mides satisfacción? ¿el precio depende de los agentes?',
+        items: [
+          {label:'🖥️ Desk (bandeja omnicanal única)', good:true, why:'Desk centraliza WhatsApp, IG y correo en una sola bandeja: fin de la fragmentación.'},
+          {label:'😊 Experience (CSAT/NPS post-atención)', good:true, why:'Para medir satisfacción tras cada atención, en el mismo canal. Va incluido gratis en Desk.'},
+          {label:'📊 Licencias ilimitadas (no cobrar por agente)', good:true, why:'Con 35 agentes el argumento clave: no se cobra por asiento, el precio va por conversaciones.'},
+          {label:'🔍 Cassper', good:false, why:'No lo pidieron. Cassper recupera ventas perdidas, no es lo que resuelve este caso.'},
+          {label:'💳 Cobro por número de agentes', good:false, why:'Error: Desk NO cobra por agente. Las licencias son ilimitadas.'},
+        ],
+      },
+      {
+        caso: 'Un servicio recibe muchísimas llamadas telefónicas y la línea se satura. Además quieren saber quién de los agentes resuelve mejor y en qué canal se demoran más.',
+        pistas: 'Ojo: no existen llamadas entrantes en Adereso. ¿Qué hace con las llamadas? ¿Dónde ves desempeño?',
+        items: [
+          {label:'📞 IVR Deflection (llamadas → WhatsApp)', good:true, why:'Desvía las llamadas a chat de WhatsApp, bajando la saturación de la línea.'},
+          {label:'📊 Métricas de Desk (TMO, FCR por agente/canal)', good:true, why:'Desk mide desempeño por agente y por canal (TMO, FCR, volumen).'},
+          {label:'☎️ Call center de llamadas entrantes', good:false, why:'Error: no existe inbound telefónico en Adereso. Solo outbound; las entrantes se desvían con IVR Deflection.'},
+          {label:'📣 Engage', good:false, why:'Engage es campañas salientes por WhatsApp; no resuelve saturación de llamadas ni métricas de atención.'},
+        ],
+      },
+      {
+        caso: 'Una empresa quiere ordenar su operación: tiene un equipo de Soporte y otro de Ventas que deben atender por separado con tiempos de respuesta distintos, ver Shopify dentro del ticket, y que cada equipo tenga su vista diaria de casos sin responder.',
+        pistas: 'Piensa: ¿equipos separados con responsables? ¿tiempos por área? ¿ver pedidos? ¿vista diaria repetible?',
+        items: [
+          {label:'🏢 Crear departamentos (Soporte y Ventas)', good:true, why:'Equipos con responsables y enrutamiento propio → departamentos.'},
+          {label:'⏱️ Configurar SLA por departamento', good:true, why:'Tiempos de respuesta distintos por área se logran con SLA por departamento.'},
+          {label:'🔌 Integración con Shopify', good:true, why:'Para ver pedidos dentro del ticket se conecta la integración de Shopify.'},
+          {label:'📋 Crear columnas por equipo (casos sin responder)', good:true, why:'Cada equipo tiene su vista diaria repetible con una columna filtrada por estado y departamento.'},
+          {label:'🏷️ Crear una etiqueta por cada ticket', good:false, why:'Error: las etiquetas clasifican motivos/campañas, no se crea una por ticket ni reemplazan a las columnas.'},
+        ],
+      },
+    ],
+  },
+  studio: {
+    chapters: [
+      {title:'¿Qué es Studio?', html:`<p><strong>Studio crea bots con IA sin código.</strong> Bots que responden, ejecutan acciones reales y derivan a un humano cuando hace falta — todo desde una interfaz visual.</p><div class="tip">💬 Pitch: "¿Tu equipo pierde horas respondiendo lo mismo? ¿Se pierden ventas fuera de horario? Studio configura un bot que entiende al cliente, ejecuta acciones y sabe cuándo pasar a un humano."</div>`},
+      {title:'Agente vs Flow', html:`<table><tr><th>Aspecto</th><th>🧠 Agente</th><th>🔀 Flow</th></tr><tr><td>Autonomía</td><td>Alta, decide por contexto</td><td>Pasos fijos</td></tr><tr><td>IA</td><td>Sí (GPT/Claude/Gemini)</td><td>Parcial</td></tr><tr><td>Ideal</td><td>Atención, ventas, FAQ</td><td>Encuestas, formularios</td></tr></table><div class="tip">💡 ¿Dudas? Empieza con Bot Agente: más flexible y se ajusta después.</div>`},
+      {title:'Crear tu primer bot', html:`<ol><li>Entra a Studio desde Desk → menú <strong>Módulos</strong></li><li>Clic en <strong>"+ Añadir Bot"</strong></li><li>Elige tipo (Agente o Flow)</li><li>Nómbralo y clic en <strong>"Crear Nuevo Bot"</strong></li></ol><div class="highlight">⏱️ En menos de 1 minuto tienes el bot creado. Luego lo configuras.</div>`},
+      {title:'Componente vs Herramienta', html:`<p>Los dos bloques con que se arma un bot. Es la distinción técnica clave:</p><table><tr><th></th><th>🧩 Componente</th><th>🔧 Herramienta</th></tr><tr><td>Define</td><td>Cómo <strong>piensa/habla</strong> el bot</td><td>Qué <strong>hace/ejecuta</strong> el bot</td></tr><tr><td>Naturaleza</td><td>Instrucción de comportamiento</td><td>Acción concreta</td></tr><tr><td>Ejemplos</td><td>Personalidad, reglas, objetivo</td><td>Cerrar ticket, derivar, llamar API</td></tr></table><div class="tip">💡 Regla mental: <strong>componente = instrucción</strong> (texto que guía), <strong>herramienta = acción</strong> (algo que ocurre en la conversación o en un sistema).</div>`},
+      {title:'Tipos de componentes', html:`<p>Un componente es una <strong>instrucción estructurada</strong> de cómo comportarse. Se combinan varios para armar el comportamiento total. Tipos disponibles:</p><ul><li><strong>🎯 Objetivo</strong> — la misión del bot <em>(único por bot)</em></li><li><strong>🎭 Personalidad</strong> — tono y actitud <em>(único)</em></li><li><strong>💬 Estilo de comunicación</strong> — largo, formato, emojis <em>(único)</em></li><li><strong>📜 Reglas</strong> — políticas que debe cumplir</li><li><strong>🚫 Restricciones</strong> — lo que NO debe hacer/decir</li><li><strong>🪜 Pasos</strong> — procedimientos secuenciales</li><li><strong>⚡ Condicionales</strong> — comportamiento según condiciones</li><li><strong>📚 Conocimiento</strong> / <strong>🏢 Conocimiento de negocio</strong> / <strong>🔤 Terminología</strong></li><li><strong>🛡️ Protección</strong> — filtros anti-manipulación</li><li><strong>🔀 Transferencia</strong> — cuándo derivar</li><li><strong>🛍️ Tienda Shopify · 🔌 Servidor MCP · 💳 Stripe MCP</strong></li></ul><div class="warning">⚠️ Objetivo, Personalidad y Estilo de comunicación son <strong>únicos</strong>: solo uno de cada por bot (se editan, no se duplican).</div>`},
+      {title:'Cómo se configura un componente', html:`<p>Studio → abre el bot → menú <strong>Comportamiento</strong> → <strong>Nuevo componente</strong> → eliges el tipo, le pones <strong>nombre</strong> e <strong>instrucciones</strong> → Guardar.</p><p>Qué se pone dentro: instrucciones en <strong>lenguaje natural, en segunda persona</strong> ("debes enviar un mensaje…", no "el agente debe…"). Deben ser específicas y concretas.</p><ul><li>Se pueden <strong>activar/desactivar</strong> sin borrarlos (para probar variantes)</li><li>Hay un <strong>contador de tokens</strong>: mientras más ocupan las instrucciones, menos espacio queda para la conversación → el bot puede "olvidar" el inicio de chats largos</li></ul><div class="tip">💡 No se trata de escribir poco, sino de escribir <em>bien</em>: claro y sin repeticiones.</div>`},
+      {title:'Tipos de herramientas', html:`<p>Las herramientas son las <strong>acciones</strong> que el bot ejecuta. Se agrupan así:</p><ul><li><strong>💬 Comunicación:</strong> Botones interactivos, Derivar a humano, Cerrar conversación, Ignorar</li><li><strong>📊 Datos y gestión:</strong> Agregar etiquetas, Actualizar metadatos, Establecer prioridad (1-5)</li><li><strong>🔌 Integración:</strong> Petición HTTP (GET/POST/…), Base de conocimiento, Búsqueda de productos, Invocar agente, Temporizador, Transferir a HelpDesk</li><li><strong>🧠 Memoria:</strong> Memoria dinámica (set, append, remove, update)</li></ul><p>Concepto clave — <strong>terminal vs no terminal</strong>:</p><table><tr><th>Terminal</th><th>No terminal</th></tr><tr><td>Finaliza la sesión del bot (ej: Cerrar, Derivar)</td><td>Se ejecuta y el bot sigue conversando (ej: HTTP, etiquetas)</td></tr></table><div class="warning">⚠️ No abuses de herramientas terminales: el bot podría cerrar conversaciones antes de tiempo. Siempre deja una herramienta de derivación a humano como respaldo.</div>`},
+      {title:'Base de conocimiento', html:`<p>Se sube desde <strong>Studio → el bot → sección Base de Conocimiento</strong>, organizada en 4 pestañas: <strong>Archivos, Subir desde Drive, Scraper Web, Historial</strong>.</p><p><strong>Formatos soportados:</strong> PDF (con texto seleccionable), Word y Hojas de Cálculo / Google Sheets. Desde Drive: PDF, Word y Sheets. También se puede <strong>scrapear un sitio web</strong> (hasta 500 páginas por defecto).</p><ul><li>❌ Evita: PDFs escaneados (solo imagen), archivos con contraseña, hojas con macros</li><li>Auto-sincronización mantiene los archivos al día con su fuente</li></ul>`},
+      {title:'¿Se crea una tool para la KB?', html:`<div class="warning">⚠️ <strong>SÍ.</strong> Subir contenido NO basta. Si no agregas la herramienta <strong>"Búsqueda en base de conocimiento"</strong>, el bot tiene el contenido indexado pero <strong>no puede consultarlo</strong>.</div><p>Es la respuesta a la pregunta más frecuente del cliente técnico: <em>"subí mis PDFs pero el bot no los usa"</em> → falta la tool de búsqueda o está inactiva.</p><p>Parámetros de esa tool: <code>namespace</code>, <code>scope</code> (archivos específicos), <code>query_description</code>, <code>metadata_filters</code> y <code>search_settings</code> (máx. resultados 1-20, umbral de similitud ~0.7).</p>`},
+      {title:'La idea clave de Studio', html:`<p>Esto es lo que un comercial debe poder explicar en una frase:</p><div class="highlight">🧠 "Studio <strong>no es un constructor de flujos rígidos</strong>. Es un <strong>constructor de agentes</strong>. Tú defines <em>qué sabe</em> el bot, <em>cómo se comporta</em>, <em>qué puede hacer</em> y <em>cuándo</em> usar cada capacidad."</div><p>Un Bot Agente interpreta el mensaje, decide la siguiente acción y usa herramientas cuando corresponde. No memoriza un árbol: razona sobre el contexto.</p>`},
+      {title:'¿Componente, tool, KB o API?', html:`<p>La decisión que más le cuesta al cliente. Tú debes guiarla:</p><table><tr><th>Necesito…</th><th>Uso…</th></tr><tr><td>Definir comportamiento, límites, tono, reglas</td><td>🧩 <strong>Componente</strong></td></tr><tr><td>Que el bot <em>haga algo</em> en la conversación</td><td>🔧 <strong>Tool</strong></td></tr><tr><td>Responder desde documentos (políticas, FAQ, garantías)</td><td>📕 <strong>KB</strong> + tool de búsqueda</td></tr><tr><td>Datos vivos o ejecutar acciones (stock, pedido, deuda)</td><td>🔌 <strong>API</strong> (Petición HTTP)</td></tr><tr><td>Pasar a otro agente de Studio</td><td>🔀 <strong>Handoff</strong></td></tr><tr><td>Pasar a una persona</td><td>🙋 <strong>Derivación a humano</strong></td></tr></table>`},
+      {title:'KB vs API: la línea', html:`<p>La confusión #1 del cliente. La regla es simple:</p><table><tr><th>📕 Base de conocimiento</th><th>🔌 API</th></tr><tr><td>Info <strong>estable</strong> en documentos</td><td>Info <strong>viva</strong> / transaccional</td></tr><tr><td>FAQs, políticas, garantías, manuales, condiciones de despacho/devolución</td><td>Estado de pedido, stock en vivo, saldos, pagos, validar identidad, agendar</td></tr></table><div class="warning">⚠️ La KB <strong>NO sirve</strong> para stock en vivo, estado de pedidos ni saldos: eso cambia en tiempo real → va por API.</div>`},
+      {title:'Un componente por responsabilidad', html:`<p>La regla sana de configuración. Explícasela así al cliente:</p><div class="highlight">📏 <strong>Un componente = una responsabilidad.</strong> No mezcles personalidad, reglas, restricciones y pasos en un bloque gigante.</div><ul><li>"Tono del bot" → componente <strong>Personalidad</strong> o <strong>Estilo</strong></li><li>"No inventar precios ni stock" → componente <strong>Restricciones</strong></li><li>"Si preguntan por garantías, responder con la KB" → componente <strong>Conocimiento</strong> + tool de búsqueda</li><li>"Consultar estado de pedido" → <strong>tool HTTP (API)</strong></li><li>"Derivar a humano" → <strong>tool de derivación</strong></li></ul><div class="tip">💡 Ojo con el contador de tokens (arriba de Componentes): bloques gigantes suben el costo y hacen que el bot "olvide" chats largos.</div>`},
+      {title:'Cómo se ve la plataforma', html:`<p>Para acompañar al cliente conviene reconocer el builder. El menú lateral se organiza en:</p><ul><li><strong>Construir:</strong> Mi agente, Activadores, Mapa, Recursos Compartidos, Tiendas</li><li><strong>Contenido:</strong> Conocimiento (la KB)</li><li><strong>Analítica:</strong> Analítica, Diagrama, Conversaciones</li><li><strong>Calidad:</strong> Tests, Diagnóstico, Versiones</li></ul><p>En "Mi agente" ves 3 columnas: <strong>Componentes</strong> (con badge de tokens), <strong>Herramientas</strong> y <strong>Eventos</strong>. Arriba: <strong>Borrador</strong> vs versión publicada, y el botón <strong>Probar</strong> para simular la conversación.</p><div class="tip">💡 "Probar" muestra qué componente aplicó y qué herramienta se invocó — clave para demostrar en vivo cómo razona el bot.</div>`},
+      {title:'El orden para armar un bot', html:`<p>El flujo recomendado, de principio a fin. Sirve para guiar una demo o un onboarding:</p><ol><li>Definir el <strong>objetivo</strong> del bot</li><li><strong>Personalidad</strong> y estilo de comunicación</li><li><strong>Restricciones</strong> globales (no inventar precios/stock)</li><li><strong>Conocimiento de negocio</strong> estable</li><li>Conectar la <strong>KB</strong> si responde desde documentos</li><li>Conectar <strong>APIs</strong> si necesita datos vivos o ejecutar acciones</li><li>Agregar <strong>reglas, condiciones o pasos</strong></li><li>Agregar <strong>derivación y cierre</strong></li><li><strong>Probar</strong> con conversaciones reales</li><li><strong>Publicar</strong> versión</li></ol>`},
+      {title:'Tiendas y diferenciadores', html:`<p><strong>Shopify vía MCP:</strong> solo pones la URL de la tienda, creas un componente y listo. Sin API. VTEX/WooCommerce y otras se conectan por API.</p><p>Diferenciadores: multi-motor de IA, NO fine-tuning (datos privados), modo asíncrono y funciona standalone sin Desk.</p>`},
+    ],
+    scenarios: [
+      {client:'"Necesito un bot pero no tengo programadores ni presupuesto para desarrollo."', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Sin problema, Studio es sin código: se arma con componentes visuales y prompts, sin programar."', correct:true, fb:'Correcto. "Sin código" es el gancho clave para clientes sin equipo técnico.'},
+        {t:'"Te podemos cotizar el desarrollo custom."', correct:false, fb:'Innecesario. El diferenciador de Studio es que NO requiere desarrollo para lo estándar.'},
+        {t:'"Necesitarás al menos un desarrollador."', correct:false, fb:'Falso y espanta al cliente. Studio se opera sin código.'},
+      ]},
+      {client:'"Tengo mi catálogo en Shopify. ¿Es un proyecto largo integrarlo?"', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Sí, requiere desarrollo de API, unas semanas."', correct:false, fb:'Incorrecto para Shopify. Con el MCP es inmediato, sin API.'},
+        {t:'"Con Shopify usamos el MCP: pones la URL de la tienda, creas un componente y el bot ya accede al catálogo. Sin API."', correct:true, fb:'Exacto. El MCP de Shopify es el camino fácil, sin desarrollo.'},
+        {t:'"No soportamos Shopify."', correct:false, fb:'Falso. Shopify es justo el caso más simple gracias al MCP.'},
+      ]},
+      {client:'"Me preocupa que el bot invente respuestas o entregue datos falsos."', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Es un riesgo de toda IA, no se puede evitar."', correct:false, fb:'Genera desconfianza. Studio tiene control de alucinaciones.'},
+        {t:'"El bot solo responde con la info de su base de conocimiento; si no la tiene, deriva o avisa. No inventa."', correct:true, fb:'Correcto. Explica el control de alucinaciones: responde solo desde su base.'},
+        {t:'"Le pondremos reglas para que no mienta mucho."', correct:false, fb:'Vago y poco confiable. El mecanismo real: responde solo desde la base de conocimiento.'},
+      ]},
+      {client:'"Subí todos mis PDFs a la base de conocimiento, pero el bot no los usa. ¿Qué falta?"', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Hay que esperar, se indexan solos con el tiempo."', correct:false, fb:'Incorrecto. Aunque se indexen, el bot no consulta la KB sin la herramienta de búsqueda.'},
+        {t:'"Falta agregar la herramienta \'Búsqueda en base de conocimiento\'. Subir el contenido no basta: sin esa tool el bot no puede consultarlo."', correct:true, fb:'Exacto. La KB necesita la tool de búsqueda activa; ese es el paso que casi todos olvidan.'},
+        {t:'"Los PDFs no sirven, hay que copiar todo a un componente."', correct:false, fb:'No. Los PDFs (con texto) sí sirven; lo que falta es la herramienta de búsqueda en la KB.'},
+      ]},
+      {client:'"Quiero que el bot le diga a la gente en qué estado va su pedido, en tiempo real."', prompt:'¿Qué le recomiendas configurar?', opts:[
+        {t:'"Súbelo a la base de conocimiento."', correct:false, fb:'No. El estado de pedido cambia en vivo; la KB es para info estable (políticas, FAQs). Eso va por API.'},
+        {t:'"Eso va por API (Petición HTTP): el bot consulta el sistema de pedidos y responde el estado actual."', correct:true, fb:'Correcto. Datos vivos/transaccionales = API, nunca KB.'},
+        {t:'"Escríbelo en el componente de conocimiento de negocio."', correct:false, fb:'No. Un componente guarda info estable; el estado de un pedido cambia constantemente → API.'},
+      ]},
+      {client:'"Necesito que el bot responda las dudas de garantías y devoluciones según nuestras políticas."', prompt:'¿Qué le recomiendas?', opts:[
+        {t:'"Conecta una API a tu sistema de garantías."', correct:false, fb:'Sobrecomplica. Las políticas son documentos estables → base de conocimiento.'},
+        {t:'"Sube las políticas a la base de conocimiento y agrega la tool de búsqueda para que el bot responda desde esos documentos."', correct:true, fb:'Correcto. Info estable en documentos = KB + tool de búsqueda.'},
+        {t:'"Ponlo todo en el componente de personalidad."', correct:false, fb:'No. La personalidad define el tono, no el contenido de políticas. Eso va en la KB.'},
+      ]},
+      {client:'"Quiero que el bot nunca invente precios ni plazos, y que hable siempre formal."', prompt:'¿Cómo lo configuras?', opts:[
+        {t:'"Todo en un solo componente gigante."', correct:false, fb:'Mala práctica. La regla es un componente por responsabilidad, para que no se mezcle ni suba tokens.'},
+        {t:'"Un componente de Restricciones (\'no inventar precios ni plazos\') y otro de Personalidad/Estilo para el tono formal."', correct:true, fb:'Correcto. Un componente por responsabilidad: restricciones y tono son cosas distintas.'},
+        {t:'"Con una API que valide cada respuesta."', correct:false, fb:'No aplica. Comportamiento y límites se definen con componentes, no con APIs.'},
+      ]},
+      {client:'"¿Cómo le muestro al cliente, en la reunión, que el bot realmente razona y no es un árbol de opciones?"', prompt:'¿Qué haces en la demo?', opts:[
+        {t:'"Le muestro un diagrama de flujo del bot."', correct:false, fb:'Refuerza justo lo contrario: Studio no es flujos rígidos, es un agente que razona.'},
+        {t:'"Uso el botón Probar: el cliente escribe libremente y ve qué componente aplicó y qué herramienta se invocó."', correct:true, fb:'Correcto. "Probar" evidencia en vivo cómo el agente decide, no un árbol fijo.'},
+        {t:'"Le explico el código por detrás."', correct:false, fb:'Innecesario y contraproducente: Studio es sin código. La demostración fuerte es probarlo en vivo.'},
+      ]},
+    ],
+    builder: [
+      {
+        caso: 'E-commerce de zapatillas. El cliente quiere un bot que recomiende productos del catálogo Shopify, responda dudas de la política de cambios y, si el cliente se enoja o lo pide, lo pase a una persona.',
+        pistas: 'Piensa: ¿qué es catálogo? ¿qué es una política (documento estable)? ¿qué pasa cuando piden humano?',
+        items: [
+          {label:'🛍️ Tool de Búsqueda de productos', good:true, why:'El catálogo Shopify se consulta con la tool de búsqueda de productos.'},
+          {label:'📕 KB (política de cambios) + tool de búsqueda', good:true, why:'La política de cambios es un documento estable → KB + su tool de búsqueda.'},
+          {label:'🙋 Tool de Derivación a humano', good:true, why:'Si se enoja o pide una persona, se deriva a humano.'},
+          {label:'🔌 API de estado de pedido', good:false, why:'No lo pidieron. El caso no menciona seguimiento de pedidos en vivo.'},
+          {label:'📣 Campaña de Engage', good:false, why:'Engage es otro producto (campañas salientes), no parte de armar este bot.'},
+        ],
+      },
+      {
+        caso: 'Retail que quiere un bot para consultar el estado del pedido en tiempo real. Debe pedir el número de pedido, consultarlo en el sistema y responder el estado actual. Nunca debe inventar.',
+        pistas: 'Estado en tiempo real = dato vivo. "Nunca inventar" = un límite de comportamiento.',
+        items: [
+          {label:'🔌 Tool API (Petición HTTP) al sistema de pedidos', good:true, why:'El estado en vivo es transaccional → se consulta por API.'},
+          {label:'⚡ Componente Condicional (pedir N° de pedido)', good:true, why:'"Si preguntan por su pedido, pedir el número y usar la API" es una condición.'},
+          {label:'🚫 Componente de Restricciones (no inventar)', good:true, why:'"Nunca inventar" es una restricción de comportamiento.'},
+          {label:'📕 Subir los pedidos a la base de conocimiento', good:false, why:'Error clásico: la KB es para info estable, no para datos que cambian en vivo.'},
+          {label:'🕐 Temporizador', good:false, why:'No hay seguimiento diferido en el caso; el temporizador no aporta aquí.'},
+        ],
+      },
+      {
+        caso: 'Clínica que quiere un bot que responda dudas frecuentes (horarios, ubicaciones, cómo agendar) con tono cálido y formal, y derive a recepción si el caso es médico.',
+        pistas: 'FAQs = documentos. Tono = comportamiento. "Caso médico" = límite para derivar.',
+        items: [
+          {label:'📕 KB (FAQs/horarios) + tool de búsqueda', good:true, why:'Las FAQs y horarios son info estable → KB + su tool de búsqueda.'},
+          {label:'🎭 Componente Personalidad/Estilo (cálido y formal)', good:true, why:'El tono se define con Personalidad y Estilo de comunicación.'},
+          {label:'🙋 Tool de Derivación a humano (casos médicos)', good:true, why:'Un caso médico debe pasar a una persona → derivación.'},
+          {label:'🔌 API de historial clínico', good:false, why:'No lo pidieron y sería sensible. El caso es informativo, no transaccional.'},
+          {label:'🛍️ Tool de Búsqueda de productos', good:false, why:'No hay catálogo de productos en una clínica.'},
+        ],
+      },
+    ],
+  },
+  engage: {
+    chapters: [
+      {title:'¿Qué es Engage?', html:`<p><strong>Engage son campañas masivas y proactivas por WhatsApp.</strong> Tasa de apertura del <strong>98%</strong> (vs ~20% del email).</p><div class="warning">⚠️ Funciona EXCLUSIVAMENTE por WhatsApp.</div>`},
+      {title:'Casos de uso', html:`<table><tr><th>Categoría</th><th>Ejemplos</th></tr><tr><td><strong>Postventa</strong></td><td>Confirmaciones, despacho, recordatorios de cita</td></tr><tr><td><strong>Comercial</strong></td><td>Promos, lanzamientos, remarketing, carrito abandonado</td></tr><tr><td><strong>Relacional</strong></td><td>Fidelización, reactivación de inactivos</td></tr></table>`},
+      {title:'HSM y tiers', html:`<p><strong>3 tipos de HSM:</strong> Marketing (promos, costo alto), Utility (recordatorios, costo bajo), Autenticación (OTP). Meta aprueba cada plantilla.</p><p><strong>Tiers de envío:</strong> 1K → 10K → 100K → ilimitado. Se sube enviando volumen con buena calidad.</p>`},
+      {title:'Cobro y validación', html:`<table><tr><th>Estado</th><th>¿Se cobra?</th></tr><tr><td>Failed</td><td>❌ No</td></tr><tr><td>Delivered</td><td>✅ Sí</td></tr><tr><td>Read</td><td>✅ Sí</td></tr></table><p>Modelo: módulo + tráfico + <strong>12% BSP</strong> sobre fee de Meta.</p><div class="warning">⚠️ Limpiar la base antes de enviar protege la calidad (que afecta el tier).</div>`},
+      {title:'El modelo mental', html:`<div class="highlight">🧠 Engage <strong>no reemplaza a Desk</strong>: Engage <strong>inicia</strong> la conversación (proactiva). Si el cliente responde, esa conversación <strong>entra a Desk como un ticket</strong> para atención.</div>`},
+      {title:'Cómo se crea una campaña', html:`<p>Se arma en un asistente paso a paso:</p><ol><li><strong>Nombre</strong> de la campaña</li><li><strong>Cuenta de WhatsApp</strong> desde donde se envía</li><li><strong>Template HSM</strong> aprobado (con variables de personalización)</li><li><strong>Carga de contactos CSV</strong> (teléfono + variables)</li><li><strong>Departamento de respuesta</strong> (dónde caen las respuestas)</li><li><strong>Programación</strong>: envío inmediato o futuro</li></ol>`},
+      {title:'El CSV de contactos', html:`<p>El archivo CSV lleva el teléfono y las variables dinámicas que rellenan el template (ej: nombre, N° de pedido).</p><div class="warning">⚠️ Los teléfonos deben ir con <strong>código de país</strong>. Las columnas del CSV se mapean contra las variables del template.</div>`},
+      {title:'Estados y métricas', html:`<p><strong>Estados de una campaña:</strong> Cargada → Enviando → Completada (o Pausada / Error).</p><p><strong>Métricas:</strong> total enviados, entregados, leídos, respondidos y <strong>tasa de respuesta</strong> (idealmente con detalle por contacto).</p>`},
+    ],
+    scenarios: [
+      {client:'"Mando newsletters por email pero casi nadie las abre."', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Con Engage envías esas campañas por WhatsApp, que tiene 98% de apertura vs ~20% del email."', correct:true, fb:'Correcto. El contraste de apertura es el argumento más fuerte de Engage.'},
+        {t:'"Podemos mejorar tus emails."', correct:false, fb:'Fuera de foco. Engage no mejora el email; cambia el canal a WhatsApp.'},
+        {t:'"Engage también manda emails masivos."', correct:false, fb:'Falso. Engage es EXCLUSIVO de WhatsApp.'},
+      ]},
+      {client:'"¿Me van a cobrar por todos los mensajes aunque no lleguen?"', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Sí, se cobra todo lo que se envía."', correct:false, fb:'Incorrecto. Los mensajes Failed no se cobran.'},
+        {t:'"No: los que fallan (Failed) no se cobran. Solo se cobran los entregados (Delivered) y leídos (Read)."', correct:true, fb:'Exacto. Solo se cobra Delivered y Read; Failed no.'},
+        {t:'"Solo se cobra si el cliente responde."', correct:false, fb:'Falso. Se cobra al entregar/leer, no al responder.'},
+      ]},
+      {client:'"Si le mando una campaña a 5.000 personas y algunas responden, ¿dónde llegan esas respuestas?"', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Se pierden, Engage solo envía."', correct:false, fb:'Incorrecto. Las respuestas entran a Desk como tickets.'},
+        {t:'"Caen en Desk como tickets, en el departamento de respuesta que definiste al crear la campaña."', correct:true, fb:'Correcto. Engage inicia; si responden, la conversación entra a Desk para atención.'},
+        {t:'"Llegan a tu correo."', correct:false, fb:'No. Las respuestas se gestionan como tickets en Desk, no por email.'},
+      ]},
+      {client:'"Quiero avisar a mis clientes que su pedido va en camino."', prompt:'¿Qué tipo de HSM aplica?', opts:[
+        {t:'"Marketing."', correct:false, fb:'No. Marketing es para promos. Un aviso de despacho es Utility (más barato).'},
+        {t:'"Utility — es un recordatorio/aviso transaccional, y además cuesta menos que Marketing."', correct:true, fb:'Correcto. Avisos y confirmaciones son Utility, categoría de menor costo.'},
+        {t:'"Autenticación."', correct:false, fb:'No. Autenticación es solo para códigos OTP/verificación.'},
+      ]},
+      {client:'"Ya tengo el Excel con los teléfonos, pero la campaña falla al cargarlos."', prompt:'¿Qué revisas primero?', opts:[
+        {t:'"Que los teléfonos tengan el código de país y que las columnas mapeen a las variables del template."', correct:true, fb:'Correcto. Falta de código país o mal mapeo de columnas es la causa más común.'},
+        {t:'"Que el Excel tenga menos de 10 filas."', correct:false, fb:'No hay tal límite. El problema típico es el formato del teléfono (código país) o el mapeo.'},
+        {t:'"Cambiar de cuenta de WhatsApp."', correct:false, fb:'No es eso. Primero valida el CSV: código de país y columnas mapeadas al template.'},
+      ]},
+    ],
+    builder: [
+      {
+        caso: 'Una marca quiere lanzar una promo de Black Friday a 8.000 contactos por WhatsApp. El número es nuevo (recién migrado) y quieren que quien responda sea atendido. Su base de contactos es vieja.',
+        pistas: 'Piensa: ¿qué tipo de HSM es una promo? ¿un número nuevo puede enviar 8.000 de una? ¿dónde caen las respuestas? ¿base vieja?',
+        items: [
+          {label:'📣 HSM tipo Marketing', good:true, why:'Una promo de Black Friday es categoría Marketing.'},
+          {label:'🧹 Validar/limpiar la base antes de enviar', good:true, why:'Base vieja → limpiar primero protege la calidad (que define el tier) y evita fallos masivos.'},
+          {label:'🔗 Conexión con Desk (respuestas como tickets)', good:true, why:'Quien responda la campaña cae como ticket en Desk para atención.'},
+          {label:'🚀 Enviar los 8.000 de inmediato con número nuevo', good:false, why:'Error: un número recién migrado parte en TIER_1K (1.000/24h). Hay que subir tier con envíos de calidad.'},
+          {label:'🔑 HSM tipo Autenticación', good:false, why:'No. Autenticación es solo para OTP/códigos, no para promociones.'},
+        ],
+      },
+      {
+        caso: 'Una empresa quiere mandar recordatorios de cita y confirmaciones de despacho. Le preocupa el costo y que le cobren mensajes que no llegan.',
+        pistas: 'Recordatorio/confirmación = ¿qué categoría? ¿se cobran los que fallan?',
+        items: [
+          {label:'🔧 HSM tipo Utility', good:true, why:'Recordatorios y confirmaciones son Utility, la categoría de menor costo.'},
+          {label:'💡 Explicar cobro por estado (Failed no se cobra)', good:true, why:'Tranquiliza el costo: solo se cobran Delivered y Read; los Failed no.'},
+          {label:'📣 HSM tipo Marketing', good:false, why:'Marketing cuesta más y es para promos, no para avisos transaccionales.'},
+          {label:'🔍 Cassper', good:false, why:'No corresponde. Cassper recupera ventas perdidas, no envía recordatorios.'},
+        ],
+      },
+    ],
+  },
+  experience: {
+    chapters: [
+      {title:'¿Qué es Experience?', html:`<p><strong>Experience son encuestas post-atención</strong> integradas en el mismo canal donde se atendió al cliente (WhatsApp, IG, etc.).</p><div class="tip">💡 Va GRATIS incluido en Desk. En la negociación: "en otros proveedores te lo cobran aparte".</div>`},
+      {title:'Tipos de encuesta', html:`<ul><li><strong>CSAT:</strong> satisfacción con la atención</li><li><strong>NPS:</strong> probabilidad de recomendar</li><li><strong>CES:</strong> esfuerzo que le costó al cliente resolver</li></ul>`},
+      {title:'Por qué convierte', html:`<p>Tasa de respuesta del <strong>~30%</strong> porque la encuesta llega por el mismo canal de la conversación (vs 2-5% del email). Los resultados alimentan métricas de calidad y se cruzan con las conversaciones de Desk.</p>`},
+      {title:'El modelo mental', html:`<div class="highlight">🧠 Experience <strong>no es una bandeja de atención</strong>: es una <strong>capa de medición y recuperación</strong> sobre Desk. Mide la calidad de la atención y captura feedback justo después de cerrar el ticket.</div>`},
+      {title:'Tipos de pregunta', html:`<p>Más allá de CSAT/NPS/CES, una encuesta puede combinar:</p><ul><li><strong>Resolución:</strong> ¿se resolvió tu caso?</li><li><strong>CSAT:</strong> satisfacción con la atención</li><li><strong>NPS:</strong> probabilidad de recomendar</li><li><strong>CES:</strong> esfuerzo del cliente</li><li><strong>FCR:</strong> resolución en el primer contacto</li><li><strong>Comentario abierto:</strong> feedback en texto libre</li></ul>`},
+      {title:'Cómo se crea (wizard)', html:`<p>La encuesta se arma en un asistente de 4 pasos:</p><ol><li><strong>Información general y canales</strong> (a qué cuentas/canales aplica)</li><li><strong>Envío y frecuencia</strong> (manual o automático, anti-spam)</li><li><strong>Preguntas</strong> de la encuesta</li><li><strong>Revisión y publicación</strong></li></ol>`},
+      {title:'Envío manual vs automático', html:`<ul><li><strong>Manual:</strong> tú decides cuándo enviar</li><li><strong>Automático al cerrar ticket:</strong> se dispara solo tras cerrar la atención (se puede configurar una espera antes del envío)</li></ul><div class="warning">⚠️ Anti-spam: se configura una cantidad de días para no volver a encuestar al mismo cliente demasiado seguido.</div>`},
+      {title:'Reapertura automática', html:`<div class="highlight">🔄 Si la pregunta de <strong>Resolución</strong> sale negativa, el ticket puede <strong>volver automáticamente a la cola</strong> de Desk para reatención.</div><p>Por eso es "medición + recuperación": no solo mides, recuperas al cliente insatisfecho.</p><div class="warning">⚠️ Regla clave: una <strong>cuenta social solo puede tener una encuesta activa a la vez</strong>.</div>`},
+    ],
+    scenarios: [
+      {client:'"Medir satisfacción suena caro. ¿Cuánto cuesta el módulo de encuestas?"', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Experience viene GRATIS incluido en Desk — otros proveedores lo cobran aparte."', correct:true, fb:'Correcto. Gratis incluido es un gancho de negociación (muñequeo).'},
+        {t:'"Es un módulo adicional con fee mensual."', correct:false, fb:'Incorrecto. Experience está incluido en Desk sin costo extra.'},
+        {t:'"Depende del volumen de encuestas."', correct:false, fb:'No. Va incluido en Desk, sin cobro por volumen.'},
+      ]},
+      {client:'"Mandamos encuestas por email pero casi nadie las contesta."', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Es normal, las encuestas tienen baja respuesta."', correct:false, fb:'Te rindes ante el dolor. Experience lo resuelve con el canal.'},
+        {t:'"Experience pregunta por el mismo canal de la atención (ej. WhatsApp) y llega a ~30% de respuesta vs 2-5% del email."', correct:true, fb:'Correcto. El mismo canal es la razón del salto en tasa de respuesta.'},
+        {t:'"Podemos rediseñar tus encuestas de email."', correct:false, fb:'Fuera de foco. El cambio clave es el canal, no el diseño.'},
+      ]},
+      {client:'"Quiero saber qué tan probable es que me recomienden."', prompt:'¿Qué métrica corresponde?', opts:[
+        {t:'"CSAT."', correct:false, fb:'CSAT mide satisfacción con la atención, no recomendación.'},
+        {t:'"NPS — mide justamente la probabilidad de recomendar."', correct:true, fb:'Correcto. NPS = Net Promoter Score, probabilidad de recomendación.'},
+        {t:'"CES."', correct:false, fb:'CES mide el esfuerzo del cliente, no la recomendación.'},
+      ]},
+      {client:'"Quiero que, si un cliente dice que su caso NO quedó resuelto, alguien lo retome. ¿Se puede?"', prompt:'¿Cómo respondes?', opts:[
+        {t:'"No, la encuesta solo mide, no actúa."', correct:false, fb:'Incorrecto. Experience también recupera: puede reabrir el caso.'},
+        {t:'"Sí: si la pregunta de Resolución sale negativa, el ticket vuelve automáticamente a la cola para reatención."', correct:true, fb:'Correcto. Esa es la reapertura automática — medición + recuperación.'},
+        {t:'"Habría que revisar manualmente cada encuesta."', correct:false, fb:'Innecesario. La reapertura por Resolución negativa es automática.'},
+      ]},
+      {client:'"No quiero bombardear al cliente con encuestas ni tener que enviarlas a mano."', prompt:'¿Qué le propones?', opts:[
+        {t:'"Enviar automático al cerrar el ticket, con anti-spam de X días para no repetir al mismo cliente."', correct:true, fb:'Correcto. Envío automático post-cierre + protección anti-spam por días.'},
+        {t:'"Enviar todo manual para controlar."', correct:false, fb:'Justo lo que quiere evitar. El envío automático al cerrar resuelve el trabajo manual.'},
+        {t:'"Enviar varias encuestas por día al mismo cliente."', correct:false, fb:'Eso es bombardear. Para evitarlo está el anti-spam por días.'},
+      ]},
+    ],
+    builder: [
+      {
+        caso: 'Un cliente quiere medir 3 cosas tras la atención: qué tan satisfechos quedan, qué tan probable es que recomienden la marca, y cuánto esfuerzo les costó resolver su problema. Hoy usan encuestas por email con muy baja respuesta.',
+        pistas: 'Cada objetivo mapea a una métrica distinta. ¿Y por qué el email responde tan poco?',
+        items: [
+          {label:'😊 CSAT (satisfacción con la atención)', good:true, why:'CSAT mide qué tan satisfecho quedó el cliente con la atención.'},
+          {label:'⭐ NPS (probabilidad de recomendar)', good:true, why:'NPS mide la probabilidad de que recomienden la marca.'},
+          {label:'💪 CES (esfuerzo del cliente)', good:true, why:'CES mide cuánto esfuerzo le costó al cliente resolver.'},
+          {label:'📩 Enviar por el mismo canal de atención (no email)', good:true, why:'Preguntar por el mismo canal sube la respuesta a ~30% vs 2-5% del email.'},
+          {label:'💰 Cobrar Experience como módulo aparte', good:false, why:'Error: Experience va gratis incluido en Desk. No es un cobro adicional.'},
+        ],
+      },
+      {
+        caso: 'Una empresa quiere que, al cerrar cada ticket de WhatsApp, se pregunte si el caso quedó resuelto y qué tan satisfecho quedó el cliente. Si dice que NO se resolvió, quieren retomarlo. Y no quieren molestar al mismo cliente más de una vez por semana.',
+        pistas: 'Piensa: ¿qué preguntas? ¿envío manual o automático? ¿qué pasa si dice que no se resolvió? ¿cómo evitas repetir?',
+        items: [
+          {label:'✅ Pregunta de Resolución + CSAT', good:true, why:'"¿Se resolvió?" es Resolución; "¿qué tan satisfecho?" es CSAT.'},
+          {label:'⚙️ Envío automático al cerrar el ticket', good:true, why:'Quieren que se dispare al cerrar cada atención → envío automático post-cierre.'},
+          {label:'🔄 Reapertura automática si Resolución es negativa', good:true, why:'Si dice que no se resolvió, el ticket vuelve a la cola automáticamente.'},
+          {label:'🚫 Anti-spam de 7 días', good:true, why:'Para no molestar más de una vez por semana se fija anti-spam por días.'},
+          {label:'📧 Enviar la encuesta por email', good:false, why:'No. El caso es WhatsApp; enviar por el mismo canal es lo que sube la respuesta.'},
+        ],
+      },
+    ],
+  },
+  cassper: {
+    chapters: [
+      {title:'¿Qué es Cassper?', html:`<p><strong>Cassper recupera ventas perdidas por WhatsApp.</strong> Detecta conversaciones con intención de compra que <strong>no cerraron</strong>, las diagnostica y las reactiva.</p>`},
+      {title:'Cómo funciona', html:`<ol><li><strong>Detecta:</strong> encuentra chats con intención de compra sin cierre</li><li><strong>Diagnostica:</strong> analiza por qué no cerró</li><li><strong>Reactiva:</strong> retoma la conversación con IA para recuperar la venta</li></ol><div class="tip">💡 Primeros insights desde el día 15. Resultados sólidos entre 30-90 días.</div>`},
+      {title:'Planes', html:`<table><tr><th>Plan</th><th>Mensual</th></tr><tr><td>Starter</td><td>$250 (2.300 créditos IA + USD 2.500 en ventas recuperadas incluidas)</td></tr><tr><td>Growth</td><td>$500</td></tr><tr><td>Scale</td><td>$1.000</td></tr></table><p>Incluye créditos IA, ventas recuperadas incluidas y <strong>5% de success fee</strong> sobre lo recuperado.</p>`},
+    ],
+    scenarios: [
+      {client:'"Recibo muchas consultas por WhatsApp pero siento que se me escapan ventas."', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Cassper detecta las conversaciones con intención de compra que no cerraron y las reactiva para recuperar esas ventas."', correct:true, fb:'Correcto. Ese es exactamente el trabajo de Cassper.'},
+        {t:'"Necesitas más agentes."', correct:false, fb:'No resuelve el problema. Cassper recupera lo perdido sin sumar headcount.'},
+        {t:'"Con Engage mandas más promos."', correct:false, fb:'Fuera de foco. Engage es campañas salientes; recuperar ventas perdidas es Cassper.'},
+      ]},
+      {client:'"¿En cuánto tiempo veo resultados?"', prompt:'¿Cómo respondes?', opts:[
+        {t:'"De inmediato, el primer día."', correct:false, fb:'Sobrepromesa. Los primeros insights llegan al día 15.'},
+        {t:'"Primeros insights desde el día 15, y resultados sólidos entre 30 y 90 días."', correct:true, fb:'Correcto. Sé honesto con el timeline: día 15 y 30-90 días.'},
+        {t:'"Depende, no sabría decirte."', correct:false, fb:'Tienes el dato: día 15 para insights, 30-90 días para resultados sólidos.'},
+      ]},
+      {client:'"¿Y cómo cobran? No quiero pagar por algo que no funcione."', prompt:'¿Cómo respondes?', opts:[
+        {t:'"Un fee fijo altísimo por adelantado."', correct:false, fb:'Espanta al cliente. El modelo tiene planes + success fee, alineado al resultado.'},
+        {t:'"Hay planes desde $250 con ventas recuperadas incluidas, más un 5% de success fee: solo escala si recupera ventas."', correct:true, fb:'Correcto. El success fee alinea el precio al resultado, justo lo que el cliente teme.'},
+        {t:'"Es gratis."', correct:false, fb:'Falso. Cassper tiene planes (Starter/Growth/Scale) + 5% success fee.'},
+      ]},
+    ],
+    builder: [
+      {
+        caso: 'Un e-commerce cierra pocas de las muchas conversaciones de compra que recibe por WhatsApp. Quiere recuperar esas ventas perdidas, entender por qué no cerraron, y le preocupa pagar por algo que no funcione. Pregunta cuándo verá resultados.',
+        pistas: 'Piensa: ¿qué producto recupera ventas? ¿qué modelo de cobro lo tranquiliza? ¿qué timeline es honesto?',
+        items: [
+          {label:'🔍 Cassper (detecta, diagnostica y reactiva)', good:true, why:'Cassper detecta conversaciones con intención de compra que no cerraron y las reactiva.'},
+          {label:'💵 Modelo con 5% de success fee', good:true, why:'El success fee alinea el precio al resultado: escala solo si recupera ventas.'},
+          {label:'📅 Timeline honesto: insights día 15, resultados 30-90 días', good:true, why:'Fijar bien la expectativa evita frustración: día 15 primeros insights, 30-90 días resultados sólidos.'},
+          {label:'📣 Engage para mandar más promos', good:false, why:'Fuera de foco. Engage es campañas salientes; recuperar ventas perdidas es Cassper.'},
+          {label:'👥 Contratar más agentes', good:false, why:'No resuelve el problema. Cassper recupera lo perdido sin sumar headcount.'},
+        ],
+      },
+    ],
+  },
+};
+
+function isProductMastered(key) {
+  return (state.productsMastered || []).includes(key);
+}
+
+function renderProductAcademies() {
+  const list = document.getElementById('product-academy-list');
+  const total = PRODUCT_ACADEMIES.length;
+  const done = PRODUCT_ACADEMIES.filter(p => isProductMastered(p.key)).length;
+  let html = `<div class="welcome-card" style="margin-bottom:16px">
+    <div class="progress-row"><span>${done}/${total} productos dominados</span><span>${Math.round(done/total*100)}%</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done/total*100)}%"></div></div>
+  </div>`;
+  PRODUCT_ACADEMIES.forEach(p => {
+    const mastered = isProductMastered(p.key);
+    html += `
+      <div class="lesson-card" onclick="openProductAcademy('${p.key}')" style="cursor:pointer">
+        <div class="lesson-num" style="background:${mastered ? 'var(--green)' : p.color};color:white;font-size:20px">${mastered ? '✓' : p.icon}</div>
+        <div class="lesson-info">
+          <div class="lesson-title">${p.name}</div>
+          <div class="lesson-desc">${p.tagline}</div>
+          <span class="lesson-tag tag-producto">Producto</span>
+          ${mastered ? '<div class="lesson-status done">✓ Dominado</div>' : '<div class="lesson-status" style="color:var(--accent);font-weight:700">→ Estudiar y evaluar</div>'}
+        </div>
+      </div>`;
+  });
+  list.innerHTML = html;
+}
+
+let currentProduct = null;
+let wiz = {}; // { steps:[...], idx, quizScore, sceneAnswered }
+
+function openProductAcademy(key) {
+  currentProduct = PRODUCT_ACADEMIES.find(p => p.key === key);
+  if (!currentProduct) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById('lesson-view').style.display = 'none';
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('flashcard-view').style.display = 'none';
+  const view = document.getElementById('product-view');
+  view.style.display = 'block';
+  view.classList.add('active');
+  document.getElementById('product-view-title').textContent = currentProduct.icon + ' ' + currentProduct.name;
+  buildWizard(key);
+  renderWizStep();
+  window.scrollTo(0,0);
+}
+
+function buildWizard(key) {
+  const content = PRODUCT_CONTENT[key] || {chapters:[], scenarios:[]};
+  const steps = [];
+  content.chapters.forEach((c, i) => steps.push({phase:'chapter', data:c, num:i+1, of:content.chapters.length}));
+  content.scenarios.forEach((s, i) => steps.push({phase:'scenario', data:s, num:i+1, of:content.scenarios.length}));
+  if (content.builder && content.builder.length) {
+    content.builder.forEach((b, i) => steps.push({phase:'builder', data:b, num:i+1, of:content.builder.length}));
+  }
+  const pool = LESSON_QS[currentProduct.lessonId] ? [...LESSON_QS[currentProduct.lessonId]] : [];
+  const quizQs = pool.sort(() => Math.random()-0.5).slice(0, 3);
+  quizQs.forEach((q, i) => steps.push({phase:'quiz', data:q, num:i+1, of:quizQs.length}));
+  wiz = { steps, idx: 0, quizScore: 0, sceneAnswered: false };
+}
+
+function renderWizProgress() {
+  const bar = document.getElementById('product-wiz-progress');
+  bar.innerHTML = wiz.steps.map((s, i) =>
+    `<div class="wiz-step ${i < wiz.idx ? 'done' : i === wiz.idx ? 'current' : ''}"></div>`
+  ).join('');
+}
+
+function phaseLabel(phase) {
+  return phase === 'chapter' ? '📖 Aprende' : phase === 'scenario' ? '🎭 Simulación' : phase === 'builder' ? '🛠️ Arma el bot' : '✅ Evaluación';
+}
+
+function renderWizStep() {
+  renderWizProgress();
+  const step = wiz.steps[wiz.idx];
+  if (!step) { renderWizResult(); return; }
+  wiz.sceneAnswered = false;
+  const content = document.getElementById('product-view-content');
+  const nav = document.getElementById('product-view-nav');
+  if (step.phase === 'chapter') {
+    content.innerHTML = `
+      <div class="wiz-card animate-in">
+        <span class="wiz-phase-tag">${phaseLabel('chapter')} · Capítulo ${step.num}/${step.of}</span>
+        <h2>${step.data.title}</h2>
+        <div class="lesson-content">${step.data.html}</div>
+      </div>`;
+    nav.innerHTML = `<div class="wiz-nav">
+      ${wiz.idx > 0 ? `<button class="wiz-back" onclick="wizPrev()">←</button>` : ''}
+      <button class="wiz-next" onclick="wizNext()">Siguiente →</button>
+    </div>`;
+  } else if (step.phase === 'scenario') {
+    const sc = step.data;
+    let optsHtml = sc.opts.map((o, i) => `<button class="quiz-option" onclick="answerScenario(${i})">${o.t}</button>`).join('');
+    content.innerHTML = `
+      <div class="wiz-card animate-in">
+        <span class="wiz-phase-tag">${phaseLabel('scenario')} · Escenario ${step.num}/${step.of}</span>
+        <div class="scenario-box">
+          <div class="scenario-client">
+            <div class="scenario-avatar">👤</div>
+            <div class="scenario-bubble">${sc.client}</div>
+          </div>
+        </div>
+        <div class="scenario-prompt">${sc.prompt}</div>
+        <div id="scenario-opts">${optsHtml}</div>
+        <div class="scenario-feedback" id="scenario-fb"></div>
+      </div>`;
+    nav.innerHTML = `<div class="wiz-nav">
+      ${wiz.idx > 0 ? `<button class="wiz-back" onclick="wizPrev()">←</button>` : ''}
+      <button class="wiz-next" id="scenario-next" onclick="wizNext()" style="opacity:0.5;pointer-events:none">Siguiente →</button>
+    </div>`;
+  } else if (step.phase === 'builder') {
+    const b = step.data;
+    let itemsHtml = b.items.map((it, i) => `<div class="build-item" id="build-item-${i}" onclick="toggleBuildItem(${i})"><span class="build-check">＋</span><span>${it.label}</span></div>`).join('');
+    content.innerHTML = `
+      <div class="wiz-card animate-in">
+        <span class="wiz-phase-tag">${phaseLabel('builder')} · Caso ${step.num}/${step.of}</span>
+        <div class="scenario-box" style="border-left-color:var(--accent)">
+          <div style="font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:6px">🧑‍💼 El cliente necesita:</div>
+          <div style="font-size:14px;line-height:1.5">${b.caso}</div>
+        </div>
+        <div class="scenario-prompt">Elige TODO lo que usarías para armar este bot:</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">💭 ${b.pistas}</div>
+        <div id="build-items">${itemsHtml}</div>
+        <div class="scenario-feedback" id="build-fb"></div>
+      </div>`;
+    nav.innerHTML = `<div class="wiz-nav">
+      ${wiz.idx > 0 ? `<button class="wiz-back" onclick="wizPrev()">←</button>` : ''}
+      <button class="wiz-next" id="build-check-btn" onclick="checkBuild()">Verificar armado ✓</button>
+    </div>`;
+    wiz.buildSel = [];
+    wiz.buildDone = false;
+  } else if (step.phase === 'quiz') {
+    const q = step.data;
+    let optsHtml = q.opts.map((o, i) => `<button class="quiz-option" onclick="answerWizQuiz(${i})">${o}</button>`).join('');
+    content.innerHTML = `
+      <div class="wiz-card animate-in">
+        <span class="wiz-phase-tag">${phaseLabel('quiz')} · Pregunta ${step.num}/${step.of}</span>
+        <div class="quiz-q-text" style="font-size:15px;margin-bottom:14px">${q.q}</div>
+        <div id="wiz-quiz-opts">${optsHtml}</div>
+        <div class="quiz-explanation" id="wiz-quiz-explain">${q.e || q.explain || ''}</div>
+      </div>`;
+    nav.innerHTML = `<div class="wiz-nav">
+      <button class="wiz-next" id="wiz-quiz-next" onclick="wizNext()" style="opacity:0.5;pointer-events:none">Siguiente →</button>
+    </div>`;
+  }
+  window.scrollTo(0,0);
+}
+
+function answerScenario(idx) {
+  if (wiz.sceneAnswered) return;
+  wiz.sceneAnswered = true;
+  const sc = wiz.steps[wiz.idx].data;
+  const chosen = sc.opts[idx];
+  const opts = document.querySelectorAll('#scenario-opts .quiz-option');
+  opts.forEach((o, i) => {
+    o.classList.add('disabled');
+    if (sc.opts[i].correct) o.classList.add('correct');
+    if (i === idx && !sc.opts[i].correct) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('scenario-fb');
+  fb.className = 'scenario-feedback ' + (chosen.correct ? 'good' : 'bad');
+  fb.innerHTML = (chosen.correct ? '✅ ' : '💡 ') + chosen.fb;
+  fb.style.display = 'block';
+  const next = document.getElementById('scenario-next');
+  next.style.opacity = '1'; next.style.pointerEvents = 'auto';
+  state.totalAnswered++; if (chosen.correct) state.totalCorrect++; save();
+}
+
+function toggleBuildItem(i) {
+  if (wiz.buildDone) return;
+  if (!wiz.buildSel) wiz.buildSel = [];
+  const el = document.getElementById('build-item-' + i);
+  const pos = wiz.buildSel.indexOf(i);
+  if (pos >= 0) {
+    wiz.buildSel.splice(pos, 1);
+    el.classList.remove('selected');
+    el.querySelector('.build-check').textContent = '＋';
+  } else {
+    wiz.buildSel.push(i);
+    el.classList.add('selected');
+    el.querySelector('.build-check').textContent = '✓';
+  }
+}
+
+function checkBuild() {
+  const step = wiz.steps[wiz.idx];
+  const items = step.data.items;
+  if (wiz.buildDone) { wizNext(); return; }
+  wiz.buildDone = true;
+  let allCorrect = true;
+  items.forEach((it, i) => {
+    const el = document.getElementById('build-item-' + i);
+    el.classList.add('disabled');
+    const picked = wiz.buildSel.includes(i);
+    if (it.good && picked) { el.classList.add('build-right'); }
+    else if (it.good && !picked) { el.classList.add('build-missed'); allCorrect = false; }
+    else if (!it.good && picked) { el.classList.add('build-wrong'); allCorrect = false; }
+  });
+  const fb = document.getElementById('build-fb');
+  const detail = items.map(it => `<div style="margin-top:6px">${it.good ? '✅' : '🚫'} <strong>${it.label}</strong> — ${it.why}</div>`).join('');
+  fb.className = 'scenario-feedback ' + (allCorrect ? 'good' : 'bad');
+  fb.innerHTML = (allCorrect ? '🎉 ¡Armado perfecto! Elegiste exactamente las capacidades correctas.' : '💡 Casi. Revisa el desglose:') + detail;
+  fb.style.display = 'block';
+  if (allCorrect) { state.totalCorrect++; }
+  state.totalAnswered++; save();
+  const btn = document.getElementById('build-check-btn');
+  btn.textContent = (wiz.idx === wiz.steps.length - 1) ? 'Ver resultado →' : 'Siguiente →';
+}
+
+function answerWizQuiz(idx) {
+  const step = wiz.steps[wiz.idx];
+  const q = step.data;
+  const opts = document.querySelectorAll('#wiz-quiz-opts .quiz-option');
+  if (opts[0].classList.contains('disabled')) return;
+  opts.forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === q.correct) o.classList.add('correct');
+    if (i === idx && i !== q.correct) o.classList.add('wrong');
+  });
+  if (idx === q.correct) wiz.quizScore++;
+  state.totalAnswered++; if (idx === q.correct) state.totalCorrect++; save();
+  document.getElementById('wiz-quiz-explain').style.display = 'block';
+  const next = document.getElementById('wiz-quiz-next');
+  next.style.opacity = '1'; next.style.pointerEvents = 'auto';
+  next.textContent = (wiz.idx === wiz.steps.length - 1) ? 'Ver resultado →' : 'Siguiente →';
+}
+
+function wizNext() {
+  const step = wiz.steps[wiz.idx];
+  // Block advancing an unanswered scenario/quiz/builder
+  if (step.phase === 'scenario' && !wiz.sceneAnswered) return;
+  if (step.phase === 'builder' && !wiz.buildDone) return;
+  wiz.idx++;
+  renderWizStep();
+}
+
+function wizPrev() {
+  if (wiz.idx > 0) { wiz.idx--; renderWizStep(); }
+}
+
+function renderWizResult() {
+  renderWizProgress();
+  const totalQuiz = wiz.steps.filter(s => s.phase === 'quiz').length;
+  const passed = wiz.quizScore >= 2;
+  const content = document.getElementById('product-view-content');
+  const nav = document.getElementById('product-view-nav');
+  if (passed) {
+    if (!state.productsMastered) state.productsMastered = [];
+    const firstTime = !state.productsMastered.includes(currentProduct.key);
+    if (firstTime) { state.productsMastered.push(currentProduct.key); state.xp += 60; }
+    save(); updateHeader();
+    content.innerHTML = `<div class="wiz-card animate-in" style="text-align:center">
+      <div style="font-size:44px;margin-bottom:8px">🏆</div>
+      <div class="challenge-result pass" style="margin:0">¡${currentProduct.name} dominado! ${wiz.quizScore}/${totalQuiz} correctas${firstTime ? ' · +60 XP' : ''}</div>
+      <p style="font-size:13px;color:var(--text2);margin-top:14px">Ya sabes explicar el producto y responder a las objeciones más comunes del cliente.</p>
+    </div>`;
+    nav.innerHTML = `<div class="wiz-nav"><button class="wiz-next" onclick="switchTab('products')">← Volver a Productos</button></div>`;
+  } else {
+    content.innerHTML = `<div class="wiz-card animate-in" style="text-align:center">
+      <div style="font-size:44px;margin-bottom:8px">📚</div>
+      <div class="challenge-result fail" style="margin:0">${wiz.quizScore}/${totalQuiz} — necesitas al menos 2/3</div>
+      <p style="font-size:13px;color:var(--text2);margin-top:14px">Repasa los capítulos y vuelve a intentar la evaluación.</p>
+    </div>`;
+    nav.innerHTML = `<div class="wiz-nav">
+      <button class="wiz-back" onclick="wizRestartChapters()" style="flex:1">📖 Repasar</button>
+      <button class="wiz-next" onclick="wizRetryQuiz()">🔄 Reintentar evaluación</button>
+    </div>`;
+  }
+  window.scrollTo(0,0);
+}
+
+function wizRestartChapters() {
+  wiz.idx = 0;
+  renderWizStep();
+}
+
+function wizRetryQuiz() {
+  const firstQuizIdx = wiz.steps.findIndex(s => s.phase === 'quiz');
+  wiz.quizScore = 0;
+  wiz.idx = firstQuizIdx >= 0 ? firstQuizIdx : 0;
+  renderWizStep();
+}
 
 function startLessonChallenge() {
   if (!currentLesson) return;
