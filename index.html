@@ -173,6 +173,47 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
 .build-item.build-wrong { border-color: var(--accent); background: #FFEBEE; }
 .build-item.build-wrong .build-check { background: var(--accent); color: white; border-color: var(--accent); }
 
+/* Ecosystem diagram */
+.eco-case { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden; }
+.eco-case-head { padding: 15px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+.eco-case-head .eco-emoji { font-size: 22px; }
+.eco-case-head .eco-titles { flex: 1; }
+.eco-case-title { font-size: 15px; font-weight: 700; color: var(--accent3); }
+.eco-case-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.eco-case-head .eco-chev { color: var(--text2); font-size: 13px; transition: transform 0.2s; }
+.eco-case.open .eco-chev { transform: rotate(180deg); }
+.eco-case-body { display: none; padding: 0 0 16px; }
+.eco-case.open .eco-case-body { display: block; }
+.eco-hint { font-size: 11px; color: var(--text2); padding: 0 16px 8px; }
+.eco-scroll { overflow-x: auto; padding: 6px 16px 14px; -webkit-overflow-scrolling: touch; }
+.eco-scroll::-webkit-scrollbar { height: 5px; }
+.eco-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.eco-flow { display: inline-flex; align-items: center; gap: 4px; }
+/* main-path pill */
+.eco-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.eco-step-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; color: var(--text2); }
+.eco-pill { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 2px solid var(--accent2); border-radius: 12px; padding: 9px 12px; width: 150px; }
+.eco-pill.yes { border-color: var(--green); background: #E8F5E9; }
+.eco-pill.no { border-color: var(--accent); background: #FFEBEE; }
+.eco-pill-ic { font-size: 18px; flex-shrink: 0; }
+.eco-pill-prod { font-size: 13px; font-weight: 700; color: var(--accent3); }
+.eco-pill-note { font-size: 11px; color: var(--text2); line-height: 1.3; margin-top: 1px; }
+.eco-arrow { font-size: 20px; color: var(--accent2); font-weight: 700; align-self: center; margin-top: 14px; }
+.eco-case.open .eco-arrow { animation: ecoArrowPulse 1.6s ease-in-out infinite; }
+.eco-case.open .eco-arrow:nth-of-type(2) { animation-delay: 0.2s; }
+.eco-case.open .eco-arrow:nth-of-type(3) { animation-delay: 0.4s; }
+@keyframes ecoArrowPulse { 0%,100% { opacity: 0.35; transform: translateX(0); } 50% { opacity: 1; transform: translateX(3px); } }
+.eco-mini-arrow { font-size: 14px; color: var(--text2); align-self: center; }
+/* decision diamond */
+.eco-diamond { width: 74px; height: 74px; flex-shrink: 0; background: linear-gradient(135deg, #FFD700, #FFA000); transform: rotate(45deg); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 6px; box-shadow: var(--shadow); }
+.eco-diamond span { transform: rotate(-45deg); font-size: 10px; font-weight: 700; color: #5a3d00; text-align: center; line-height: 1.15; width: 70px; }
+/* branches */
+.eco-branches { display: flex; flex-direction: column; gap: 12px; }
+.eco-branch-row { display: flex; align-items: center; gap: 4px; }
+.eco-branch-tag { font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 20px; margin-bottom: 6px; display: inline-block; }
+.eco-branch-tag.yes { background: #E8F5E9; color: var(--green); }
+.eco-branch-tag.no { background: #FFEBEE; color: var(--accent); }
+
 /* Match game */
 .match-game { display: flex; gap: 12px; margin-bottom: 16px; }
 .match-col { flex: 1; display: flex; flex-direction: column; gap: 8px; }
@@ -431,6 +472,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
     <div class="section-title">🎓 Academias por Producto</div>
     <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Domina cada producto por separado. Cada academia tiene su ficha completa + evaluación específica. Aprueba (2/3) para dominarlo.</div>
     <div id="product-academy-list"></div>
+
+    <div class="section-title" style="margin-top:28px">🧩 Cómo se combinan los productos</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Un caso real vale más que mil features. Así se ubica cada producto donde aporta valor en el journey del cliente.</div>
+    <div id="ecosystem-list"></div>
   </div>
 
   <!-- Product Academy detail view -->
@@ -1042,16 +1087,17 @@ const LESSONS = [
 </ul>
 `},
 
-  {id:11, type:'producto', icon:'😊', title:'Adereso Experience: encuestas post-atención', desc:'CSAT, NPS y CES integrados en el mismo canal', content:`
+  {id:11, type:'producto', icon:'😊', title:'Adereso Experience: encuestas post-atención', desc:'CSAT, CES y FCR integrados en el mismo canal', content:`
 <h3>¿Qué es?</h3>
 <p>Evalúa en tiempo real la calidad del servicio con encuestas post-atención. Se integra directamente en Desk.</p>
 
 <h3>Tipos de encuesta</h3>
 <ul>
 <li><strong>CSAT:</strong> Calificación post-atención (texto, estrellas o emojis)</li>
-<li><strong>NPS:</strong> Escala 0-10 de probabilidad de recomendación</li>
 <li><strong>CES:</strong> Qué tan fácil fue resolver el problema</li>
+<li><strong>FCR:</strong> Si se resolvió en el primer contacto</li>
 </ul>
+<div class="warning">⚠️ Experience NO mide NPS. El NPS es una métrica de negocio (se ve en Customer Control para el KAM), pero las encuestas post-atención de Experience son CSAT, CES y FCR.</div>
 
 <h3>Diferenciadores</h3>
 <ul>
@@ -1529,7 +1575,7 @@ producto: [
   {q:"¿Cuál es el uptime promedio 2025 de Adereso?", opts:["97.50%","99.00%","99.78%","99.99%"], correct:2, explain:"Uptime promedio anual 2025: 99.78%. Mejor mes (Marzo): 99.93%."},
   {q:"¿GPT reduce el TMO en cuánto?", opts:["5%","10%","15%","25%"], correct:2, explain:"-15% en Tiempo Medio de Operación. Con 50 agentes y TMO 6 min = ~450 hrs/mes recuperadas."},
   {q:"¿Cómo se cobra Adereso GPT?", opts:["Por usuario activo","Por conversación","Por mensaje enviado","Fee fijo mensual"], correct:2, explain:"GPT se cobra por mensaje enviado (no por conversación ni por usuario). Próximamente se cobrará por créditos."},
-  {q:"¿Qué diferencia a VoC de Experience?", opts:["Son lo mismo","Experience analiza conversaciones y VoC envía encuestas","VoC analiza conversaciones con IA; Experience mide satisfacción con encuestas","VoC es para voz y Experience para texto"], correct:2, explain:"VoC analiza conversaciones (sentimiento, calidad, automatización). Experience mide satisfacción (CSAT/NPS/CES) post-atención."},
+  {q:"¿Qué diferencia a VoC de Experience?", opts:["Son lo mismo","Experience analiza conversaciones y VoC envía encuestas","VoC analiza conversaciones con IA; Experience mide satisfacción con encuestas","VoC es para voz y Experience para texto"], correct:2, explain:"VoC analiza conversaciones (sentimiento, calidad, automatización). Experience mide satisfacción (CSAT/CES/FCR) post-atención."},
   {q:"¿Studio puede contratarse sin Desk?", opts:["Sí, es standalone","No, requiere Desk","Solo con Engage","Depende del plan"], correct:0, explain:"Studio puede contratarse de forma standalone — no requiere Adereso Desk."},
   {q:"¿Qué tasa de respuesta promedio tienen las encuestas de Experience?", opts:["5%","15%","30%","50%"], correct:2, explain:"30% promedio — porque van por el mismo canal de atención (vs 2-5% del email)."},
   {q:"¿Cuál es el recargo BSP de Engage sobre el fee de Meta?", opts:["5%","8%","12%","15%"], correct:2, explain:"12% sobre el costo de Meta por ser WhatsApp BSP. Cubre gestión API e integración."},
@@ -1632,7 +1678,7 @@ products: [
   {cat:"Desk", front:"¿Qué es Adereso Desk?", back:"Helpdesk inteligente con IA generativa para centralizar atención en múltiples canales. Agentes ilimitados. Canales: WhatsApp, IG, FB, LinkedIn, Email, Chat Web."},
   {cat:"Studio", front:"¿Qué es Adereso Studio?", back:"Plataforma para crear agentes IA sin código. Dos tipos: Studio Flows (flujos estructurados) y Studio Agent (IA generativa autónoma). Multi-motor, privacidad total."},
   {cat:"Engage", front:"¿Qué es Adereso Engage?", back:"Campañas masivas SOLO por WhatsApp. 98% tasa de apertura. HSM aprobados por Meta. Cobro: módulo + tráfico + 12% BSP sobre fee Meta."},
-  {cat:"Experience", front:"¿Qué es Adereso Experience?", back:"Encuestas post-atención (CSAT, NPS, CES) GRATIS incluidas en Desk. Mismo canal = 30% tasa respuesta. En la negociación: 'en otros proveedores te lo cobran aparte'."},
+  {cat:"Experience", front:"¿Qué es Adereso Experience?", back:"Encuestas post-atención (CSAT, CES, FCR) GRATIS incluidas en Desk. Mismo canal = 30% tasa respuesta. En la negociación: 'en otros proveedores te lo cobran aparte'. No mide NPS."},
   {cat:"VoC", front:"¿Qué es Adereso VoC?", back:"Análisis de voz del cliente con IA. Analytics (motivos, sentimiento, oportunidades de automatización) + Pauta de Calidad (evaluación a escala). Procesa texto y voz."},
   {cat:"GPT", front:"¿Qué es Adereso GPT?", back:"Asistente interno para ejecutivos (no clientes). 3 niveles: Básico (PDFs), Intermedio (sistemas internos), Avanzado (ejecuta acciones). Se cobra por mensaje (futuro: créditos). -15% TMO."},
   {cat:"Diferenciador", front:"¿Por qué Adereso vs competencia?", back:"1) BSP oficial Meta (sin intermediarios). 2) IA ilimitada por conversación (competencia cobra por token). 3) Agentes ilimitados. 4) Multi-motor IA. 5) Privacidad total (no fine-tuning)."},
@@ -2226,7 +2272,7 @@ const LESSON_QS = {
       {q:"¿Cuál es un estado válido de una campaña?",opts:["Aprobada por RRHH","Cargada / Enviando / Completada (o Pausada / Error)","En SLA","Indexada"],correct:1,e:"Los estados de campaña son: Cargada, Enviando, Completada, Pausada y Error."}],
   11:[{q:"¿Experience tiene costo adicional?",opts:["Sí, fee mensual","No, viene GRATIS incluido en Desk","Solo en Plan 2","Depende del volumen"],correct:1,e:"GRATIS incluido en Desk. En la negociación: 'en otros proveedores te lo cobran aparte'."},
       {q:"¿Qué tasa de respuesta tienen las encuestas?",opts:["5%","15%","30%","50%"],correct:2,e:"30% porque van por el mismo canal de atención (vs 2-5% del email)."},
-      {q:"¿Qué tipos de encuesta soporta Experience?",opts:["Solo CSAT","Solo NPS","CSAT, NPS y CES","Solo formularios"],correct:2,e:"CSAT (satisfacción), NPS (recomendación) y CES (esfuerzo del cliente)."},
+      {q:"¿Qué tipos de encuesta soporta Experience?",opts:["Solo CSAT","CSAT, CES y FCR (no NPS)","CSAT, NPS y CES","Solo formularios"],correct:1,e:"Experience mide CSAT (satisfacción), CES (esfuerzo) y FCR (resolución en primer contacto). NO mide NPS."},
       {q:"Si la pregunta de Resolución sale negativa, ¿qué puede pasar?",opts:["Nada","El ticket vuelve automáticamente a la cola para reatención","Se borra la encuesta","Se cierra el cliente"],correct:1,e:"Reapertura automática: si Resolución es negativa, el ticket regresa a la cola. Experience mide y recupera."},
       {q:"¿Cuántas encuestas activas puede tener una cuenta social a la vez?",opts:["Ilimitadas","Una","Tres","Depende del plan"],correct:1,e:"Una cuenta social solo puede estar asociada a una encuesta activa a la vez."},
       {q:"¿Para qué sirve el anti-spam en Experience?",opts:["Bloquear bots","No volver a encuestar al mismo cliente por X días","Filtrar correos","Cifrar respuestas"],correct:1,e:"La protección anti-spam define días para no encuestar al mismo cliente demasiado seguido."},
@@ -2279,7 +2325,7 @@ const PRODUCT_ACADEMIES = [
   {key:'desk', name:'Adereso Desk', icon:'🖥️', lessonId:8, tagline:'El helpdesk omnicanal con IA', color:'#0F3460'},
   {key:'studio', name:'Adereso Studio', icon:'🤖', lessonId:9, tagline:'Bots con IA sin código', color:'#E94560'},
   {key:'engage', name:'Adereso Engage', icon:'📣', lessonId:10, tagline:'Campañas masivas por WhatsApp', color:'#16A085'},
-  {key:'experience', name:'Adereso Experience', icon:'😊', lessonId:11, tagline:'Encuestas post-atención (CSAT/NPS/CES)', color:'#F39C12'},
+  {key:'experience', name:'Adereso Experience', icon:'😊', lessonId:11, tagline:'Encuestas post-atención (CSAT/CES/FCR)', color:'#F39C12'},
   {key:'cassper', name:'Cassper', icon:'🔍', lessonId:23, tagline:'Recupera ventas perdidas por WhatsApp', color:'#8E44AD'},
 ];
 
@@ -2338,7 +2384,7 @@ const PRODUCT_CONTENT = {
         pistas: 'Piensa: ¿qué unifica canales? ¿cómo mides satisfacción? ¿el precio depende de los agentes?',
         items: [
           {label:'🖥️ Desk (bandeja omnicanal única)', good:true, why:'Desk centraliza WhatsApp, IG y correo en una sola bandeja: fin de la fragmentación.'},
-          {label:'😊 Experience (CSAT/NPS post-atención)', good:true, why:'Para medir satisfacción tras cada atención, en el mismo canal. Va incluido gratis en Desk.'},
+          {label:'😊 Experience (CSAT/CES/FCR post-atención)', good:true, why:'Para medir satisfacción tras cada atención, en el mismo canal. Va incluido gratis en Desk.'},
           {label:'📊 Licencias ilimitadas (no cobrar por agente)', good:true, why:'Con 35 agentes el argumento clave: no se cobra por asiento, el precio va por conversaciones.'},
           {label:'🔍 Cassper', good:false, why:'No lo pidieron. Cassper recupera ventas perdidas, no es lo que resuelve este caso.'},
           {label:'💳 Cobro por número de agentes', good:false, why:'Error: Desk NO cobra por agente. Las licencias son ilimitadas.'},
@@ -2529,10 +2575,10 @@ const PRODUCT_CONTENT = {
   experience: {
     chapters: [
       {title:'¿Qué es Experience?', html:`<p><strong>Experience son encuestas post-atención</strong> integradas en el mismo canal donde se atendió al cliente (WhatsApp, IG, etc.).</p><div class="tip">💡 Va GRATIS incluido en Desk. En la negociación: "en otros proveedores te lo cobran aparte".</div>`},
-      {title:'Tipos de encuesta', html:`<ul><li><strong>CSAT:</strong> satisfacción con la atención</li><li><strong>NPS:</strong> probabilidad de recomendar</li><li><strong>CES:</strong> esfuerzo que le costó al cliente resolver</li></ul>`},
+      {title:'Tipos de encuesta', html:`<ul><li><strong>CSAT:</strong> satisfacción con la atención</li><li><strong>CES:</strong> esfuerzo que le costó al cliente resolver</li><li><strong>FCR:</strong> si se resolvió en el primer contacto</li></ul><div class="warning">⚠️ Experience NO mide NPS. El NPS es una métrica de negocio (Customer Control / KAM), no una encuesta post-atención de Experience.</div>`},
       {title:'Por qué convierte', html:`<p>Tasa de respuesta del <strong>~30%</strong> porque la encuesta llega por el mismo canal de la conversación (vs 2-5% del email). Los resultados alimentan métricas de calidad y se cruzan con las conversaciones de Desk.</p>`},
       {title:'El modelo mental', html:`<div class="highlight">🧠 Experience <strong>no es una bandeja de atención</strong>: es una <strong>capa de medición y recuperación</strong> sobre Desk. Mide la calidad de la atención y captura feedback justo después de cerrar el ticket.</div>`},
-      {title:'Tipos de pregunta', html:`<p>Más allá de CSAT/NPS/CES, una encuesta puede combinar:</p><ul><li><strong>Resolución:</strong> ¿se resolvió tu caso?</li><li><strong>CSAT:</strong> satisfacción con la atención</li><li><strong>NPS:</strong> probabilidad de recomendar</li><li><strong>CES:</strong> esfuerzo del cliente</li><li><strong>FCR:</strong> resolución en el primer contacto</li><li><strong>Comentario abierto:</strong> feedback en texto libre</li></ul>`},
+      {title:'Tipos de pregunta', html:`<p>Una encuesta puede combinar:</p><ul><li><strong>Resolución:</strong> ¿se resolvió tu caso?</li><li><strong>CSAT:</strong> satisfacción con la atención</li><li><strong>CES:</strong> esfuerzo del cliente</li><li><strong>FCR:</strong> resolución en el primer contacto</li><li><strong>Comentario abierto:</strong> feedback en texto libre</li></ul><div class="warning">⚠️ Nada de NPS aquí: Experience mide CSAT, CES y FCR (más Resolución y comentario).</div>`},
       {title:'Cómo se crea (wizard)', html:`<p>La encuesta se arma en un asistente de 4 pasos:</p><ol><li><strong>Información general y canales</strong> (a qué cuentas/canales aplica)</li><li><strong>Envío y frecuencia</strong> (manual o automático, anti-spam)</li><li><strong>Preguntas</strong> de la encuesta</li><li><strong>Revisión y publicación</strong></li></ol>`},
       {title:'Envío manual vs automático', html:`<ul><li><strong>Manual:</strong> tú decides cuándo enviar</li><li><strong>Automático al cerrar ticket:</strong> se dispara solo tras cerrar la atención (se puede configurar una espera antes del envío)</li></ul><div class="warning">⚠️ Anti-spam: se configura una cantidad de días para no volver a encuestar al mismo cliente demasiado seguido.</div>`},
       {title:'Reapertura automática', html:`<div class="highlight">🔄 Si la pregunta de <strong>Resolución</strong> sale negativa, el ticket puede <strong>volver automáticamente a la cola</strong> de Desk para reatención.</div><p>Por eso es "medición + recuperación": no solo mides, recuperas al cliente insatisfecho.</p><div class="warning">⚠️ Regla clave: una <strong>cuenta social solo puede tener una encuesta activa a la vez</strong>.</div>`},
@@ -2548,10 +2594,10 @@ const PRODUCT_CONTENT = {
         {t:'"Experience pregunta por el mismo canal de la atención (ej. WhatsApp) y llega a ~30% de respuesta vs 2-5% del email."', correct:true, fb:'Correcto. El mismo canal es la razón del salto en tasa de respuesta.'},
         {t:'"Podemos rediseñar tus encuestas de email."', correct:false, fb:'Fuera de foco. El cambio clave es el canal, no el diseño.'},
       ]},
-      {client:'"Quiero saber qué tan probable es que me recomienden."', prompt:'¿Qué métrica corresponde?', opts:[
-        {t:'"CSAT."', correct:false, fb:'CSAT mide satisfacción con la atención, no recomendación.'},
-        {t:'"NPS — mide justamente la probabilidad de recomendar."', correct:true, fb:'Correcto. NPS = Net Promoter Score, probabilidad de recomendación.'},
-        {t:'"CES."', correct:false, fb:'CES mide el esfuerzo del cliente, no la recomendación.'},
+      {client:'"Quiero saber si el problema del cliente se resolvió en el primer contacto."', prompt:'¿Qué métrica corresponde?', opts:[
+        {t:'"CSAT."', correct:false, fb:'CSAT mide satisfacción con la atención, no si se resolvió al primer contacto.'},
+        {t:'"FCR — mide justamente la resolución en el primer contacto."', correct:true, fb:'Correcto. FCR = First Contact Resolution. Experience mide CSAT, CES y FCR.'},
+        {t:'"NPS."', correct:false, fb:'Ojo: Experience NO mide NPS. Y NPS es recomendación, no resolución al primer contacto.'},
       ]},
       {client:'"Quiero que, si un cliente dice que su caso NO quedó resuelto, alguien lo retome. ¿Se puede?"', prompt:'¿Cómo respondes?', opts:[
         {t:'"No, la encuesta solo mide, no actúa."', correct:false, fb:'Incorrecto. Experience también recupera: puede reabrir el caso.'},
@@ -2566,14 +2612,14 @@ const PRODUCT_CONTENT = {
     ],
     builder: [
       {
-        caso: 'Un cliente quiere medir 3 cosas tras la atención: qué tan satisfechos quedan, qué tan probable es que recomienden la marca, y cuánto esfuerzo les costó resolver su problema. Hoy usan encuestas por email con muy baja respuesta.',
-        pistas: 'Cada objetivo mapea a una métrica distinta. ¿Y por qué el email responde tan poco?',
+        caso: 'Un cliente quiere medir 3 cosas tras la atención: qué tan satisfechos quedan, cuánto esfuerzo les costó resolver, y si el caso se resolvió en el primer contacto. Hoy usan encuestas por email con muy baja respuesta.',
+        pistas: 'Cada objetivo mapea a una métrica de Experience. Ojo: Experience NO mide NPS. ¿Y por qué el email responde tan poco?',
         items: [
           {label:'😊 CSAT (satisfacción con la atención)', good:true, why:'CSAT mide qué tan satisfecho quedó el cliente con la atención.'},
-          {label:'⭐ NPS (probabilidad de recomendar)', good:true, why:'NPS mide la probabilidad de que recomienden la marca.'},
           {label:'💪 CES (esfuerzo del cliente)', good:true, why:'CES mide cuánto esfuerzo le costó al cliente resolver.'},
+          {label:'✅ FCR (resolución en el primer contacto)', good:true, why:'FCR mide si el caso se resolvió al primer contacto.'},
           {label:'📩 Enviar por el mismo canal de atención (no email)', good:true, why:'Preguntar por el mismo canal sube la respuesta a ~30% vs 2-5% del email.'},
-          {label:'💰 Cobrar Experience como módulo aparte', good:false, why:'Error: Experience va gratis incluido en Desk. No es un cobro adicional.'},
+          {label:'⭐ NPS (probabilidad de recomendar)', good:false, why:'Error: Experience NO mide NPS. Sus encuestas son CSAT, CES y FCR (más Resolución y comentario).'},
         ],
       },
       {
@@ -2654,6 +2700,150 @@ function renderProductAcademies() {
       </div>`;
   });
   list.innerHTML = html;
+  renderEcosystems();
+}
+
+// Casos de uso: flujo simple con ramas. path = camino principal; decision = bifurcación SÍ/NO
+const ECOSYSTEMS = [
+  {
+    key:'ecommerce', emoji:'🛒', title:'E-commerce', sub:'De la publicidad a la recompra',
+    path:[
+      {step:'Captación', ic:'📣', prod:'Engage', note:'Campañas por WhatsApp'},
+      {step:'Conversión', ic:'🤖', prod:'Studio', note:'Agente IA de venta + catálogo'},
+      {step:'Venta', ic:'🖥️', prod:'Desk', note:'Cierra la conversación'},
+    ],
+    decision:{ q:'¿Compra?',
+      yes:[
+        {ic:'😊', prod:'Experience', note:'Encuesta post-venta'},
+        {ic:'🤖', prod:'Studio + Desk', note:'Postventa'},
+      ],
+      no:[
+        {ic:'🔍', prod:'Cassper', note:'Recupera el carrito perdido'},
+      ],
+    },
+  },
+  {
+    key:'automotriz', emoji:'🚗', title:'Automotriz', sub:'Del lead a la venta del auto',
+    path:[
+      {step:'Entrada', ic:'🖥️', prod:'Desk', note:'100% de los leads'},
+      {step:'1ª respuesta', ic:'🤖', prod:'Studio', note:'Contacta al instante (+12 pts)'},
+      {step:'Agendamiento', ic:'🤖', prod:'Studio', note:'Agenda la cita (+15 pts)'},
+      {step:'Asistencia', ic:'📣', prod:'Engage', note:'Recordatorios (+25 pts)'},
+    ],
+    decision:{ q:'¿Compra el auto?',
+      yes:[
+        {ic:'🖥️', prod:'Desk + ejecutivo', note:'Cierra la venta'},
+        {ic:'😊', prod:'Experience', note:'Encuesta post-venta'},
+      ],
+      no:[
+        {ic:'🔍', prod:'Cassper / Engage', note:'🔥 Recontacto ULTRA HOT'},
+      ],
+    },
+  },
+  {
+    key:'salud', emoji:'🏥', title:'Salud', sub:'De la reserva de hora al paciente recurrente',
+    path:[
+      {step:'Reserva', ic:'🤖', prod:'Studio', note:'Agenda hora 24/7'},
+      {step:'Recordatorio', ic:'📣', prod:'Engage', note:'Baja el no-show'},
+      {step:'Atención', ic:'🖥️', prod:'Desk', note:'Consultas + historial'},
+    ],
+    decision:{ q:'¿Asistió?',
+      yes:[
+        {ic:'😊', prod:'Experience', note:'Encuesta de calidad'},
+        {ic:'📣', prod:'Engage', note:'Controles y preventivos'},
+      ],
+      no:[
+        {ic:'🔍', prod:'Cassper / Engage', note:'Reagenda al paciente'},
+      ],
+    },
+  },
+  {
+    key:'servicios', emoji:'🛠️', title:'Servicios y soporte', sub:'De la consulta a la retención',
+    path:[
+      {step:'Captación', ic:'📣', prod:'Engage', note:'Campañas + reactivación'},
+      {step:'1er contacto', ic:'🤖', prod:'Studio', note:'Responde y califica 24/7'},
+      {step:'Soporte', ic:'🖥️', prod:'Desk', note:'Tickets con SLA'},
+    ],
+    decision:{ q:'¿Resuelto?',
+      yes:[
+        {ic:'😊', prod:'Experience', note:'Mide la atención'},
+        {ic:'📊', prod:'VoC', note:'Analiza conversaciones'},
+      ],
+      no:[
+        {ic:'📣', prod:'Engage', note:'Retención y renovaciones'},
+      ],
+    },
+  },
+  {
+    key:'educacion', emoji:'🎓', title:'Educación', sub:'Del postulante a la permanencia',
+    path:[
+      {step:'Captación', ic:'📣', prod:'Engage', note:'Campañas de admisión'},
+      {step:'Admisión', ic:'🤖', prod:'Studio', note:'Guía la matrícula'},
+      {step:'Permanencia', ic:'🖥️', prod:'Desk', note:'Soporte al alumno'},
+    ],
+    decision:{ q:'¿Sigue activo?',
+      yes:[
+        {ic:'😊', prod:'Experience', note:'Satisfacción del alumno'},
+        {ic:'📊', prod:'VoC', note:'Señales de deserción'},
+      ],
+      no:[
+        {ic:'🔍', prod:'Cassper / Engage', note:'Reactiva al alumno'},
+      ],
+    },
+  },
+];
+
+function renderEcosystems() {
+  const cont = document.getElementById('ecosystem-list');
+  if (!cont) return;
+  cont.innerHTML = ECOSYSTEMS.map((e, ei) => {
+    const pill = (n, cls) => `<div class="eco-pill ${cls||''}">
+        <span class="eco-pill-ic">${n.ic}</span>
+        <div><div class="eco-pill-prod">${n.prod}</div><div class="eco-pill-note">${n.note}</div></div>
+      </div>`;
+    // Camino principal: paso + píldora, unidos por flechas
+    const mainPath = e.path.map((n, i) => `
+      <div class="eco-item">
+        <div class="eco-step-label">${n.step}</div>
+        ${pill(n)}
+      </div>
+      <div class="eco-arrow">→</div>`).join('');
+    // Rombo de decisión + ramas
+    const yes = e.decision.yes.map(n => pill(n, 'yes')).join('<div class="eco-mini-arrow">→</div>');
+    const no = e.decision.no.map(n => pill(n, 'no')).join('<div class="eco-mini-arrow">→</div>');
+    const branch = `
+      <div class="eco-diamond"><span>${e.decision.q}</span></div>
+      <div class="eco-branches">
+        <div class="eco-branch">
+          <div class="eco-branch-tag yes">SÍ ✓</div>
+          <div class="eco-branch-row">${yes}</div>
+        </div>
+        <div class="eco-branch">
+          <div class="eco-branch-tag no">NO ✕</div>
+          <div class="eco-branch-row">${no}</div>
+        </div>
+      </div>`;
+    return `<div class="eco-case" id="eco-case-${ei}">
+      <div class="eco-case-head" onclick="toggleEco(${ei})">
+        <span class="eco-emoji">${e.emoji}</span>
+        <div class="eco-titles"><div class="eco-case-title">${e.title}</div><div class="eco-case-sub">${e.sub}</div></div>
+        <span class="eco-chev">▼</span>
+      </div>
+      <div class="eco-case-body">
+        <div class="eco-hint">👉 Desliza si el flujo no cabe</div>
+        <div class="eco-scroll">
+          <div class="eco-flow">
+            ${mainPath}
+            ${branch}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleEco(i) {
+  document.getElementById('eco-case-' + i).classList.toggle('open');
 }
 
 let currentProduct = null;
